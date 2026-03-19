@@ -1,4 +1,3 @@
-import { ConfirmModal } from "@/components/ConfirmModal";
 import { PageWrapper } from "@/components/PageWrapper";
 import { Card } from "@/components/ui/Card";
 import { Divider } from "@/components/ui/Divider";

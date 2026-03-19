@@ -44,7 +44,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = ({
   allowClear = true,
   showSearch = true,
   size = "medium",
-  label,
+  label: _label,
   canOpenDisabled = false,
   canSelectRoot = false,
   onClear,

@@ -88,7 +88,7 @@ export const DrawableSignature = ({ onChange }: DrawableSignatureProps) => {
         <Button
           type="button"
           variant="tertiary"
-          size="sm"
+          size="small"
           onClick={handleClear}
         >
           Limpar

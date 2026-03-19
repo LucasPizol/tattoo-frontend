@@ -6,6 +6,7 @@ import type { ProductType } from "../product-types/types";
 export type Stock = {
   id: number;
   quantity: number;
+  user: User;
 };
 
 export type Product = {

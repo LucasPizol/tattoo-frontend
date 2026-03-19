@@ -24,7 +24,7 @@ const getDefaultDateRange = (): DateRange => {
 
 export const Comissions = () => {
   const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange());
-  const { data, isLoading, filters, onChangeFilters } = useComissions();
+  const { data, isLoading, onChangeFilters } = useComissions();
   const [pdfLoading, setPdfLoading] = useState(false);
   const {
     open: openPdfModal,

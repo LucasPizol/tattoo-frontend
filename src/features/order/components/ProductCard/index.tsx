@@ -13,6 +13,7 @@ type ProductCardProps = {
   className?: string;
   isSelected?: boolean;
   onAddStock?: () => void;
+  hasMultipleStocks?: boolean;
 };
 
 export const ProductCard = ({

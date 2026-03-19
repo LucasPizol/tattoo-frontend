@@ -34,6 +34,14 @@ export type OrderPaymentMethod = {
   updatedAt: string;
 };
 
+export type ClientPayment = {
+  paymentMethod: { id: number; name: string };
+  totalPaidAmount: MoneyValue;
+  installments: number;
+  installmentAmount: MoneyValue;
+  netReceivedValue: MoneyValue;
+};
+
 export type Order = {
   id: number;
   status: OrderStatus;
@@ -91,6 +99,8 @@ export type OrderShowResponse = {
     birthDateDiscountValue?: MoneyValue;
     comissions: Comission[];
     orderPaymentMethods: OrderPaymentMethod[];
+    clientPayments: ClientPayment[];
+    payments: Payment[];
   };
 };
 
