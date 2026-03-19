@@ -1,0 +1,45 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal {
+  padding-bottom: 20px;
+}
+
+.rowContainer {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+
+  .rowItem {
+    flex: 1;
+  }
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #334155;
+  margin: 0;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.accordionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modalTitleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}

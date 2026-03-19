@@ -1,0 +1,13 @@
+.whatsappButton {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: var(--shape-border-radius);
+  color: #fff;
+  background: #25D366 !important;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none !important;
+}

@@ -1,0 +1,146 @@
+.container {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-auth);
+  padding: 24px;
+  font-family: var(--font-family);
+
+  background-image: radial-gradient(
+    ellipse at 40% 80%,
+    rgba(230, 185, 102, 0.04) 0%,
+    transparent 60%
+  );
+}
+
+.card {
+  background: var(--surface-auth-raised);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-inverse);
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5);
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--amber-dark), var(--amber), var(--amber-dim));
+  }
+
+  /* Contexto escuro para inputs */
+  --input-surface: rgba(255, 255, 255, 0.05);
+  --input-border-color: rgba(255, 255, 255, 0.12);
+  --input-text-color: var(--text-inverse);
+  --input-label-color: var(--text-inverse-dim);
+  --input-placeholder-color: rgba(245, 240, 232, 0.2);
+  --input-icon-color: var(--text-inverse-dim);
+
+  /* Stepper no contexto dark */
+  --stepper-line: rgba(255, 255, 255, 0.12);
+  --stepper-border: rgba(255, 255, 255, 0.18);
+  --stepper-text: rgba(255, 255, 255, 0.3);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.icon {
+  font-size: 42px;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-inverse);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  color: var(--text-inverse-dim);
+  font-size: 13px;
+  font-weight: 500;
+
+  strong {
+    color: var(--amber);
+    font-weight: 700;
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 6px;
+  color: var(--text-inverse-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-inverse);
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--text-inverse-dim);
+  font-weight: 500;
+
+  a {
+    color: var(--amber);
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 4px;
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--amber-dim);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 28px 20px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+}

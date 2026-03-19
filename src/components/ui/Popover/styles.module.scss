@@ -1,0 +1,93 @@
+// ============================================================================
+// POPOVER - TRIGGER
+// ============================================================================
+
+.trigger {
+  display: inline-flex;
+  cursor: pointer;
+}
+
+// ============================================================================
+// POPOVER - CONTAINER
+// ============================================================================
+
+.popover {
+  position: absolute;
+  z-index: 999;
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+  line-height: 1.4;
+  max-width: 300px;
+  word-wrap: break-word;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  // Estado inicial (invisível até posicionar)
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  // Placement: bottom (arrow aponta para cima)
+  &.bottom {
+    transform: translateY(-4px);
+
+    &.visible {
+      transform: translateY(0);
+    }
+
+    .arrow {
+      top: -6px;
+      bottom: auto;
+
+      &::before {
+        top: 3px;
+        bottom: auto;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// POPOVER - CONTENT
+// ============================================================================
+
+.content {
+  margin: 0;
+  font-size: 14px;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// ============================================================================
+// POPOVER - ARROW
+// ============================================================================
+
+.arrow {
+  position: absolute;
+  bottom: -6px;
+  width: 12px;
+  height: 6px;
+  transform: translateX(-50%);
+  overflow: hidden;
+  pointer-events: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background: var(--color-primary);
+  }
+}

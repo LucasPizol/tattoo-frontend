@@ -1,0 +1,179 @@
+.divider {
+  flex-shrink: 0;
+  background-color: var(--color-border);
+  transition: all 0.2s ease;
+}
+
+// Orientation variants
+.horizontal {
+  width: 100%;
+  height: 1px;
+  margin: 16px 0;
+}
+
+.vertical {
+  width: 1px;
+  height: 100%;
+  margin: 0 16px;
+  align-self: stretch;
+}
+
+// Size variants
+.thin {
+  &.horizontal {
+    height: 1px;
+  }
+
+  &.vertical {
+    width: 1px;
+  }
+}
+
+.medium {
+  &.horizontal {
+    height: 2px;
+  }
+
+  &.vertical {
+    width: 2px;
+  }
+}
+
+.thick {
+  &.horizontal {
+    height: 3px;
+  }
+
+  &.vertical {
+    width: 3px;
+  }
+}
+
+// Color variants
+.default {
+  background-color: var(--color-border);
+}
+
+.primary {
+  background-color: var(--color-primary);
+}
+
+.secondary {
+  background-color: var(--color-secondary);
+}
+
+.muted {
+  background-color: #e5e7eb;
+}
+
+// Divider with text
+.dividerWithText {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 24px 0;
+  gap: 16px;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border);
+  transition: all 0.2s ease;
+
+  &.thin {
+    height: 1px;
+  }
+
+  &.medium {
+    height: 2px;
+  }
+
+  &.thick {
+    height: 3px;
+  }
+
+  &.default {
+    background-color: var(--color-border);
+  }
+
+  &.primary {
+    background-color: var(--color-primary);
+  }
+
+  &.secondary {
+    background-color: var(--color-secondary);
+  }
+
+  &.muted {
+    background-color: #e5e7eb;
+  }
+}
+
+.left {
+  .lineLeft {
+    max-width: 20px;
+  }
+}
+
+.right {
+  .lineRight {
+    max-width: 20px;
+  }
+}
+.text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  padding: 0 8px;
+
+  &.center {
+    text-align: center;
+  }
+
+  &.right {
+    text-align: right;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .dividerWithText {
+    margin: 16px 0;
+    gap: 12px;
+  }
+
+  .text {
+    font-size: 13px;
+    padding: 0 6px;
+  }
+
+  .horizontal {
+    margin: 12px 0;
+  }
+
+  .vertical {
+    margin: 0 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dividerWithText {
+    margin: 12px 0;
+    gap: 8px;
+  }
+
+  .text {
+    font-size: 12px;
+    padding: 0 4px;
+  }
+
+  .horizontal {
+    margin: 8px 0;
+  }
+
+  .vertical {
+    margin: 0 8px;
+  }
+}

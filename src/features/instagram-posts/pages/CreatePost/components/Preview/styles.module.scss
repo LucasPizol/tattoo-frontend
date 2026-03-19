@@ -1,0 +1,336 @@
+.previewWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px;
+  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  min-height: 100%;
+  border-radius: 12px;
+}
+
+.instagramPost {
+  width: 100%;
+  max-width: 470px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #dbdbdb;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+}
+
+// Header
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #efefef;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatarWrapper {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
+  padding: 2px;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+  border: 2px solid #fff;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 2px solid #fff;
+}
+
+.usernameContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-size: 14px;
+  font-weight: 600;
+  color: #262626;
+  line-height: 1.2;
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #262626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+// Media Container
+.mediaContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #fafafa;
+  overflow: hidden;
+}
+
+.mediaWrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.emptyMedia {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+  color: #8e8e8e;
+  font-size: 14px;
+}
+
+// Navigation Buttons
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #262626;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s, background-color 0.15s;
+  z-index: 10;
+
+  &:hover {
+    background: #fff;
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+}
+
+.navPrev {
+  left: 12px;
+}
+
+.navNext {
+  right: 12px;
+}
+
+// Dots Container (on image)
+.dotsContainer {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: background-color 0.2s, transform 0.2s;
+
+  &.active {
+    background: #fff;
+    transform: scale(1.2);
+  }
+}
+
+// Image Counter
+.imageCounter {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  z-index: 10;
+}
+
+// Actions Bar
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  position: relative;
+}
+
+.leftActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #262626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, color 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &.liked {
+    color: #ed4956;
+    animation: likeAnimation 0.4s ease-in-out;
+  }
+
+  &.saved {
+    color: #262626;
+  }
+}
+
+@keyframes likeAnimation {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.3);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.saveButton {
+  margin-left: auto;
+}
+
+// Dots in actions bar
+.actionsDots {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+}
+
+.actionDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a8a8a8;
+  transition: background-color 0.2s;
+
+  &.active {
+    background: #0095f6;
+  }
+}
+
+// Likes
+.likes {
+  padding: 0 16px 8px;
+}
+
+.likesCount {
+  font-size: 14px;
+  font-weight: 600;
+  color: #262626;
+}
+
+// Caption
+.captionContainer {
+  padding: 0 16px 8px;
+}
+
+.caption {
+  font-size: 14px;
+  color: #262626;
+  line-height: 1.5;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.captionUsername {
+  font-weight: 600;
+  color: #262626;
+  margin-right: 4px;
+}
+
+.captionEmpty {
+  font-size: 14px;
+  color: #8e8e8e;
+  font-style: italic;
+  margin: 0;
+}
+
+// Timestamp
+.timestamp {
+  padding: 0 16px 16px;
+}
+
+.timestamp span {
+  font-size: 10px;
+  color: #8e8e8e;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}

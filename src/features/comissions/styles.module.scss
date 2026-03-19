@@ -1,0 +1,44 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filtersRow {
+  max-width: 350px;
+}
+
+.pdfModalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pdfModalDescription {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.pdfModalActions {
+  display: flex;
+  gap: 12px;
+}
+
+.pdfModalButton {
+  flex: 1;
+}
+
+.pdfModalHints {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  background-color: var(--color-background-secondary);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+
+  strong {
+    color: var(--color-text);
+  }
+}

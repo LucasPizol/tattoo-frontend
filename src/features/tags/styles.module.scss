@@ -1,0 +1,69 @@
+.placesCard {
+  backdrop-filter: blur(10px);
+}
+
+.placesList {
+  min-height: 150px;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #64748b;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: var(--border-radius);
+  border: 2px dashed #cbd5e1;
+}
+
+.emptyIcon {
+  color: #cbd5e1;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.emptyState h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #475569;
+  margin: 0 0 6px 0;
+}
+
+.emptyState p {
+  font-size: 13px;
+  margin: 0 0 20px 0;
+  line-height: 1.4;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.deleteModalContent {
+  text-align: center;
+}
+
+.deleteModalContent p {
+  margin: 0 0 14px 0;
+  line-height: 1.4;
+  color: #475569;
+}
+
+.deleteModalContent p:last-child {
+  margin-bottom: 0;
+}
+
+.deleteWarning {
+  font-size: 13px;
+  color: #ef4444 !important;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  padding: 10px;
+  border-radius: var(--border-radius);
+  border: 1px solid #fecaca;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+}

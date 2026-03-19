@@ -1,0 +1,149 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fieldRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  > * {
+    flex: 1;
+    min-width: 220px;
+  }
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldHint {
+  font-size: 12px;
+  color: var(--color-text-secondary, #888);
+  margin: 0;
+}
+
+.filtersContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.filterBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.filterLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--color-text-primary, #333);
+}
+
+.filterHint {
+  font-size: 12px;
+  color: var(--color-text-secondary, #888);
+  margin: 0;
+}
+
+.productTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-bottom: 24px;
+}
+
+.selectedPost {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px;
+  background: var(--color-surface-secondary, #f8f8f8);
+  border-radius: 8px;
+}
+
+.selectedPostInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.selectedPostThumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.selectedPostDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.selectedPostCaption {
+  font-size: 14px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 400px;
+}
+
+.selectedPostMetrics {
+  display: flex;
+  gap: 14px;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--color-text-secondary, #666);
+}
+
+.metricIconLike {
+  color: #e11d48;
+}
+
+.metricIconComment {
+  color: #3b82f6;
+}
+
+.clearPostBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary, #999);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--color-danger, #e11d48);
+    background: rgba(225, 29, 72, 0.08);
+  }
+}

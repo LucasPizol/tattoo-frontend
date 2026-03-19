@@ -1,0 +1,21 @@
+.filters {
+  display: flex;
+  gap: 16px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+@media (max-width: 480px) {
+  .filters {
+    gap: 8px;
+  }
+}
+
+.filtersActions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: flex-end;
+  margin-top: 16px;
+}

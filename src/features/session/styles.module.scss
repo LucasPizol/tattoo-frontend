@@ -1,0 +1,169 @@
+.loginContainer {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-auth);
+  padding: 24px;
+  font-family: var(--font-family);
+
+  /* Textura sutil — radial muito escuro */
+  background-image: radial-gradient(
+    ellipse at 60% 20%,
+    rgba(230, 185, 102, 0.04) 0%,
+    transparent 60%
+  );
+}
+
+.loginCard {
+  background: var(--surface-auth-raised);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-inverse);
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5);
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  overflow: hidden;
+
+  /* Traço âmbar — a signature do sistema */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--amber-dark), var(--amber), var(--amber-dim));
+  }
+
+  /* Contexto escuro para inputs herdarem */
+  --input-surface: rgba(255, 255, 255, 0.05);
+  --input-border-color: rgba(255, 255, 255, 0.12);
+  --input-text-color: var(--text-inverse);
+  --input-label-color: var(--text-inverse-dim);
+  --input-placeholder-color: rgba(245, 240, 232, 0.2);
+  --input-icon-color: var(--text-inverse-dim);
+}
+
+.logoSection {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.logo {
+  margin-bottom: 14px;
+}
+
+.logoIcon {
+  font-size: 42px;
+  display: block;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-inverse);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  color: var(--text-inverse-dim);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: var(--text-inverse-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-inverse);
+  }
+}
+
+.form {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.formOptions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text-inverse-dim);
+  gap: 8px;
+}
+
+.checkbox {
+  accent-color: var(--amber);
+  width: 14px;
+  height: 14px;
+}
+
+.checkboxText {
+  font-weight: 500;
+}
+
+.forgotPassword {
+  color: var(--amber);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--amber-dim);
+  }
+}
+
+.registerLink {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text-inverse-dim);
+  font-weight: 500;
+
+  a {
+    color: var(--amber);
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 4px;
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--amber-dim);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .loginCard {
+    padding: 28px 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+}

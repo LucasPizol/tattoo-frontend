@@ -1,0 +1,257 @@
+.label {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  background-color: transparent;
+  padding: 0 4px;
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
+  z-index: 1;
+  display: flex;
+  gap: 4px;
+  opacity: 0.5;
+
+  .required {
+    color: var(--color-error);
+    margin-left: 2px;
+  }
+
+  &.floating {
+    top: 0;
+    left: 10px;
+    font-size: 12px;
+    color: var(--color-primary);
+    background-color: white;
+    padding: 0 4px;
+    opacity: 1;
+  }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(10px);
+}
+
+.required {
+  color: var(--color-error);
+  font-size: 14px;
+}
+
+.selectIcon{
+  display: flex;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+
+  .selectIcon_svg {
+    transition: all 0.2s ease;
+    transform: translateY(-50%);
+  }
+
+  .selectIcon_open {
+    transform: translateY(-50%) rotate(180deg);
+    transition: all 0.2s ease;
+  }
+}
+
+.selectContainer {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--input-border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--color-background);
+  position: relative;
+  outline: none;
+  width: 100%;
+  padding: 10px 16px;
+  min-height: 42px;
+
+  &_open {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-color: var(--color-primary);
+    border-bottom: none;
+  }
+
+  &:hover:not(&_open) {
+    border-color: var(--color-primary);
+  }
+
+  .selectContent {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: var(--color-text-primary);
+    background-color: transparent;
+  }
+
+  &:focus-within {
+    border-color: var(--color-primary);
+
+    .label {
+      color: var(--color-primary);
+    }
+  }
+}
+
+.selectContent__selected {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.placeholder {
+  color: #777;
+  font-weight: 400;
+}
+
+.errorMessage {
+  font-size: 12px;
+  color: var(--color-error);
+  margin-top: 4px;
+  margin-left: 12px;
+  display: flex;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.select.error {
+  .selectContainer {
+    border-color: var(--color-error);
+  }
+
+  .label {
+    color: var(--color-error);
+
+    &.floating {
+      color: var(--color-error);
+    }
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.icon_clear {
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--color-error) !important;
+  }
+}
+
+.selectContent {
+  &__options {
+    z-index: 1000;
+    background-color: var(--color-background);
+    border-bottom-left-radius: var(--input-border-radius);
+    border-bottom-right-radius: var(--input-border-radius);
+    overflow-y: auto;
+    max-height: 240px;
+    border: 1.5px solid var(--color-border);
+    padding: 8px;
+    gap: 4px;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideDown 0.2s ease;
+
+    .createItem {
+      width: 100%;
+      margin-bottom: 8px;
+      border-radius: var(--input-border-radius);
+      font-weight: 500;
+    }
+
+    .option {
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 8px;
+      font-weight: 500;
+      border: 1px solid transparent;
+
+      &:hover,
+      &_selected {
+        background: var(--color-secondary-hover);
+        color: var(--color-primary);
+      }
+    }
+  }
+}
+
+.select {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+
+  &.disabled,
+  &.loadingContainer {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    .label {
+      color: var(--color-text-secondary);
+    }
+
+    .selectContainer {
+      cursor: not-allowed;
+
+      &:hover {
+        border-color: var(--color-border);
+      }
+
+      &:focus-within {
+        border-color: var(--color-border);
+      }
+    }
+  }
+}
+
+.link {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 12px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

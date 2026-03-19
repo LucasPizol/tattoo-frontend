@@ -1,0 +1,20 @@
+.instagramButton {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: var(--shape-border-radius);
+  color: #fff;
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none !important;
+}

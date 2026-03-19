@@ -1,0 +1,87 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-background);
+}
+
+.cardSkeleton {
+  height: 120px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-background-secondary);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+
+  &[data-variant="positive"] {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &[data-variant="negative"] {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+}
+
+.cardLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.cardValue {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+
+  &[data-variant="positive"] {
+    color: #2e7d32;
+  }
+
+  &[data-variant="negative"] {
+    color: #c62828;
+  }
+}
+
+.cardDescription {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}

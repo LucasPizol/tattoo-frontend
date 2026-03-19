@@ -1,0 +1,111 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.summaryCards {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.summaryCard {
+  flex: 1;
+  min-width: 180px;
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.summaryIcon {
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+.summaryIconSecondary {
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.summaryIconFilter {
+  color: #8b5cf6;
+  flex-shrink: 0;
+}
+
+.summaryIconInstagram {
+  color: #e11d48;
+  flex-shrink: 0;
+}
+
+.summaryValue {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+}
+
+.summaryLabel {
+  font-size: 13px;
+  color: var(--color-text-secondary, #666);
+  margin: 4px 0 0;
+}
+
+.filterTags {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tableCard {
+  width: 100%;
+}
+
+.table {
+  width: 100%;
+}
+
+.position {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.secondaryNote {
+  font-size: 13px;
+  color: var(--color-text-secondary, #888);
+  margin: 0 0 16px;
+}
+
+.emptyCard {
+  width: 100%;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  gap: 8px;
+  text-align: center;
+}
+
+.emptyIcon {
+  color: var(--color-text-secondary, #aaa);
+  margin-bottom: 8px;
+}
+
+.emptyHint {
+  font-size: 13px;
+  color: var(--color-text-secondary, #888);
+}

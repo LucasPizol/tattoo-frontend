@@ -1,0 +1,324 @@
+.modalImageWrapper {
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  max-height: 85vh;
+  max-width: 1100px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: modalSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .modalImageContainer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--color-primary);
+    position: relative;
+    padding: 20px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.03) 0%,
+        transparent 70%
+      );
+      pointer-events: none;
+    }
+
+    img {
+      object-fit: contain;
+      max-width: 100%;
+      max-height: 100%;
+      height: 100%;
+      width: auto;
+      border-radius: 8px;
+      animation: imageZoomIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+    }
+  }
+
+  .modalImageNavigation {
+    display: flex;
+    gap: 10px;
+    z-index: 1002;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 24px;
+    background: var(--color-secondary);
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f8f9fa;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f8f9fa;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #cbd5e0;
+      border-radius: 3px;
+
+      &:hover {
+        background: #a0aec0;
+      }
+    }
+
+    img {
+      object-fit: cover;
+      cursor: pointer;
+      flex: 0 0 90px;
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      border: 3px solid transparent;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      opacity: 0.5;
+      position: relative;
+
+      &:hover {
+        opacity: 0.8;
+        transform: translateY(-2px) scale(1.02);
+        border-color: #cbd5e0;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      &.active {
+        opacity: 1;
+        border-color: var(--color-primary);
+        transform: scale(1.05);
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: -2px;
+          right: -2px;
+          width: 20px;
+          height: 20px;
+          background: #3b82f6;
+          border-radius: 50%;
+          border: 2px solid white;
+          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+        }
+      }
+    }
+  }
+}
+
+.modalImageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  animation: fadeIn 0.25s ease-out;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalImageClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #ffffff;
+  cursor: pointer;
+  z-index: 1003;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  padding: 10px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.9);
+    border-color: rgba(239, 68, 68, 1);
+    transform: rotate(90deg) scale(1.15);
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.5);
+  }
+
+  &:active {
+    transform: rotate(90deg) scale(1.05);
+  }
+}
+
+.navigationButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1003;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+.imageCounter {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 1003;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .modalImageWrapper {
+    max-height: 95vh;
+    max-width: 95vw;
+    border-radius: 12px;
+
+    .modalImageContainer {
+      padding: 10px;
+    }
+
+    .modalImageNavigation {
+      padding: 12px;
+      gap: 8px;
+
+      img {
+        flex: 0 0 70px;
+        width: 70px;
+        height: 70px;
+      }
+    }
+  }
+
+  .modalImageOverlay {
+    padding: 20px;
+  }
+
+  .modalImageClose {
+    top: 12px;
+    right: 12px;
+    padding: 8px;
+  }
+
+  .navigationButton {
+    padding: 10px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .imageCounter {
+    bottom: 15px;
+    font-size: 12px;
+    padding: 6px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modalImageWrapper {
+    border-radius: 8px;
+
+    .modalImageNavigation {
+      padding: 10px;
+      gap: 6px;
+
+      img {
+        flex: 0 0 60px;
+        width: 60px;
+        height: 60px;
+        border-radius: 6px;
+      }
+    }
+  }
+
+  .modalImageOverlay {
+    padding: 10px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes imageZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

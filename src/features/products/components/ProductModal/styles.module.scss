@@ -1,0 +1,74 @@
+.addressStreet {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+
+  .zipCode {
+    flex: 1;
+    width: 100%;
+  }
+
+  .street {
+    flex: 3;
+    width: 100%;
+  }
+}
+
+.content {
+  width: 100%;
+}
+
+.actionButton {
+  cursor: pointer;
+}
+
+.addressNeighborhood {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+
+  .neighborhood {
+    flex: 3;
+    width: 100%;
+  }
+
+  .addressNumber {
+    flex: 1;
+    width: 100%;
+  }
+}
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+.imageUpload {
+  margin-top: 8px;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+
+  .value {
+    flex: 1;
+  }
+
+  .quantity {
+    flex: 1;
+  }
+}

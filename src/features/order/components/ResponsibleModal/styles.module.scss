@@ -1,0 +1,17 @@
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+}
+
+.cpf,
+.rg,
+.birthDate,
+.gender {
+  flex: 1;
+}

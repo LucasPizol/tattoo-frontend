@@ -1,0 +1,16 @@
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.metricIconLike {
+  color: #e11d48;
+  flex-shrink: 0;
+}
+
+.metricIconComment {
+  color: #3b82f6;
+  flex-shrink: 0;
+}

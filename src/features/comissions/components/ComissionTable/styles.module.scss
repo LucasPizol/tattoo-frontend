@@ -1,0 +1,52 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.userName {
+  font-weight: 600;
+}
+
+.tagContent {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.valuePositive {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.valueNegative {
+  color: #c62828;
+  font-weight: 600;
+}
+
+.detailSection {
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-background-secondary);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+
+    strong {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+  }
+}

@@ -1,0 +1,62 @@
+.googleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--input-border-radius);
+  background: var(--parchment-raised);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+
+  &:hover:not(:disabled) {
+    background: var(--parchment);
+    border-color: var(--amber-dim);
+    color: var(--text-primary);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Variante para contexto dark (telas de auth) */
+  &.dark {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--border-inverse);
+    color: var(--text-inverse-dim);
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: var(--border-inverse-strong);
+      color: var(--text-inverse);
+    }
+  }
+}
+
+.googleIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

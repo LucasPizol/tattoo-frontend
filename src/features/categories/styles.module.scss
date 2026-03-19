@@ -1,0 +1,44 @@
+.filters {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.actionsModalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 300px;
+
+  @media (max-width: 768px) {
+    min-width: auto;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .filters {
+    gap: 12px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

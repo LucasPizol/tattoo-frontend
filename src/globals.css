@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+  /* ─── Ink palette ─────────────────────────────────────── */
+  --ink:         #131313;
+  --ink-deep:    #0a0908;
+  --ink-raised:  #222020;
+
+  /* ─── Amber — único acento ────────────────────────────── */
+  --amber:       #e6b966;
+  --amber-dim:   #c9923a;
+  --amber-dark:  #b8832e;
+  --amber-pale:  rgba(230, 185, 102, 0.12);
+  --amber-glow:  rgba(230, 185, 102, 0.22);
+
+  /* ─── Superfícies (warm light) ────────────────────────── */
+  --parchment-muted:   #f0ebe3;
+  --parchment:         #f7f4f0;
+  --parchment-raised:  #ffffff;
+
+  /* ─── Superfícies (auth dark) ─────────────────────────── */
+  --surface-auth:        #0f0d0c;
+  --surface-auth-raised: #1a1714;
+  --surface-auth-card:   #201d1a;
+
+  /* ─── Texto hierarquia ────────────────────────────────── */
+  --text-primary:      #1a1614;
+  --text-secondary:    #4a4540;
+  --text-tertiary:     #8c8680;
+  --text-muted:        #b5b0aa;
+
+  --text-inverse:      #f5f0e8;
+  --text-inverse-dim:  rgba(245, 240, 232, 0.55);
+  --text-inverse-muted: rgba(245, 240, 232, 0.32);
+
+  /* ─── Bordas ──────────────────────────────────────────── */
+  --border:          rgba(26, 22, 18, 0.09);
+  --border-strong:   rgba(26, 22, 18, 0.16);
+  --border-inverse:  rgba(255, 255, 255, 0.1);
+  --border-inverse-strong: rgba(255, 255, 255, 0.18);
+
+  /* ─── Semânticas ──────────────────────────────────────── */
+  --color-danger:               #c0392b;
+  --color-danger-hover:         #a93226;
+  --color-danger-active:        #922b21;
+  --color-danger-text:          #ffffff;
+  --color-danger-tertiary-hover: rgba(192, 57, 43, 0.1);
+  --color-danger-bg:            rgba(192, 57, 43, 0.08);
+
+  --color-error:        #dc2626;
+  --color-error-bg:     rgba(220, 38, 38, 0.08);
+  --color-error-border: #dc2626;
+
+  --color-success-bg:     rgba(72, 165, 111, 0.1);
+  --color-success-border: #48a56f;
+
+  /* ─── Gray scale (warm-tinted) ────────────────────────── */
+  --color-gray-25:   #faf8f5;
+  --color-gray-50:   #f5f1ec;
+  --color-gray-100:  #e8e2da;
+  --color-gray-200:  #d0c8be;
+  --color-gray-300:  #b5a99e;
+  --color-gray-400:  #8c8075;
+  --color-gray-500:  #6b6058;
+
+  /* ─── Aliases de compatibilidade ─────────────────────── */
+  --color-primary:        var(--ink);
+  --color-primary-hover:  var(--ink-raised);
+  --color-primary-active: var(--ink-deep);
+  --color-primary-bg:     var(--amber-pale);
+  --color-primary-text:   var(--text-inverse);
+
+  --color-secondary:        var(--amber);
+  --color-secondary-hover:  var(--amber-dim);
+  --color-secondary-active: var(--amber-dark);
+  --color-secondary-text:   var(--ink);
+
+  --color-tertiary:        transparent;
+  --color-tertiary-hover:  var(--color-gray-50);
+  --color-tertiary-active: var(--color-gray-100);
+  --color-tertiary-text:   var(--text-primary);
+
+  --color-background: var(--parchment-raised);
+  --color-border:     var(--border);
+
+  /* ─── Shape & spacing ─────────────────────────────────── */
+  --border-radius:       8px;
+  --shape-border-radius: 16px;
+  --input-border-radius: 6px;
+  --radius-sm:           4px;
+  --radius-md:           8px;
+  --radius-lg:           14px;
+
+  --spacing:       4px;
+  --page-padding:  24px;
+
+  /* ─── Tipografia ──────────────────────────────────────── */
+  --font-family: "Montserrat", sans-serif;
+  --font-mono:   "Courier New", monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--parchment-muted);
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+label,
+a,
+table, td, th, tr, tbody, thead, tfoot,
+h1, h2, h3, h4, h5, h6,
+p, input, button, select, textarea {
+  font-family: var(--font-family);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --page-padding: 56px 16px 16px 16px;
+  }
+}
+
+.view   { color: var(--color-primary) !important; }
+.edit   { color: var(--amber-dim) !important; }
+.delete { color: var(--color-danger-active) !important; }

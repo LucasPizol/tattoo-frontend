@@ -1,0 +1,155 @@
+.modal {
+  max-width: 1300px;
+  height: 95vh;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.searchInput {
+  margin-bottom: 16px;
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.searchContainer {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #6b7280;
+  flex: 1;
+
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
+.pagination {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.paginationInfo {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.paginationButton {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: var(--border-radius);
+  background: white;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.currentPage {
+  padding: 8px 12px;
+  background: #3b82f6;
+  color: white;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  min-width: 32px;
+  text-align: center;
+}
+
+.footerSummary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footerSummaryItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 260px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.footerSummaryImage {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.footerSummaryContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  line-height: 1.2;
+}
+
+.footerSummaryName {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: #111827;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.footerSummaryPrice {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #059669;
+}
+
+@media (max-width: 768px) {
+  .productsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .modalContent {
+    padding: 8px;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

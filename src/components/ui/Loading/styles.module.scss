@@ -1,0 +1,11 @@
+.loading {
+  border-radius: 50%;
+  animation: loading 1s linear infinite;
+  transition: width 0.2s, height 0.2s;
+}
+
+@keyframes loading {
+  to {
+    transform: rotate(360deg);
+  }
+}

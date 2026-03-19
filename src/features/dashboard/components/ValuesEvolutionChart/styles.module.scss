@@ -1,0 +1,17 @@
+.card {
+  min-height: 350px;
+}
+
+.chartContainer {
+  width: 100%;
+  height: 300px;
+}
+
+.loading, .empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: var(--color-text-secondary, #666);
+  font-size: 16px;
+}

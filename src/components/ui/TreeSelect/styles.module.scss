@@ -1,0 +1,352 @@
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 32px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--input-border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #ffffff;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(23, 125, 220, 0.2);
+  }
+
+  &.disabled {
+    border-color: var(--color-border);
+    cursor: not-allowed;
+  }
+}
+
+.selectorValue {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+.selectedValue {
+  color: var(--color-secondary-text);
+  font-size: 14px;
+}
+
+.placeholder {
+  color: #777;
+  font-size: 14px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 2px;
+}
+
+.selectorSuffix {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ffffff;
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: none;
+  color: #8c8c8c;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 12px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #434343;
+    color: #ffffff;
+  }
+}
+
+.arrow {
+  transition: transform 0.2s ease;
+  color: #8c8c8c;
+}
+
+.arrowUp {
+  transform: rotate(180deg);
+}
+
+.dropdownContent {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  max-height: 300px;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+  z-index: 1000;
+  background-color: #fff;
+}
+
+.dropdownContainer {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.searchWrapper {
+  position: relative;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.searchIcon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-secondary-text);
+  z-index: 1;
+}
+
+.searchInput {
+  width: 100%;
+  height: 28px;
+  padding: 4px 8px 4px 28px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+
+  &::placeholder {
+    color: var(--color-secondary-text);
+  }
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(23, 125, 220, 0.2);
+  }
+}
+
+.treeContainer {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 4px 0;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--color-background);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--border-radius);
+
+    &:hover {
+      background: var(--color-border);
+    }
+  }
+}
+
+.treeNode {
+  position: relative;
+}
+
+.treeNodeContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--color-secondary-text);
+
+  &:hover {
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+  }
+}
+
+.treeNodeLeft {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.expandButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: none;
+  color: #8c8c8c;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: #434343;
+    color: #ffffff;
+  }
+}
+
+.expanded {
+  transform: rotate(90deg);
+}
+
+.treeNodeTitle {
+  font-size: 14px;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.treeNodeChildren {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 16px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #434343;
+  }
+}
+
+.selected {
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary-text);
+}
+
+.disabled {
+  color: #8c8c8c !important;
+  cursor: not-allowed !important;
+  background-color: transparent !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.hovered {
+  &:hover {
+    background-color: var(--color-primary);
+  }
+}
+
+.emptyText {
+  padding: 16px;
+  text-align: center;
+  color: #8c8c8c;
+  font-size: 14px;
+}
+
+// Size variants
+.small {
+  .selector {
+    min-height: 24px;
+    padding: 2px 8px;
+  }
+
+  .selectedValue,
+  .placeholder {
+    font-size: 12px;
+  }
+
+  .treeNodeContent {
+    min-height: 28px;
+    padding: 2px 6px;
+  }
+
+  .treeNodeTitle {
+    font-size: 12px;
+  }
+}
+
+.large {
+  .selector {
+    min-height: 40px;
+    padding: 6px 12px;
+  }
+
+  .selectedValue,
+  .placeholder {
+    font-size: 16px;
+  }
+
+  .treeNodeContent {
+    min-height: 36px;
+    padding: 6px 10px;
+  }
+
+  .treeNodeTitle {
+    font-size: 16px;
+  }
+}
+
+.disabled {
+  .selector {
+    background-color: #141414;
+    border-color: #434343;
+    cursor: not-allowed;
+    color: #8c8c8c;
+
+    &:hover {
+      border-color: #434343;
+    }
+  }
+
+  .placeholder {
+    color: #8c8c8c;
+  }
+}

@@ -1,0 +1,129 @@
+.alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--border-radius);
+  border: 1px solid;
+  font-size: 14px;
+  line-height: 1.5;
+  position: relative;
+
+  .alertContent {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .content {
+    flex: 1;
+  }
+
+  .dismissButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:focus {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+      border-radius: var(--border-radius);
+    }
+  }
+
+  // Variantes de tipo
+  &.error {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+
+    .icon {
+      color: #dc2626;
+    }
+  }
+
+  &.warning {
+    background-color: #fffbeb;
+    border-color: #fed7aa;
+    color: #d97706;
+
+    .icon {
+      color: #d97706;
+    }
+  }
+
+  &.info {
+    background-color: #eff6ff;
+    border-color: #bfdbfe;
+    color: #2563eb;
+
+    .icon {
+      color: #2563eb;
+    }
+  }
+
+  &.success {
+    background-color: #ddf1e7;
+    border-color: #1d8a65;
+    color: #1d8a65;
+
+    .icon {
+      color: #1d8a65;
+    }
+  }
+}
+
+// Dark mode support
+[data-theme="dark"] .alert {
+  &.error {
+    background-color: #7f1d1d;
+    border-color: #dc2626;
+    color: #fecaca;
+
+    .icon {
+      color: #fecaca;
+    }
+  }
+
+  &.warning {
+    background-color: #7c2d12;
+    border-color: #d97706;
+    color: #fed7aa;
+
+    .icon {
+      color: #fed7aa;
+    }
+  }
+
+  &.info {
+    background-color: #1e3a8a;
+    border-color: #2563eb;
+    color: #bfdbfe;
+
+    .icon {
+      color: #bfdbfe;
+    }
+  }
+}
