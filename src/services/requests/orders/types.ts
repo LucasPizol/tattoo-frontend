@@ -1,4 +1,3 @@
-import type { PaymentMethod } from "@/features/payment-methods/types";
 import type { Address } from "../address/types";
 import type { ClientShowResponse } from "../client/types";
 import type { OrderProduct } from "../order-products/types";

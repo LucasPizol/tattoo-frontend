@@ -16,7 +16,7 @@ import styles from "./styles.module.scss";
 
 export const PaymentMethods = () => {
   const isMobile = useMobile();
-  const { paymentMethods, refetch, isLoading, form, onFinishFilters } =
+  const { paymentMethods, isLoading, form, onFinishFilters } =
     usePaymentMethodList();
 
   const { open, modalProps, handleDestroyPaymentMethod } =

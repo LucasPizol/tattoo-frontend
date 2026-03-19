@@ -50,7 +50,6 @@ export const OrdersList = ({
   const {
     orders,
     pagination,
-    refetch,
     form,
     onFinishFilters,
     isLoading: isLoadingOrders,

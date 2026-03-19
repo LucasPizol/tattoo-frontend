@@ -203,9 +203,6 @@ const ModalContent = ({
                   openStockMovementForm(
                     {
                       quantity: 1,
-                      userId: hasMultipleStocks
-                        ? undefined
-                        : product.stock[0].user.id,
                     },
                     product,
                   );
