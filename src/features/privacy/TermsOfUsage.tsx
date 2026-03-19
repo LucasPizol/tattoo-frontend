@@ -4,9 +4,9 @@ import Markdown from "react-markdown";
 export const TermsOfUsage = () => {
   const markdown = `
 # Termos de Uso
-### Nome do Site/Aplicativo: Rainbow Software, Data de Vigência: 03 de dezembro de 2025
+### Nome do Site/Aplicativo: Tattoo Software, Data de Vigência: 03 de dezembro de 2025
 ### 1. Aceitação dos Termos
-Bem-vindo ao Rainbow Software (doravante “Plataforma”). Estes Termos de Uso (“Termos”) regem o acesso e a utilização dos serviços oferecidos pela Rainbow Software (doravante “Nós” ou “Empresa”).
+Bem-vindo ao Tattoo Software (doravante “Plataforma”). Estes Termos de Uso (“Termos”) regem o acesso e a utilização dos serviços oferecidos pela Tattoo Software (doravante “Nós” ou “Empresa”).
 Ao acessar ou utilizar a Plataforma, você concorda em cumprir e estar vinculado a estes Termos. Se você não concordar com qualquer parte destes Termos, você não deve utilizar a Plataforma.
 ### 2. Descrição do Serviço (Uso Comercial)
 A Plataforma é uma ferramenta de gerenciamento de negócios projetada especificamente para vendedores de piercing e outros profissionais relacionados. O serviço é oferecido para uso estritamente comercial e inclui, mas não se limita a, as seguintes funcionalidades:
@@ -29,7 +29,7 @@ Você reconhece e concorda que a Plataforma é destinada a auxiliar na gestão d
 - **5.2. Garantia**: Você garante que possui todos os direitos, licenças e autorizações necessários para o Conteúdo do Usuário e que o uso desse Conteúdo não viola direitos de terceiros ou leis aplicáveis.
 - **5.3. Conduta Proibida**: Você concorda em não utilizar a Plataforma para: - Publicar ou transmitir material ilegal, difamatório, obsceno, pornográfico, ameaçador ou que promova discriminação. - Violar direitos de propriedade intelectual de terceiros. - Realizar atividades de spam, phishing ou qualquer forma de abuso de rede. - Tentar obter acesso não autorizado a outros sistemas ou redes conectadas à Plataforma.
 ### 6. Propriedade Intelectual
-- **6.1. Plataforma**: Todos os direitos de propriedade intelectual sobre a Plataforma (incluindo software, design, logotipos e documentação) pertencem à Rainbow Software ou a seus licenciadores. Estes Termos não concedem a você nenhum direito sobre a Plataforma, exceto o direito limitado de uso conforme estipulado.
+- **6.1. Plataforma**: Todos os direitos de propriedade intelectual sobre a Plataforma (incluindo software, design, logotipos e documentação) pertencem à Tattoo Software ou a seus licenciadores. Estes Termos não concedem a você nenhum direito sobre a Plataforma, exceto o direito limitado de uso conforme estipulado.
 - **6.2. Conteúdo do Usuário**: Você retém todos os direitos de propriedade intelectual sobre o seu Conteúdo do Usuário. Ao utilizar a Plataforma, você nos concede uma licença mundial, não exclusiva, livre de royalties, transferível e sublicenciável para usar, hospedar, armazenar, reproduzir, modificar e exibir o seu Conteúdo do Usuário, estritamente para os fins de operação e fornecimento dos serviços da Plataforma.
 ### 7. Isenção de Garantias e Limitação de Responsabilidade
 - **7.1. Isenção de Garantias**: A Plataforma é fornecida “como está” e “conforme disponível”, sem garantias de qualquer tipo, expressas ou implícitas. Não garantimos que o serviço será ininterrupto, livre de erros ou seguro.
@@ -38,7 +38,7 @@ Você reconhece e concorda que a Plataforma é destinada a auxiliar na gestão d
 Podemos rescindir ou suspender seu acesso à Plataforma imediatamente, sem aviso prévio ou responsabilidade, se você violar estes Termos. Após a rescisão, seu direito de usar a Plataforma cessará imediatamente.
 ### 9. Disposições Gerais
 - **9.1. Lei Aplicável**: Estes Termos serão regidos e interpretados de acordo com as leis do Brasil.
-- **9.2. Política de Privacidade**: O uso da Plataforma também é regido por nossa Política de Privacidade, que pode ser encontrada em [Política de Privacidade](https://software.rainbowpiercing.com.br/politica-de-privacidade).
+- **9.2. Política de Privacidade**: O uso da Plataforma também é regido por nossa Política de Privacidade, que pode ser encontrada em [Política de Privacidade](https://software.Tattoopiercing.com.br/politica-de-privacidade).
 - **9.3. Alterações**: Reservamo-nos o direito de modificar estes Termos a qualquer momento. Notificaremos você sobre alterações significativas através da Plataforma ou por e-mail. O uso continuado da Plataforma após a publicação das alterações constitui sua aceitação dos novos Termos.
 ### 10. Contato
 Para quaisquer dúvidas sobre estes Termos, entre em contato conosco em: lucaspizolfe@gmail.com.
