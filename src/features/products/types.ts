@@ -6,6 +6,7 @@ import type { ProductType } from "@/features/shared/http/queries/productTypesQue
 export type Stock = {
   id: number;
   quantity: number;
+  user: User;
 };
 
 export type Product = {
