@@ -288,6 +288,7 @@ export const RoutesProvider = () => {
         <Route path="/politica-de-privacidade" element={<PoliticsPolicy />} />
         <Route path="/termos-de-uso" element={<TermsOfUsage />} />
         <Route path="/aceitar-convite/:token" element={<AcceptInvite />} />
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     );
   }, [session.isAuthenticated]);
@@ -299,9 +300,6 @@ export const RoutesProvider = () => {
   return (
     <BrowserRouter>
       {routes}
-      <Routes>
-        <Route path="/aceitar-convite/:token" element={<AcceptInvite />} />
-      </Routes>
       {hasPending && contract && (
         <ContractModal
           contract={contract}
