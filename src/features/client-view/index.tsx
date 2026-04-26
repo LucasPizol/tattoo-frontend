@@ -455,6 +455,9 @@ export const ClientView = () => {
                     {client.healthConditions?.map((condition) => (
                       <div className={styles.healthTag}>{condition.name}</div>
                     ))}
+                    {client.healthNotes && (
+                      <p className={styles.healthNotes}>{client.healthNotes}</p>
+                    )}
                   </>
                 )}
 

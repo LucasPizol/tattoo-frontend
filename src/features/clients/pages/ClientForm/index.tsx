@@ -266,67 +266,17 @@ export const ClientForm = () => {
           <Card title="Informações de Saúde" className={styles.section}>
             <div className={styles.healthGrid}>
               <Checkbox
-                label="Diabetes"
-                disabled={isLoading}
-                field="diabetes"
-              />
-              <Checkbox
-                label="Epilepsia"
-                disabled={isLoading}
-                field="epilepsy"
-              />
-              <Checkbox
-                label="Hemofilia"
-                disabled={isLoading}
-                field="hemophilia"
-              />
-              <Checkbox
-                label="Vitiligo"
-                disabled={isLoading}
-                field="vitiligo"
-              />
-              <Checkbox
-                label="Marca-passo"
-                disabled={isLoading}
-                field="pacemaker"
-              />
-              <Checkbox
-                label="Pressão alta"
-                disabled={isLoading}
-                field="highBloodPressure"
-              />
-              <Checkbox
-                label="Pressão baixa"
-                disabled={isLoading}
-                field="lowBloodPressure"
-              />
-              <Checkbox
-                label="Doenças infecto-contagiosas"
-                disabled={isLoading}
-                field="diseaseInfectiousContagious"
-              />
-              <Checkbox
-                label="Problemas de cicatrização"
-                disabled={isLoading}
-                field="healingProblems"
-              />
-              <Checkbox
                 label="Reações alérgicas"
                 disabled={isLoading}
                 field="allergicReactions"
               />
-              <Checkbox
-                label="Hipersensibilidade a produtos químicos"
-                disabled={isLoading}
-                field="hypersensitivityToChemicals"
-              />
-              <Checkbox label="Tendência a quelóide" field="keloidProneness" />
-              <Checkbox
-                label="Hipoglicemia"
-                disabled={isLoading}
-                field="hipoglycemia"
-              />
             </div>
+            <TextArea
+              label="Observações de saúde"
+              placeholder="Descreva quaisquer condições ou observações de saúde relevantes"
+              field="healthNotes"
+              rows={4}
+            />
           </Card>
 
           <Card title="Observações" className={styles.section}>

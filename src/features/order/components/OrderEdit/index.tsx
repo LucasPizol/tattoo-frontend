@@ -516,6 +516,9 @@ export const OrderEdit = (props: OrderEditProps) => {
                   <Tag key={condition.value}>{condition.name}</Tag>
                 ))}
               </div>
+              {order?.client?.healthNotes && (
+                <p>{order.client.healthNotes}</p>
+              )}
             </div>
           </Alert>
         </Visible>
