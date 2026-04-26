@@ -17,7 +17,6 @@ import {
   MdDashboard,
   MdLink,
   MdLogout,
-  MdNote,
   MdOutlineInventory,
   MdPayment,
   MdPerson,
@@ -208,18 +207,6 @@ export const Sidebar = ({
               label="Permissões"
               href="/permissoes"
               onClick={close}
-            />
-          )}
-          {can("notes.read") && (
-            <MenuItem
-              icon={<MdNote size={20} />}
-              label="Notas"
-              href="/notas"
-              notification={notifications?.notesToday}
-              onClick={() => {
-                close();
-                read("notes_today");
-              }}
             />
           )}
           {can("stock_movements.read") && (

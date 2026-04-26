@@ -23,7 +23,6 @@ import { ClientForm } from "./features/clients/pages/ClientForm";
 import { Config } from "./features/config";
 import { LazyDashboard } from "./features/dashboard/LazyDashboard.tsx";
 import { Categories } from "./features/categories";
-import { Notes } from "./features/notes";
 import { Order } from "./features/order";
 import { OrdersList } from "./features/orders-list";
 import { PaymentMethods } from "./features/payment-methods";
@@ -212,7 +211,6 @@ export const RoutesProvider = () => {
             <Route path="/clientes/novo" element={<ClientForm />} />
             <Route path="/clientes/:id/editar" element={<ClientForm />} />
             <Route path="/clientes/:id/visualizar" element={<ClientView />} />
-            <Route path="/notas" element={<Notes />} />
             <Route path="/tags" element={<Tags />} />
             <Route path="/categorias" element={<Categories />} />
             <Route path="/produtos" element={<Products />} />

@@ -11,7 +11,7 @@ const NotificationsContext = createContext<NotificationsContextProps>(
   null as unknown as NotificationsContextProps
 );
 
-type NotificationKeys = "calendar_events_today" | "notes_today";
+type NotificationKeys = "calendar_events_today";
 
 type Notification = {
   key: NotificationKeys;
@@ -92,7 +92,6 @@ export const NotificationsProvider = ({
           calendarEventsToday: needToNotify("calendar_events_today")
             ? data?.calendarEventsToday ?? 0
             : 0,
-          notesToday: needToNotify("notes_today") ? data?.notesToday ?? 0 : 0,
         },
         read,
       }}

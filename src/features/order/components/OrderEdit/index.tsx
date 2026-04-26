@@ -37,13 +37,10 @@ import {
 import { useParams } from "react-router-dom";
 import { useAttachedImages } from "../../hooks/useAttachedImages";
 import { useOrder } from "../../hooks/useOrder";
-import { useSaleMessage } from "../../hooks/useSaleMessage";
-import { ApplyBirthDateDiscountAlert } from "../ApplyBirthDateDiscountAlert";
 import { EditableCell } from "../EditableCell";
 import { type SelectionModalProduct } from "../ProductSelectionModal";
 import { LazyProductSelectionModal } from "../ProductSelectionModal/LazyProductSelectionModal";
 import { ResponsibleModal } from "../ResponsibleModal";
-import { SaleMessageModal } from "../SaleMessageModal";
 import { ConfirmOrderContent } from "./ConfirmOrder";
 import { useOrderForm } from "./hooks/useOrderForm";
 import styles from "./styles.module.scss";
@@ -102,10 +99,6 @@ export const OrderEdit = (props: OrderEditProps) => {
       await handleAddProducts(products);
     },
   });
-
-  const { data: saleMessages, handleDeleteSaleMessage } = useSaleMessage(
-    Number(id),
-  );
 
   const isNotEditable = useMemo(() => {
     return (
@@ -496,8 +489,6 @@ export const OrderEdit = (props: OrderEditProps) => {
 
   return (
     <div className={styles.orderEdit}>
-      <ApplyBirthDateDiscountAlert />
-
       {/* Alerts */}
       <div className={styles.alerts}>
         <Visible condition={requireResponsible && !order?.client?.responsible}>
@@ -726,18 +717,6 @@ export const OrderEdit = (props: OrderEditProps) => {
               <span>{order?.productValue.formatted ?? "R$ 0,00"}</span>
             </div>
 
-            <Visible
-              condition={Boolean(
-                order?.birthDateDiscountValue?.value &&
-                order?.birthDateDiscountValue.value > 0,
-              )}
-            >
-              <div className={styles.summaryLine}>
-                <span>Desc. aniversário</span>
-                <span>{order?.birthDateDiscountValue?.formatted ?? ""}</span>
-              </div>
-            </Visible>
-
             <div className={styles.summaryLine}>
               <span>Comissões</span>
               <span className={styles.redValue}>
@@ -772,29 +751,6 @@ export const OrderEdit = (props: OrderEditProps) => {
             </div>
           </div>
         </div>
-
-        {/* Quick actions + confirm (desktop) */}
-        <Visible condition={!isNotEditable}>
-          <div className={styles.quickActions}>
-            {!saleMessages?.saleMessages.length ? (
-              <SaleMessageModal orderId={Number(id)} data={undefined} />
-            ) : (
-              saleMessages?.saleMessages.map((saleMessage) => (
-                <Tag
-                  key={saleMessage.id}
-                  onRemove={
-                    isNotEditable
-                      ? undefined
-                      : async () =>
-                          handleDeleteSaleMessage.mutateAsync(saleMessage.id)
-                  }
-                >
-                  Retorno {masks.formatDate(saleMessage.scheduledAt)}
-                </Tag>
-              ))
-            )}
-          </div>
-        </Visible>
 
         <Visible condition={order?.status !== OrderStatus.WAITING_FOR_PAYMENT}>
           <div className={styles.desktopAction}>

@@ -33,8 +33,6 @@ export const Config = () => {
   useEffect(() => {
     if (session?.user) {
       form.reset({
-        birth_date_discount_percentage:
-          session.user.config.birthDateDiscountPercentage ?? 0,
         product_percentage_variation:
           session.user.config.productPercentageVariation,
       });
@@ -45,12 +43,6 @@ export const Config = () => {
     <PageWrapper title="Configurações">
       <Card title="Configurações">
         <Form onSubmit={onSubmit} form={form} className={styles.form}>
-          <Input
-            field="birth_date_discount_percentage"
-            label="Porcentagem de desconto de aniversário"
-            type="number"
-            className={styles.input}
-          />
           <Input
             field="product_percentage_variation"
             label="Porcentagem de variação de preço de produtos"

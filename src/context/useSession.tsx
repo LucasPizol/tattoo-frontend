@@ -128,8 +128,6 @@ export const SessionProvider = ({
                 ...old.user,
                 config: {
                   ...old.user.config,
-                  birthDateDiscountPercentage:
-                    config.birth_date_discount_percentage,
                   productPercentageVariation:
                     config.product_percentage_variation,
                 },

@@ -192,7 +192,6 @@ Se surgir qualquer coisa, é só falar comigo. Estamos à disposição! 💫`,
         options={[
           { label: "Perfuração", value: "piercing" },
           { label: "Venda", value: "sell" },
-          { label: "Reparo", value: "repair" },
         ]}
       />
 

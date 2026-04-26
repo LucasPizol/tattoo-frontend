@@ -1,5 +1,4 @@
 type Config = {
-  birthDateDiscountPercentage: number;
   productPercentageVariation: number;
 };
 

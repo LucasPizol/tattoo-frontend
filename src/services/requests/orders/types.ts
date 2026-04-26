@@ -89,9 +89,6 @@ export type OrderIndexResponse = {
 export type OrderShowResponse = {
   order: Order & {
     orderProducts: OrderProduct[];
-    appliedBirthDateDiscountPercentage: number;
-    canApplyBirthDateDiscount: boolean;
-    birthDateDiscountValue?: MoneyValue;
     comissions: Comission[];
     orderPaymentMethods: OrderPaymentMethod[];
     clientPayments: ClientPayment[];
