@@ -58,7 +58,6 @@ export type Order = {
   client?: ClientShowResponse["client"];
   isPartsSynchronized: boolean;
   comissionsValue: MoneyValue;
-  valueDivided: boolean;
 };
 
 export const OrderStatus = {
@@ -78,10 +77,7 @@ export type OrderCreatePayload = {
   status: OrderStatus;
   client_id: number | null;
   address_id: number;
-  iris_part: number;
-  jennipher_part: number;
   taxes_value: number;
-  values_divided: boolean;
 };
 
 export type OrderWithProduct = Order & { product: Product };
