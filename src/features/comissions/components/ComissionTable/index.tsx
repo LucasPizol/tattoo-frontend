@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { MdArrowUpward, MdArrowDownward, MdClose } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import { Table, type Column } from "@/components/ui/Table";
-import { Tag } from "@/components/ui/Tag";
 import { IconButton } from "@/components/ui/IconButton";
 import type { ComissionOrder, ComissionUser } from "../../types";
 import styles from "./styles.module.scss";
@@ -22,34 +21,18 @@ const userColumns: Column<UserRow>[] = [
     render: (user) => <span className={styles.userName}>{user.name}</span>,
   },
   {
-    key: "payer",
-    label: "Tipo",
-    width: "120px",
-    render: (user) => {
-      const isCompany = user.payer === "company";
-      return (
-        <Tag color={isCompany ? "green" : "red"}>
-          <span className={styles.tagContent}>
-            {isCompany ? (
-              <>
-                <MdArrowDownward size={14} /> Recebe
-              </>
-            ) : (
-              <>
-                <MdArrowUpward size={14} /> Paga
-              </>
-            )}
-          </span>
-        </Tag>
-      );
-    },
-  },
-  {
-    key: "commission_percentage",
-    label: "Percentual",
+    key: "artist_percentage",
+    label: "% Artista",
     width: "100px",
     align: "right",
-    render: (user) => <span>{user.commission_percentage}%</span>,
+    render: (user) => <span>{user.artist_percentage}%</span>,
+  },
+  {
+    key: "shop_percentage",
+    label: "% Studio",
+    width: "100px",
+    align: "right",
+    render: (user) => <span>{user.shop_percentage}%</span>,
   },
   {
     key: "total_value",
@@ -57,13 +40,7 @@ const userColumns: Column<UserRow>[] = [
     minWidth: "140px",
     align: "right",
     render: (user) => (
-      <span
-        className={
-          user.payer === "company" ? styles.valuePositive : styles.valueNegative
-        }
-      >
-        {user.total_value.formatted}
-      </span>
+      <span className={styles.valueNegative}>{user.total_value.formatted}</span>
     ),
   },
   {
@@ -94,11 +71,11 @@ const orderColumns: Column<OrderRow>[] = [
     render: (order) => <span>{order.product_value.formatted}</span>,
   },
   {
-    key: "commission_percentage",
-    label: "Comissão (%)",
-    width: "110px",
+    key: "artist_percentage",
+    label: "% Artista",
+    width: "90px",
     align: "right",
-    render: (order) => <span>{order.commission_percentage}%</span>,
+    render: (order) => <span>{order.artist_percentage}%</span>,
   },
   {
     key: "commission_value",

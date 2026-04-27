@@ -1,7 +1,7 @@
 import {
   MdArrowUpward,
   MdArrowDownward,
-  MdAccountBalance,
+  MdShoppingCart,
 } from "react-icons/md";
 import type { ComissionSummary as ComissionSummaryType } from "../../types";
 import styles from "./styles.module.scss";
@@ -25,8 +25,6 @@ export const ComissionSummary = ({
     );
   }
 
-  const balanceIsPositive = summary.balance.value >= 0;
-
   return (
     <div className={styles.grid}>
       <div className={styles.card}>
@@ -34,13 +32,13 @@ export const ComissionSummary = ({
           <span className={styles.cardIcon} data-variant="negative">
             <MdArrowUpward size={20} />
           </span>
-          <span className={styles.cardLabel}>Total a Pagar</span>
+          <span className={styles.cardLabel}>Comissões dos artistas</span>
         </div>
         <span className={styles.cardValue} data-variant="negative">
-          {summary.total_to_pay.formatted}
+          {summary.total_artist_commissions.formatted}
         </span>
         <span className={styles.cardDescription}>
-          Comissões que usuários pagam
+          Total repassado aos artistas no período
         </span>
       </div>
 
@@ -49,34 +47,28 @@ export const ComissionSummary = ({
           <span className={styles.cardIcon} data-variant="positive">
             <MdArrowDownward size={20} />
           </span>
-          <span className={styles.cardLabel}>Total a Receber</span>
+          <span className={styles.cardLabel}>Retenção do studio</span>
         </div>
         <span className={styles.cardValue} data-variant="positive">
-          {summary.total_to_receive.formatted}
+          {summary.total_shop_commissions.formatted}
         </span>
         <span className={styles.cardDescription}>
-          Comissões que a empresa paga
+          Parte retida pelo studio no período
         </span>
       </div>
 
       <div className={styles.card}>
         <div className={styles.cardHeader}>
-          <span
-            className={styles.cardIcon}
-            data-variant={balanceIsPositive ? "positive" : "negative"}
-          >
-            <MdAccountBalance size={20} />
+          <span className={styles.cardIcon} data-variant="neutral">
+            <MdShoppingCart size={20} />
           </span>
-          <span className={styles.cardLabel}>Saldo</span>
+          <span className={styles.cardLabel}>Total dos pedidos</span>
         </div>
-        <span
-          className={styles.cardValue}
-          data-variant={balanceIsPositive ? "positive" : "negative"}
-        >
-          {summary.balance.formatted}
+        <span className={styles.cardValue}>
+          {summary.total_orders.formatted}
         </span>
         <span className={styles.cardDescription}>
-          Diferença entre recebido e pago
+          Valor bruto dos pedidos pagos no período
         </span>
       </div>
     </div>

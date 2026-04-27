@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
     fontSize: 9,
   },
   colName: { flex: 2 },
-  colType: { flex: 1 },
   colPercentage: { flex: 1, textAlign: "right" },
   colValue: { flex: 1.5, textAlign: "right" },
   colCount: { flex: 0.8, textAlign: "center" },
@@ -152,26 +151,26 @@ const UserSummaryTable = ({ users }: { users: ComissionUser[] }) => (
   <View style={styles.table}>
     <View style={styles.tableHeader}>
       <Text style={[styles.tableHeaderCell, styles.colName]}>Usuário</Text>
-      <Text style={[styles.tableHeaderCell, styles.colType]}>Tipo</Text>
-      <Text style={[styles.tableHeaderCell, styles.colPercentage]}>%</Text>
+      <Text style={[styles.tableHeaderCell, styles.colPercentage]}>
+        % Artista
+      </Text>
+      <Text style={[styles.tableHeaderCell, styles.colPercentage]}>
+        % Studio
+      </Text>
       <Text style={[styles.tableHeaderCell, styles.colValue]}>Total</Text>
       <Text style={[styles.tableHeaderCell, styles.colCount]}>Pedidos</Text>
     </View>
     {users.map((user) => (
       <View key={user.id} style={styles.tableRow}>
         <Text style={[styles.tableCell, styles.colName]}>{user.name}</Text>
-        <Text style={[styles.tableCell, styles.colType]}>
-          {user.payer === "company" ? "Recebe" : "Paga"}
+        <Text style={[styles.tableCell, styles.colPercentage]}>
+          {user.artist_percentage}%
         </Text>
         <Text style={[styles.tableCell, styles.colPercentage]}>
-          {user.commission_percentage}%
+          {user.shop_percentage}%
         </Text>
         <Text
-          style={[
-            styles.tableCell,
-            styles.colValue,
-            user.payer === "company" ? styles.positiveText : styles.negativeText,
-          ]}
+          style={[styles.tableCell, styles.colValue, styles.negativeText]}
         >
           {user.total_value.formatted}
         </Text>
@@ -186,8 +185,8 @@ const UserSummaryTable = ({ users }: { users: ComissionUser[] }) => (
 const UserOrdersDetail = ({ user }: { user: ComissionUser }) => (
   <View wrap={false}>
     <Text style={styles.ordersSubtitle}>
-      {user.name} — {user.payer === "company" ? "Recebe" : "Paga"} (
-      {user.commission_percentage}%)
+      {user.name} — Artista {user.artist_percentage}% / Studio{" "}
+      {user.shop_percentage}%
     </Text>
     <View style={styles.table}>
       <View style={styles.orderTableHeader}>
@@ -199,7 +198,7 @@ const UserOrdersDetail = ({ user }: { user: ComissionUser }) => (
           Valor Pedido
         </Text>
         <Text style={[styles.tableHeaderCell, styles.orderColPercentage]}>
-          %
+          % Art.
         </Text>
         <Text style={[styles.tableHeaderCell, styles.orderColCommission]}>
           Comissão
@@ -218,7 +217,7 @@ const UserOrdersDetail = ({ user }: { user: ComissionUser }) => (
             {order.product_value.formatted}
           </Text>
           <Text style={[styles.tableCell, styles.orderColPercentage]}>
-            {order.commission_percentage}%
+            {order.artist_percentage}%
           </Text>
           <Text style={[styles.tableCell, styles.orderColCommission]}>
             {order.commission_value.formatted}
@@ -249,28 +248,21 @@ const ComissionPdfDocument = ({
 
       <View style={styles.summaryRow}>
         <View style={styles.summaryCard}>
-          <Text style={styles.summaryLabel}>Total a Pagar</Text>
+          <Text style={styles.summaryLabel}>Comissões dos artistas</Text>
           <Text style={[styles.summaryValue, styles.negativeText]}>
-            {data.summary.total_to_pay.formatted}
+            {data.summary.total_artist_commissions.formatted}
           </Text>
         </View>
         <View style={styles.summaryCard}>
-          <Text style={styles.summaryLabel}>Total a Receber</Text>
+          <Text style={styles.summaryLabel}>Retenção do studio</Text>
           <Text style={[styles.summaryValue, styles.positiveText]}>
-            {data.summary.total_to_receive.formatted}
+            {data.summary.total_shop_commissions.formatted}
           </Text>
         </View>
         <View style={styles.summaryCard}>
-          <Text style={styles.summaryLabel}>Saldo</Text>
-          <Text
-            style={[
-              styles.summaryValue,
-              data.summary.balance.value >= 0
-                ? styles.positiveText
-                : styles.negativeText,
-            ]}
-          >
-            {data.summary.balance.formatted}
+          <Text style={styles.summaryLabel}>Total dos pedidos</Text>
+          <Text style={styles.summaryValue}>
+            {data.summary.total_orders.formatted}
           </Text>
         </View>
       </View>
