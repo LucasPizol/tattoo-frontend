@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 import {
   CheckoutSessionError,
+  PortalSessionError,
   billingService,
 } from "@/services/requests/billing";
 import type { BillingStatus } from "@/schemas/billing";
@@ -40,7 +41,9 @@ type UseSubscriptionResult = {
   isPolling: boolean;
   pollTimedOut: boolean;
   isCheckoutPending: boolean;
+  isPortalPending: boolean;
   startCheckout: () => void;
+  startPortal: () => void;
   reload: () => void;
 };
 
@@ -57,6 +60,13 @@ type UseSubscriptionResult = {
  *      409 -> silent refetch (race with webhook).
  *      422 -> toast `Plano indisponível no momento. Contate o suporte.`
  *      502 -> toast `Não foi possível iniciar o checkout. Tente novamente.`
+ *  - Trigger POST /api/billing/portal_session and redirect to the
+ *    returned Stripe Customer Portal URL (WI#4). Branch error handling:
+ *      422 no_billing_account -> invalidate billing status (defensive
+ *        recovery: card invariant said a subscription existed) AND
+ *        toast the no-billing-account copy.
+ *      502 stripe_unavailable / unknown -> toast the generic
+ *        "Não foi possível abrir o portal. Tente novamente em instantes."
  */
 export const useSubscription = (): UseSubscriptionResult => {
   const queryClient = useQueryClient();
@@ -154,6 +164,44 @@ export const useSubscription = (): UseSubscriptionResult => {
     checkoutMutation.mutate();
   }, [checkoutMutation]);
 
+  const portalMutation = useMutation({
+    mutationFn: billingService.createPortalSession,
+    onSuccess: ({ url }) => {
+      if (typeof window !== "undefined") {
+        window.location.href = url;
+      }
+    },
+    onError: (error) => {
+      if (error instanceof PortalSessionError) {
+        if (error.code === "no_billing_account") {
+          // Defensive: the card invariant says we only render the
+          // Manage CTA when a Subscription exists. Hitting this branch
+          // means the cached state diverged from the backend (e.g.,
+          // admin canceled in another tab). Refetch to recover.
+          queryClient.invalidateQueries({
+            queryKey: BILLING_STATUS_QUERY_KEY,
+          });
+          toast(
+            "Você ainda não possui uma assinatura. Inicie um plano para gerenciar a cobrança.",
+          );
+          return;
+        }
+        // stripe_unavailable | unknown
+        toast.error(
+          "Não foi possível abrir o portal. Tente novamente em instantes.",
+        );
+        return;
+      }
+      toast.error(
+        "Não foi possível abrir o portal. Tente novamente em instantes.",
+      );
+    },
+  });
+
+  const startPortal = useCallback(() => {
+    portalMutation.mutate();
+  }, [portalMutation]);
+
   const reload = useCallback(() => {
     if (typeof window !== "undefined") window.location.reload();
   }, []);
@@ -164,7 +212,9 @@ export const useSubscription = (): UseSubscriptionResult => {
     isPolling,
     pollTimedOut,
     isCheckoutPending: checkoutMutation.isPending,
+    isPortalPending: portalMutation.isPending,
     startCheckout,
+    startPortal,
     reload,
   };
 };
