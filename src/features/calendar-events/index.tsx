@@ -1,7 +1,7 @@
 import { PageWrapper } from "@/components/PageWrapper";
 import { Button } from "@/components/ui/Button";
 import { Calendar } from "@/components/ui/Calendar";
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdCalendarToday } from "react-icons/md";
 import { CalendarEventModal } from "./components/CalendarEventModal";
 import { useCalendarEventListQuery } from "./http/queries/calendarEventsQuery";
 import { useCalendarForm } from "./hooks/useCalendarForm";
@@ -31,7 +31,7 @@ const getEndTime = (startTime: string) => {
 export const CalendarEvents = () => {
   const { open, modalProps } = useCalendarForm();
 
-  const { data } = useCalendarEventListQuery({
+  const { data, isLoading } = useCalendarEventListQuery({
     start_at_gteq: startOfMonth.toISOString(),
     end_at_lteq: endOfMonth.toISOString(),
   });
@@ -60,6 +60,26 @@ export const CalendarEvents = () => {
       }
       containerClassName={styles.calendarEventsContainer}
     >
+      {!isLoading && data.length === 0 && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "12px 16px",
+            borderRadius: "var(--border-radius)",
+            background: "var(--parchment-raised)",
+            border: "1px solid var(--border)",
+            marginBottom: 16,
+            fontSize: "var(--font-size-body2)",
+            color: "var(--text-secondary)",
+          }}
+        >
+          <MdCalendarToday size={20} style={{ color: "var(--amber)", flexShrink: 0 }} />
+          Nenhum atendimento este mês. Clique em um dia do calendário ou em{" "}
+          <strong>Novo evento</strong> para começar.
+        </div>
+      )}
       <Calendar
         events={data.map((event) => ({
           ...event,

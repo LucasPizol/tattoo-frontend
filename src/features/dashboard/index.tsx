@@ -1,6 +1,7 @@
 import { PageWrapper } from "@/components/PageWrapper";
 import { Card } from "@/components/ui/Card";
 import { Divider } from "@/components/ui/Divider";
+import { Tabs } from "@/components/ui/Tabs";
 import type { DashboardFilter } from "@/services/requests/dashboard/types";
 import { useCallback, useState } from "react";
 import { MdTrendingUp } from "react-icons/md";
@@ -22,15 +23,17 @@ import { useProductTypes } from "./hooks/useProductTypes";
 import { useSellers } from "./hooks/useSellers";
 import { useSummaries } from "./hooks/useSummaries";
 import { useValuesEvolution } from "./hooks/useValuesEvolution";
+import { IndicationsContent } from "@/features/indications/IndicationsContent";
 import styles from "./styles.module.scss";
 
-const Dashboard = () => {
+const AnalyticsTab = () => {
   const [submittedFilters, setSubmittedFilters] =
     useState<DashboardFilter>(getDefaultFilters);
 
   const handleFiltersChange = useCallback((filters: DashboardFilter) => {
     setSubmittedFilters(filters);
   }, []);
+
   const { tags, isLoading: tagsLoading } = useTags(submittedFilters);
   const { orderCount, isLoading: orderCountLoading } =
     useOrderCount(submittedFilters);
@@ -48,10 +51,7 @@ const Dashboard = () => {
     useProductTypes(submittedFilters);
 
   return (
-    <PageWrapper
-      title="Dashboard"
-      subtitle="Visão geral dos dados do seu negócio"
-    >
+    <>
       <DashboardFilters onFiltersChange={handleFiltersChange} />
       <div className={styles.chartCard}>
         <Card
@@ -115,7 +115,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Segunda linha - Gráficos */}
       <div className={styles.chartsRow}>
         <div className={styles.chartCard}>
           <TagsChart data={tags} isLoading={tagsLoading} />
@@ -130,12 +129,24 @@ const Dashboard = () => {
           />
         </div>
       </div>
+    </>
+  );
+};
 
-      {/* <div className={styles.reportContainer}>
-        <div className={styles.reportWrapper}>
-          <Markdown>{report?.content ?? ""}</Markdown>
-        </div>
-      </div> */}
+const Dashboard = () => {
+  return (
+    <PageWrapper
+      title="Relatórios"
+      subtitle="Visão geral dos dados do seu negócio"
+    >
+      <Tabs>
+        <Tabs.Tab label="Analytics">
+          <AnalyticsTab />
+        </Tabs.Tab>
+        <Tabs.Tab label="Indicações">
+          <IndicationsContent />
+        </Tabs.Tab>
+      </Tabs>
     </PageWrapper>
   );
 };

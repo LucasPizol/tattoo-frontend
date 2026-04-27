@@ -1,5 +1,4 @@
 import { FiltersCard } from "@/components/FiltersCard";
-import { PageWrapper } from "@/components/PageWrapper";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
 import { Input } from "@/components/ui/Input";
@@ -14,7 +13,7 @@ import { usePaymentMethodForm } from "./hooks/usePaymentMethodForm";
 import { usePaymentMethodList } from "./hooks/usePaymentMethodList";
 import styles from "./styles.module.scss";
 
-export const PaymentMethods = () => {
+export const PaymentMethodsContent = () => {
   const isMobile = useMobile();
   const { paymentMethods, isLoading, form, onFinishFilters } =
     usePaymentMethodList();
@@ -84,11 +83,10 @@ export const PaymentMethods = () => {
   ];
 
   return (
-    <PageWrapper
-      title="Métodos de Pagamento"
-      subtitle="Gerencie seus métodos de pagamento e mantenha as informações atualizadas"
-      actions={<Button onClick={() => open()}>Novo Método de Pagamento</Button>}
-    >
+    <>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+        <Button onClick={() => open()}>Novo Método de Pagamento</Button>
+      </div>
       <FiltersCard form={form} onFinishFilters={onFinishFilters}>
         <Input
           field="name_cont"
@@ -126,6 +124,6 @@ export const PaymentMethods = () => {
           placeholder="Taxa sobre o método de pagamento"
         />
       </Modal>
-    </PageWrapper>
+    </>
   );
 };

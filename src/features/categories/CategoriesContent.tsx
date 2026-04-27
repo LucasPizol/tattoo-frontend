@@ -1,6 +1,5 @@
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { FiltersCard } from "@/components/FiltersCard";
-import { PageWrapper } from "@/components/PageWrapper";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
 import { Input } from "@/components/ui/Input";
@@ -13,7 +12,7 @@ import { useCategoryForm } from "./hooks/useCategoryForm";
 import { useCategoryList } from "./hooks/useCategoryList";
 import styles from "./styles.module.scss";
 
-export const Categories = () => {
+export const CategoriesContent = () => {
   const { categories, isLoading, form, onFinishFilters } = useCategoryList();
   const { open, modalProps, handleDestroyCategory } = useCategoryForm();
 
@@ -65,11 +64,10 @@ export const Categories = () => {
   ];
 
   return (
-    <PageWrapper
-      title="Categorias"
-      subtitle="Gerencie suas categorias e mantenha as informações atualizadas"
-      actions={<Button onClick={() => open()}>Nova Categoria</Button>}
-    >
+    <>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+        <Button onClick={() => open()}>Nova Categoria</Button>
+      </div>
       <FiltersCard form={form} onFinishFilters={onFinishFilters}>
         <Input
           field="name_cont"
@@ -93,6 +91,6 @@ export const Categories = () => {
           placeholder="Observações sobre a categoria (opcional)"
         />
       </Modal>
-    </PageWrapper>
+    </>
   );
 };

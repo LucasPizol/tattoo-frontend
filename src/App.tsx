@@ -3,6 +3,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
 import { MdCheckCircle, MdError } from "react-icons/md";
 import { SessionProvider } from "./context/useSession";
+import { ThemeProvider } from "./context/ThemeContext";
 import "./globals.css";
 import { RoutesProvider } from "./RoutesProvider";
 
@@ -18,6 +19,7 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ""}>
     <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
       <SessionProvider>
         <RoutesProvider />
         <Toaster
@@ -29,9 +31,9 @@ function App() {
               borderRadius: "24px",
               borderWidth: "1px",
               borderStyle: "solid",
-              background: "var(--color-primary-bg)",
-              color: "var(--color-primary)",
-              borderColor: "var(--color-primary)",
+              background: "var(--parchment-raised)",
+              color: "var(--text-primary)",
+              borderColor: "var(--border)",
             },
             success: {
               icon: <MdCheckCircle size={20} />,
@@ -52,6 +54,7 @@ function App() {
           }}
         />
       </SessionProvider>
+      </ThemeProvider>
     </QueryClientProvider>
     </GoogleOAuthProvider>
   );

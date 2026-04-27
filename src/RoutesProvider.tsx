@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import {
   BrowserRouter,
@@ -14,19 +14,17 @@ import { LoadingScreen } from "./components/LoadingScreen";
 import { Loading } from "./components/ui/Loading/index.tsx";
 import { useCompanySocket } from "./context/useCompanySocket.tsx";
 import { useSessionContext } from "./context/useSession";
+import { useEntitlement } from "./hooks/useEntitlement";
 import { CalendarEvents } from "./features/calendar-events";
-import { Indications } from "./features/indications/index.tsx";
 import { PostFormPage } from "./features/instagram-posts/pages/CreatePost/index.tsx";
-import { Tags } from "./features/tags/index.tsx";
 import { ClientView } from "./features/client-view";
 import { Clients } from "./features/clients";
 import { ClientForm } from "./features/clients/pages/ClientForm";
 import { Config } from "./features/config";
 import { LazyDashboard } from "./features/dashboard/LazyDashboard.tsx";
-import { Categories } from "./features/categories";
+import { LazyHome } from "./features/home/LazyHome.tsx";
 import { Order } from "./features/order";
 import { OrdersList } from "./features/orders-list";
-import { PaymentMethods } from "./features/payment-methods";
 import { PoliticsPolicy } from "./features/privacy/PoliticsPolicy.tsx";
 import { TermsOfUsage } from "./features/privacy/TermsOfUsage";
 import { Products } from "./features/products";
@@ -42,9 +40,8 @@ import { Comissions } from "./features/comissions";
 import type { UserConfigUpdatePayload } from "./services/requests/company-configs/types.ts";
 import { api } from "./services/api";
 import { Connections } from "./features/connections/index.tsx";
-import { UsersPage } from "./features/users/index.tsx";
+import { EquipePage } from "./features/equipe/index.tsx";
 import { AcceptInvite } from "./features/accept-invite/index.tsx";
-import { RolesPage } from "./features/roles/index.tsx";
 import { ContractModal } from "./features/contract/ContractModal.tsx";
 import { usePendingContract } from "./features/contract/usePendingContract.ts";
 import { Register } from "./features/register/index.tsx";
@@ -106,6 +103,148 @@ export const InstagramRedirect = () => {
     );
 
   return <div>Instagram conectado com sucesso</div>;
+};
+
+const AuthenticatedRoutes = () => {
+  const hasCommissions = useEntitlement("multi_artist_commissions");
+  const hasInstagramRaffles = useEntitlement("instagram_raffles");
+
+  return (
+    <Layout>
+      <BillingGate>
+        <Routes>
+          <Route path="/agenda" element={<CalendarEvents />} />
+          <Route path="/clientes" element={<Clients />} />
+          <Route path="/clientes/novo" element={<ClientForm />} />
+          <Route path="/clientes/:id/editar" element={<ClientForm />} />
+          <Route path="/clientes/:id/visualizar" element={<ClientView />} />
+          <Route path="/produtos" element={<Products />} />
+          <Route
+            path="/politica-de-privacidade"
+            element={<PoliticsPolicy />}
+          />
+          <Route path="/termos-de-uso" element={<TermsOfUsage />} />
+          <Route path="/vendas/usuarios" element={<OrdersList />} />
+          <Route path="/pedidos/:id" element={<Order />} />
+          <Route path="/comissoes" element={<Comissions />} />
+          <Route path="/aceitar-convite/:token" element={<AcceptInvite />} />
+
+          <Route path="/equipe" element={<EquipePage />} />
+
+          {hasCommissions && (
+            <Route path="/estoque" element={<StockMovements />} />
+          )}
+
+          {hasInstagramRaffles && (
+            <>
+              <Route path="/sorteios" element={<RaffleList />} />
+              <Route path="/sorteios/novo" element={<RaffleForm />} />
+              <Route path="/sorteios/:id" element={<RaffleDetail />} />
+              <Route
+                path="/instagram/dashboard"
+                element={<InstagramDashboard />}
+              />
+              <Route path="/instagram/posts" element={<InstagramPosts />} />
+              <Route
+                path="/instagram/posts/criar"
+                element={<PostFormPage />}
+              />
+              <Route
+                path="/instagram/comentarios"
+                element={<InstagramComments />}
+              />
+            </>
+          )}
+
+          <Route
+            path="/dashboard"
+            element={
+              <Suspense
+                fallback={
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100vh",
+                    }}
+                  >
+                    <Loading
+                      size={48}
+                      color="var(--color-primary)"
+                      outlineColor="#fff"
+                    />
+                  </div>
+                }
+              >
+                <LazyHome />
+              </Suspense>
+            }
+          />
+
+          {hasCommissions && (
+            <Route
+              path="/relatorios"
+              element={
+                <Suspense
+                  fallback={
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100vh",
+                      }}
+                    >
+                      <Loading
+                        size={48}
+                        color="var(--color-primary)"
+                        outlineColor="#fff"
+                      />
+                    </div>
+                  }
+                >
+                  <LazyDashboard />
+                </Suspense>
+              }
+            />
+          )}
+
+          <Route path="/conexoes" element={<Connections />} />
+          <Route path="/configuracoes" element={<Config />} />
+          <Route path="/instagram/success" element={<InstagramRedirect />} />
+
+          {/* Legacy redirects — old paths that moved into /configuracoes or /equipe */}
+          <Route
+            path="/metodos-de-pagamento"
+            element={<Navigate to="/configuracoes" replace />}
+          />
+          <Route
+            path="/tags"
+            element={<Navigate to="/configuracoes" replace />}
+          />
+          <Route
+            path="/categorias"
+            element={<Navigate to="/configuracoes" replace />}
+          />
+          <Route
+            path="/indicacoes"
+            element={<Navigate to="/relatorios" replace />}
+          />
+          <Route
+            path="/usuarios"
+            element={<Navigate to="/equipe" replace />}
+          />
+          <Route
+            path="/permissoes"
+            element={<Navigate to="/equipe" replace />}
+          />
+
+          <Route path="*" element={<Navigate to="/dashboard" />} />
+        </Routes>
+      </BillingGate>
+    </Layout>
+  );
 };
 
 export const RoutesProvider = () => {
@@ -202,102 +341,24 @@ export const RoutesProvider = () => {
     };
   }, []);
 
-  const routes = useMemo(() => {
-    if (session.isAuthenticated) {
-      return (
-        <Layout>
-          <BillingGate>
-            <Routes>
-              <Route path="/agenda" element={<CalendarEvents />} />
-            <Route path="/clientes" element={<Clients />} />
-            <Route path="/clientes/novo" element={<ClientForm />} />
-            <Route path="/clientes/:id/editar" element={<ClientForm />} />
-            <Route path="/clientes/:id/visualizar" element={<ClientView />} />
-            <Route path="/tags" element={<Tags />} />
-            <Route path="/categorias" element={<Categories />} />
-            <Route path="/produtos" element={<Products />} />
-            <Route path="/indicacoes" element={<Indications />} />
-            <Route
-              path="/politica-de-privacidade"
-              element={<PoliticsPolicy />}
-            />
-            <Route path="/termos-de-uso" element={<TermsOfUsage />} />
-            <Route path="/metodos-de-pagamento" element={<PaymentMethods />} />
-            <Route path="/vendas/usuarios" element={<OrdersList />} />
-            <Route path="/pedidos/:id" element={<Order />} />
-            <Route path="/estoque" element={<StockMovements />} />
-            <Route path="/comissoes" element={<Comissions />} />
-            <Route path="/aceitar-convite/:token" element={<AcceptInvite />} />
-
-            <Route
-              path="/dashboard"
-              element={
-                <Suspense
-                  fallback={
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: "100vh",
-                      }}
-                    >
-                      <Loading
-                        size={48}
-                        color="var(--color-primary)"
-                        outlineColor="#fff"
-                      />
-                    </div>
-                  }
-                >
-                  <LazyDashboard />
-                </Suspense>
-              }
-            />
-            <Route path="/sorteios" element={<RaffleList />} />
-            <Route path="/sorteios/novo" element={<RaffleForm />} />
-            <Route path="/sorteios/:id" element={<RaffleDetail />} />
-            <Route
-              path="/instagram/dashboard"
-              element={<InstagramDashboard />}
-            />
-            <Route path="/instagram/posts" element={<InstagramPosts />} />
-            <Route path="/instagram/posts/criar" element={<PostFormPage />} />
-            <Route
-              path="/instagram/comentarios"
-              element={<InstagramComments />}
-            />
-            <Route path="/conexoes" element={<Connections />} />
-            <Route path="/usuarios" element={<UsersPage />} />
-            <Route path="/permissoes" element={<RolesPage />} />
-            <Route path="/configuracoes" element={<Config />} />
-            <Route path="/instagram/success" element={<InstagramRedirect />} />
-            <Route path="*" element={<Navigate to="/agenda" />} />
-            </Routes>
-          </BillingGate>
-        </Layout>
-      );
-    }
-
-    return (
-      <Routes>
-        <Route path="/login" element={<LoginScreen />} />
-        <Route path="/cadastro" element={<Register />} />
-        <Route path="/politica-de-privacidade" element={<PoliticsPolicy />} />
-        <Route path="/termos-de-uso" element={<TermsOfUsage />} />
-        <Route path="/aceitar-convite/:token" element={<AcceptInvite />} />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    );
-  }, [session.isAuthenticated]);
-
   if (isAuthenticating) {
     return <LoadingScreen variant="rainbow" showProgress progress={progress} />;
   }
 
   return (
     <BrowserRouter>
-      {routes}
+      {session.isAuthenticated ? (
+        <AuthenticatedRoutes />
+      ) : (
+        <Routes>
+          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/cadastro" element={<Register />} />
+          <Route path="/politica-de-privacidade" element={<PoliticsPolicy />} />
+          <Route path="/termos-de-uso" element={<TermsOfUsage />} />
+          <Route path="/aceitar-convite/:token" element={<AcceptInvite />} />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      )}
       {hasPending && contract && (
         <ContractModal
           contract={contract}

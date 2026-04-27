@@ -17,10 +17,12 @@ type SessionContextType = {
   session:
     | {
         user: LoginResponse["user"];
+        company: LoginResponse["company"];
         isAuthenticated: true;
       }
     | {
         user: null;
+        company: null;
         isAuthenticated: false;
       };
   login: (payload: LoginPayload) => Promise<void>;
@@ -156,8 +158,8 @@ export const SessionProvider = ({
     <SessionContext.Provider
       value={{
         session: session
-          ? { user: session.user, isAuthenticated: true }
-          : { user: null, isAuthenticated: false },
+          ? { user: session.user, company: session.company, isAuthenticated: true }
+          : { user: null, company: null, isAuthenticated: false },
         login,
         loginWithGoogle,
         completeGoogleRegistration,

@@ -15,6 +15,7 @@ import {
   MdAdd,
   MdDelete,
   MdEdit,
+  MdPeople,
   MdSearch,
   MdVisibility,
 } from "react-icons/md";
@@ -132,6 +133,38 @@ export const Clients = () => {
         </Button>
       }
     >
+      {!isLoading && clients?.length === 0 && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 12,
+            padding: "48px 24px",
+            textAlign: "center",
+            borderRadius: "var(--border-radius)",
+            background: "var(--parchment-raised)",
+            border: "1px solid var(--border)",
+          }}
+        >
+          <MdPeople size={40} style={{ color: "var(--amber)" }} />
+          <p
+            style={{
+              fontSize: "var(--font-size-body2)",
+              color: "var(--text-secondary)",
+              margin: 0,
+            }}
+          >
+            Nenhum cliente cadastrado ainda.
+          </p>
+          <Button
+            prefixIcon={<MdAdd />}
+            onClick={() => navigate("/clientes/novo")}
+          >
+            Adicionar primeiro cliente
+          </Button>
+        </div>
+      )}
       <FiltersCard onFinishFilters={onFinishFilters} form={form}>
         <Input
           field="name_or_email_or_phone_cont"

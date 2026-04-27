@@ -5,6 +5,7 @@ import { cn } from "@/utils/cn";
 import { MdClose, MdMenu } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
+import { Topbar } from "./Topbar";
 import styles from "./styles.module.scss";
 
 type LayoutProps = {
@@ -93,14 +94,17 @@ export const Layout = ({ children }: LayoutProps) => {
         />
       </NotificationsProvider>
 
-      <main
-        className={cn(styles.content, {
-          [styles.contentMobile]: isMobile,
-        })}
-        ref={containerRef}
-      >
-        {children}
-      </main>
+      <div className={styles.contentWrapper}>
+        <Topbar />
+        <main
+          className={cn(styles.content, {
+            [styles.contentMobile]: isMobile,
+          })}
+          ref={containerRef}
+        >
+          {children}
+        </main>
+      </div>
     </div>
   );
 };

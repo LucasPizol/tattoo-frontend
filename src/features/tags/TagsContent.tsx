@@ -1,5 +1,4 @@
 import { CategoryTreeSelect } from "@/components/CategoryTreeSelect";
-import { PageWrapper } from "@/components/PageWrapper";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
@@ -10,22 +9,19 @@ import { useTagForm } from "./hooks/useTagsForm";
 import { useTagList } from "./hooks/useTagList";
 import styles from "./styles.module.scss";
 
-export const Tags = () => {
+export const TagsContent = () => {
   const { data, refetch } = useTagList();
   const { form, open, modalProps } = useTagForm();
 
   const parentTag = form.watch("parentTag");
 
   return (
-    <PageWrapper
-      title="Tags"
-      subtitle="Gerencie as tags dos produtos"
-      actions={
+    <>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
         <Button prefixIcon={<MdAdd />} variant="primary" onClick={() => open()}>
           Nova Tag
         </Button>
-      }
-    >
+      </div>
       <Card title="Tags" icon={<MdLocalOffer />} className={styles.categoriesCard}>
         <div className={styles.categoriesList}>
           {data.length === 0 ? (
@@ -71,6 +67,6 @@ export const Tags = () => {
           />
         </div>
       </Modal>
-    </PageWrapper>
+    </>
   );
 };

@@ -9,7 +9,7 @@ import { MultiSelect } from "@/components/ui/MultiSelect";
 import { Table } from "@/components/ui/Table";
 import { Tag, type TagColor } from "@/components/ui/Tag";
 import { OrderStatus, type Order } from "@/services/requests/orders/types";
-import { MdAdd, MdArrowBack, MdDelete, MdSearch } from "react-icons/md";
+import { MdAdd, MdArrowBack, MdDelete, MdSearch, MdShoppingBag } from "react-icons/md";
 import {
   useCreateOrder,
   useDeleteOrder,
@@ -177,6 +177,35 @@ export const OrdersList = () => {
         </div>
       }
     >
+      {!isLoadingOrders && orders?.length === 0 && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 12,
+            padding: "48px 24px",
+            textAlign: "center",
+            borderRadius: "var(--border-radius)",
+            background: "var(--parchment-raised)",
+            border: "1px solid var(--border)",
+          }}
+        >
+          <MdShoppingBag size={40} style={{ color: "var(--amber)" }} />
+          <p
+            style={{
+              fontSize: "var(--font-size-body2)",
+              color: "var(--text-secondary)",
+              margin: 0,
+            }}
+          >
+            Nenhum pedido ainda.
+          </p>
+          <Button prefixIcon={<MdAdd />} onClick={onCreateOrder}>
+            Criar primeiro pedido
+          </Button>
+        </div>
+      )}
       <FiltersCard
         onFinishFilters={onFinishFilters}
         form={form}

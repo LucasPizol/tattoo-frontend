@@ -1,3 +1,41 @@
+.themeRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 400px;
+}
+
+.themeLabel {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-label);
+  color: var(--text-primary);
+}
+
+.themeSelect {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: var(--font-size-body2);
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background-color: var(--parchment-raised);
+  border: 1.5px solid var(--border);
+  border-radius: var(--input-border-radius);
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px var(--amber-glow);
+  }
+}
+
+.themeHint {
+  margin-top: 12px;
+  font-size: var(--font-size-caption);
+  color: var(--text-tertiary);
+}
+
 .form {
   display: flex;
   flex-direction: column;
