@@ -42,25 +42,25 @@ const formatCep = (value: string) => {
 
   return formattedValue;
 };
-const formatPhone = (value: string) => {
+const formatPhone = (value: string | null | undefined): string => {
+  if (value == null) return "";
+
   let digits = value.replace(/\D/g, "");
-  if (digits.length === 0) return "";
+  if (digits.length === 0) return value.trim() === "" ? "" : value;
 
-  digits = digits.slice(0, 11);
-
-  if (digits.length < 3) {
-    return `(${digits}`;
+  if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) {
+    digits = digits.slice(2);
   }
 
-  if (digits.length < 7) {
-    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-  }
-
-  if (digits.length < 11) {
+  if (digits.length === 10) {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
   }
 
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  if (digits.length === 11) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  }
+
+  return value;
 };
 
 const formatPercentage = (value: string) => {
