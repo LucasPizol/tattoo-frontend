@@ -39,7 +39,7 @@ export const BillingGate = ({ children }: BillingGateProps) => {
 
   if (
     accessBucket === "hard_block" &&
-    location.pathname !== CONFIG_PATH
+    !location.pathname.startsWith(CONFIG_PATH)
   ) {
     return <Navigate to={CONFIG_PATH} replace />;
   }

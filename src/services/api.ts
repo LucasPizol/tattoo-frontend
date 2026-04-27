@@ -40,7 +40,7 @@ createAxios.interceptors.response.use(
     ) {
       if (
         typeof window !== "undefined" &&
-        window.location.pathname !== "/configuracoes"
+        !window.location.pathname.startsWith("/configuracoes")
       ) {
         window.location.assign("/configuracoes");
       }

@@ -72,6 +72,7 @@ const noSubscriptionResponse = {
   current_period_end: null,
   trial_end: null,
   cancel_at_period_end: null,
+  billing_state: "no_subscription" as const,
 };
 
 const trialingResponse = {
@@ -81,6 +82,7 @@ const trialingResponse = {
   current_period_end: "2026-05-11T00:00:00Z",
   trial_end: "2026-05-11T00:00:00Z",
   cancel_at_period_end: false,
+  billing_state: "trialing" as const,
 };
 
 beforeEach(() => {
