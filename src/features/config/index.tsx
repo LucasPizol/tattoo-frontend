@@ -9,6 +9,7 @@ import type { UserConfigForm } from "@/schemas/user-config";
 import { api } from "@/services/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { SubscriptionCard } from "./components/SubscriptionCard";
 import { useConfigForm } from "./hooks/useConfigForm";
 import styles from "./styles.module.scss";
 
@@ -41,6 +42,7 @@ export const Config = () => {
 
   return (
     <PageWrapper title="Configurações">
+      <SubscriptionCard />
       <Card title="Configurações">
         <Form onSubmit={onSubmit} form={form} className={styles.form}>
           <Input
