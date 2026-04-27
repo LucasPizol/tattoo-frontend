@@ -1,9 +1,13 @@
 import { AxiosError } from "axios";
 import { api } from "@/services/api";
 import { type BillingStatus, billingStatusSchema } from "@/schemas/billing";
-import type { CheckoutErrorCode, PortalErrorCode } from "./types";
+import type {
+  BillingState,
+  CheckoutErrorCode,
+  PortalErrorCode,
+} from "./types";
 
-export type { CheckoutErrorCode, PortalErrorCode };
+export type { BillingState, CheckoutErrorCode, PortalErrorCode };
 
 export class CheckoutSessionError extends Error {
   readonly code: CheckoutErrorCode;

@@ -1,0 +1,21 @@
+.wrapper {
+  padding: 12px 16px 0 16px;
+}
+
+.headline {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.body {
+  display: block;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}

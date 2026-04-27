@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 import {
+  type BillingState,
   CheckoutSessionError,
   PortalSessionError,
   billingService,
@@ -37,6 +38,7 @@ const readCheckoutParam = (): "success" | "cancelled" | null => {
 
 type UseSubscriptionResult = {
   status: BillingStatus | undefined;
+  billingState: BillingState | null;
   isLoading: boolean;
   isPolling: boolean;
   pollTimedOut: boolean;
@@ -208,6 +210,7 @@ export const useSubscription = (): UseSubscriptionResult => {
 
   return {
     status: query.data,
+    billingState: query.data?.billing_state ?? null,
     isLoading: query.isLoading,
     isPolling,
     pollTimedOut,
