@@ -26,6 +26,27 @@ createAxios.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // WI#5: catch mid-session billing-state flips (e.g. tenant was
+    // `:trialing` at login but Stripe webhook just landed `:canceled`).
+    // Backend hard-blocks return 403 with `error: "billing_blocked"`;
+    // we redirect to /configuracoes UNLESS we're already there — that
+    // single guard prevents the post-checkout `?checkout=success`
+    // polling loop. We use `window.location.assign` (NOT reload) so
+    // React Router's tree fully unmounts and the BillingGate re-mounts
+    // with a fresh status query.
+    if (
+      error.response?.status === 403 &&
+      error.response?.data?.error === "billing_blocked"
+    ) {
+      if (
+        typeof window !== "undefined" &&
+        window.location.pathname !== "/configuracoes"
+      ) {
+        window.location.assign("/configuracoes");
+      }
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (error.request.responseURL.includes("/api/sessions/refresh")) {
         localStorage.removeItem("is_authenticated");
