@@ -58,7 +58,6 @@ export const SubscriptionCard = () => {
   const {
     status,
     isLoading,
-    isPolling,
     pollTimedOut,
     isCheckoutPending,
     startCheckout,
@@ -151,11 +150,6 @@ export const SubscriptionCard = () => {
         >
           Sua assinatura está sendo ativada. Recarregue a página em alguns
           instantes.
-        </Alert>
-      )}
-      {isPolling && !pollTimedOut && (
-        <Alert type="info" className={styles.banner}>
-          Estamos confirmando seu pagamento com a Stripe...
         </Alert>
       )}
       {renderBody()}

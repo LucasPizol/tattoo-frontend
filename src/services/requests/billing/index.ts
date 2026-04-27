@@ -4,17 +4,9 @@ import {
   type BillingStatus,
   billingStatusSchema,
 } from "@/schemas/billing";
+import type { CheckoutErrorCode } from "./types";
 
-/**
- * Typed error thrown by createCheckoutSession so the UI can branch
- * per the WI#3 state matrix (already_subscribed, price_unavailable,
- * stripe_unavailable, etc).
- */
-export type CheckoutErrorCode =
-  | "already_subscribed"
-  | "price_unavailable"
-  | "stripe_unavailable"
-  | "unknown";
+export type { CheckoutErrorCode };
 
 export class CheckoutSessionError extends Error {
   readonly code: CheckoutErrorCode;
@@ -41,15 +33,6 @@ const mapStatusToCode = (status: number | undefined): CheckoutErrorCode => {
   }
 };
 
-/**
- * POST /api/billing/checkout_session
- *
- * Returns the Stripe-hosted Checkout URL for the current Company.
- * Body is intentionally empty for WI#3 (Solo monthly is the only price).
- *
- * Errors are normalized to a CheckoutSessionError with a typed `code`
- * the UI can switch on.
- */
 export const createCheckoutSession = async (): Promise<{ url: string }> => {
   try {
     const response = await api.post<{ url: string }>(
@@ -70,12 +53,6 @@ export const createCheckoutSession = async (): Promise<{ url: string }> => {
   }
 };
 
-/**
- * GET /api/billing/status
- *
- * Returns the (narrow) billing snapshot for the current Company.
- * Validated through zod so the UI never has to guess the shape.
- */
 export const getBillingStatus = async (): Promise<BillingStatus> => {
   const raw = await api.get<unknown>("/api/billing/status");
   return billingStatusSchema.parse(raw);

@@ -15,10 +15,10 @@ import {
   CheckoutSessionError,
   createCheckoutSession,
   getBillingStatus,
-} from "./billing";
-import { api } from "./api";
+} from ".";
+import { api } from "@/services/api";
 
-vi.mock("./api", () => ({
+vi.mock("@/services/api", () => ({
   api: {
     post: vi.fn(),
     get: vi.fn(),

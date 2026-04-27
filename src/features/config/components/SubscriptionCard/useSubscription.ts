@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import {
   CheckoutSessionError,
   billingService,
-} from "@/services/billing";
+} from "@/services/requests/billing";
 import type { BillingStatus } from "@/schemas/billing";
 
 export const BILLING_STATUS_QUERY_KEY = ["billing", "status"] as const;

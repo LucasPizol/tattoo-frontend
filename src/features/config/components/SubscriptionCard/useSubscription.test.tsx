@@ -12,12 +12,12 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import toast from "react-hot-toast";
 
-import { CheckoutSessionError } from "@/services/billing";
+import { CheckoutSessionError } from "@/services/requests/billing";
 
-vi.mock("@/services/billing", async () => {
+vi.mock("@/services/requests/billing", async () => {
   const actual =
-    await vi.importActual<typeof import("@/services/billing")>(
-      "@/services/billing",
+    await vi.importActual<typeof import("@/services/requests/billing")>(
+      "@/services/requests/billing",
     );
   return {
     ...actual,
@@ -38,7 +38,7 @@ vi.mock("react-hot-toast", () => {
   return { default: fn };
 });
 
-import { billingService } from "@/services/billing";
+import { billingService } from "@/services/requests/billing";
 import { useSubscription } from "./useSubscription";
 
 const mockedService = billingService as unknown as {
