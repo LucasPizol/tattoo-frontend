@@ -8,6 +8,7 @@ import {
   Routes,
   useSearchParams,
 } from "react-router-dom";
+import { BillingGate } from "./components/BillingGate";
 import { Layout } from "./components/Layout";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { Loading } from "./components/ui/Loading/index.tsx";
@@ -205,8 +206,9 @@ export const RoutesProvider = () => {
     if (session.isAuthenticated) {
       return (
         <Layout>
-          <Routes>
-            <Route path="/agenda" element={<CalendarEvents />} />
+          <BillingGate>
+            <Routes>
+              <Route path="/agenda" element={<CalendarEvents />} />
             <Route path="/clientes" element={<Clients />} />
             <Route path="/clientes/novo" element={<ClientForm />} />
             <Route path="/clientes/:id/editar" element={<ClientForm />} />
@@ -271,7 +273,8 @@ export const RoutesProvider = () => {
             <Route path="/configuracoes" element={<Config />} />
             <Route path="/instagram/success" element={<InstagramRedirect />} />
             <Route path="*" element={<Navigate to="/agenda" />} />
-          </Routes>
+            </Routes>
+          </BillingGate>
         </Layout>
       );
     }
