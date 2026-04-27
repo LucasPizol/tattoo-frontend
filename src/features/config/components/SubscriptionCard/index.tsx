@@ -60,7 +60,9 @@ export const SubscriptionCard = () => {
     isLoading,
     pollTimedOut,
     isCheckoutPending,
+    isPortalPending,
     startCheckout,
+    startPortal,
     reload,
   } = useSubscription();
 
@@ -78,8 +80,13 @@ export const SubscriptionCard = () => {
         <div className={styles.body}>
           <h4 className={styles.headline}>Período de teste ativo</h4>
           <p className={styles.copy}>Seu teste termina em {trialEnd}.</p>
-          <Button variant="secondary" disabled>
-            Gerenciar assinatura (em breve)
+          <Button
+            variant="secondary"
+            onClick={startPortal}
+            loading={isPortalPending}
+            disabled={isPortalPending}
+          >
+            Gerenciar assinatura
           </Button>
         </div>
       );
@@ -91,8 +98,13 @@ export const SubscriptionCard = () => {
         <div className={styles.body}>
           <h4 className={styles.headline}>Plano Solo ativo</h4>
           <p className={styles.copy}>Próxima cobrança em {periodEnd}.</p>
-          <Button variant="secondary" disabled>
-            Gerenciar assinatura (em breve)
+          <Button
+            variant="secondary"
+            onClick={startPortal}
+            loading={isPortalPending}
+            disabled={isPortalPending}
+          >
+            Gerenciar assinatura
           </Button>
         </div>
       );
@@ -107,11 +119,11 @@ export const SubscriptionCard = () => {
           </p>
           <Button
             variant="primary"
-            onClick={startCheckout}
-            loading={isCheckoutPending}
-            disabled={isCheckoutPending}
+            onClick={startPortal}
+            loading={isPortalPending}
+            disabled={isPortalPending}
           >
-            Atualizar pagamento
+            Gerenciar cobrança
           </Button>
         </div>
       );

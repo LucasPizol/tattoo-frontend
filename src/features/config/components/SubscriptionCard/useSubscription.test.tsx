@@ -12,7 +12,10 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import toast from "react-hot-toast";
 
-import { CheckoutSessionError } from "@/services/requests/billing";
+import {
+  CheckoutSessionError,
+  PortalSessionError,
+} from "@/services/requests/billing";
 
 vi.mock("@/services/requests/billing", async () => {
   const actual =
@@ -23,9 +26,11 @@ vi.mock("@/services/requests/billing", async () => {
     ...actual,
     billingService: {
       createCheckoutSession: vi.fn(),
+      createPortalSession: vi.fn(),
       getBillingStatus: vi.fn(),
     },
     createCheckoutSession: vi.fn(),
+    createPortalSession: vi.fn(),
     getBillingStatus: vi.fn(),
   };
 });
@@ -39,10 +44,11 @@ vi.mock("react-hot-toast", () => {
 });
 
 import { billingService } from "@/services/requests/billing";
-import { useSubscription } from "./useSubscription";
+import { useSubscription, BILLING_STATUS_QUERY_KEY } from "./useSubscription";
 
 const mockedService = billingService as unknown as {
   createCheckoutSession: ReturnType<typeof vi.fn>;
+  createPortalSession: ReturnType<typeof vi.fn>;
   getBillingStatus: ReturnType<typeof vi.fn>;
 };
 
@@ -267,6 +273,87 @@ describe("useSubscription — startCheckout mutation", () => {
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith(
         "Não foi possível iniciar o checkout. Tente novamente.",
+      ),
+    );
+  });
+});
+
+describe("useSubscription — startPortal mutation", () => {
+  it("redirects to the Stripe Portal URL on success", async () => {
+    mockedService.getBillingStatus.mockResolvedValue(trialingResponse);
+    mockedService.createPortalSession.mockResolvedValue({
+      url: "https://billing.stripe.com/p/session/test_xyz",
+    });
+
+    const originalLocation = window.location;
+    Object.defineProperty(window, "location", {
+      value: { ...originalLocation, href: "" },
+      writable: true,
+    });
+
+    const { result } = renderHook(() => useSubscription(), {
+      wrapper: buildWrapper(),
+    });
+
+    await act(async () => {
+      result.current.startPortal();
+    });
+
+    await waitFor(() =>
+      expect(window.location.href).toBe(
+        "https://billing.stripe.com/p/session/test_xyz",
+      ),
+    );
+
+    Object.defineProperty(window, "location", {
+      value: originalLocation,
+      writable: true,
+    });
+  });
+
+  it("on 422 no_billing_account, invalidates billing status and toasts the explanatory copy", async () => {
+    mockedService.getBillingStatus.mockResolvedValue(trialingResponse);
+    mockedService.createPortalSession.mockRejectedValueOnce(
+      new PortalSessionError("no_billing_account", 422),
+    );
+
+    const { result } = renderHook(() => useSubscription(), {
+      wrapper: buildWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    await act(async () => {
+      result.current.startPortal();
+    });
+
+    // Re-fetch fired (invalidate triggers a refetch under the hood).
+    await waitFor(() =>
+      expect(mockedService.getBillingStatus).toHaveBeenCalledTimes(2),
+    );
+    expect(toast).toHaveBeenCalledWith(
+      "Você ainda não possui uma assinatura. Inicie um plano para gerenciar a cobrança.",
+    );
+    expect(BILLING_STATUS_QUERY_KEY).toEqual(["billing", "status"]);
+  });
+
+  it("on 502 stripe_unavailable, toasts the generic retry message", async () => {
+    mockedService.getBillingStatus.mockResolvedValue(trialingResponse);
+    mockedService.createPortalSession.mockRejectedValueOnce(
+      new PortalSessionError("stripe_unavailable", 502),
+    );
+
+    const { result } = renderHook(() => useSubscription(), {
+      wrapper: buildWrapper(),
+    });
+
+    await act(async () => {
+      result.current.startPortal();
+    });
+
+    await waitFor(() =>
+      expect(toast.error).toHaveBeenCalledWith(
+        "Não foi possível abrir o portal. Tente novamente em instantes.",
       ),
     );
   });

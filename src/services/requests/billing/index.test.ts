@@ -13,7 +13,9 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 
 import {
   CheckoutSessionError,
+  PortalSessionError,
   createCheckoutSession,
+  createPortalSession,
   getBillingStatus,
 } from ".";
 import { api } from "@/services/api";
@@ -106,6 +108,54 @@ describe("services/billing.createCheckoutSession", () => {
     await expect(createCheckoutSession()).rejects.toBeInstanceOf(
       CheckoutSessionError,
     );
+  });
+});
+
+describe("services/billing.createPortalSession", () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("returns the URL on success", async () => {
+    mockedApi.post.mockResolvedValueOnce({
+      url: "https://billing.stripe.com/p/session/test_abc",
+    });
+
+    const result = await createPortalSession();
+
+    expect(result.url).toBe("https://billing.stripe.com/p/session/test_abc");
+    expect(mockedApi.post).toHaveBeenCalledWith(
+      "/api/billing/portal_session",
+      {},
+    );
+  });
+
+  it("maps 422 to no_billing_account", async () => {
+    mockedApi.post.mockRejectedValueOnce(buildAxiosError(422));
+
+    await expect(createPortalSession()).rejects.toMatchObject({
+      name: "PortalSessionError",
+      code: "no_billing_account",
+      status: 422,
+    });
+  });
+
+  it("instantiates a PortalSessionError on axios failure", async () => {
+    mockedApi.post.mockRejectedValueOnce(buildAxiosError(502));
+
+    await expect(createPortalSession()).rejects.toBeInstanceOf(
+      PortalSessionError,
+    );
+  });
+
+  it("maps 502 to stripe_unavailable", async () => {
+    mockedApi.post.mockRejectedValueOnce(buildAxiosError(502));
+
+    await expect(createPortalSession()).rejects.toMatchObject({
+      name: "PortalSessionError",
+      code: "stripe_unavailable",
+      status: 502,
+    });
   });
 });
 
