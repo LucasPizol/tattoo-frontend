@@ -1,0 +1,77 @@
+.card {
+  margin-bottom: 16px;
+}
+
+.banner {
+  margin-bottom: 16px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.headline {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+
+.copy {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+// Skeleton — match parchment/border tokens used by the rest of the UI.
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.skeletonHeadline,
+.skeletonLine,
+.skeletonLineShort,
+.skeletonButton {
+  background: linear-gradient(
+    90deg,
+    var(--parchment-muted) 0%,
+    var(--parchment) 50%,
+    var(--parchment-muted) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: var(--input-border-radius);
+  animation: shimmer 1.4s infinite linear;
+}
+
+.skeletonHeadline {
+  height: 22px;
+  width: 50%;
+}
+
+.skeletonLine {
+  height: 16px;
+  width: 80%;
+}
+
+.skeletonLineShort {
+  height: 16px;
+  width: 60%;
+}
+
+.skeletonButton {
+  height: 36px;
+  width: 200px;
+  margin-top: 6px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
