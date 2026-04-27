@@ -41,11 +41,7 @@ const statusColor = {
   [OrderStatus.REFUNDED]: "green",
 };
 
-export const OrdersList = ({
-  createdBy = "user",
-}: {
-  createdBy: "client" | "user";
-}) => {
+export const OrdersList = () => {
   const navigate = useNavigate();
   const {
     orders,
@@ -54,7 +50,7 @@ export const OrdersList = ({
     onFinishFilters,
     isLoading: isLoadingOrders,
     filters,
-  } = useOrderList(createdBy);
+  } = useOrderList();
 
   const { mutateAsync: createOrder } = useCreateOrder();
   const { mutateAsync: deleteOrder } = useDeleteOrder();
@@ -131,7 +127,7 @@ export const OrdersList = ({
       render: (order: Order) => {
         const isPaid = order.status === OrderStatus.PAID;
 
-        if (isPaid || order.createdBy === "client") return null;
+        if (isPaid) return null;
 
         return (
           <div className={styles.actions}>

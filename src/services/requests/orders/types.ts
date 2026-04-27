@@ -1,4 +1,3 @@
-import type { Address } from "../address/types";
 import type { ClientShowResponse } from "../client/types";
 import type { OrderProduct } from "../order-products/types";
 import type { Product } from "../products/types";
@@ -17,7 +16,6 @@ export type Payment = {
   updatedAt: string;
   valueExpected: MoneyValue;
   valueReceived: MoneyValue;
-  shipmentReceivedValue: MoneyValue;
   paymentMethod: {
     id: number;
     name: string;
@@ -33,18 +31,9 @@ export type OrderPaymentMethod = {
   updatedAt: string;
 };
 
-export type ClientPayment = {
-  paymentMethod: { id: number; name: string };
-  totalPaidAmount: MoneyValue;
-  installments: number;
-  installmentAmount: MoneyValue;
-  netReceivedValue: MoneyValue;
-};
-
 export type Order = {
   id: number;
   status: OrderStatus;
-  createdBy: "client" | "user";
   createdAt: string;
   updatedAt: string;
   productValue: MoneyValue;
@@ -52,8 +41,6 @@ export type Order = {
   taxesValue: MoneyValue;
   totalValue: MoneyValue;
   costValue: MoneyValue;
-  shippingValue: MoneyValue;
-  address?: Address;
   paymentMethods?: string;
   client?: ClientShowResponse["client"];
   isPartsSynchronized: boolean;
@@ -76,7 +63,6 @@ export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
 export type OrderCreatePayload = {
   status: OrderStatus;
   client_id: number | null;
-  address_id: number;
   taxes_value: number;
 };
 
@@ -91,7 +77,6 @@ export type OrderShowResponse = {
     orderProducts: OrderProduct[];
     comissions: Comission[];
     orderPaymentMethods: OrderPaymentMethod[];
-    clientPayments: ClientPayment[];
     payments: Payment[];
   };
 };
@@ -102,5 +87,4 @@ export type OrderFilters = {
   paid_at_lteq?: string;
   status_in?: OrderStatus[];
   client_id_eq?: number;
-  created_by_eq?: "client" | "user";
 };

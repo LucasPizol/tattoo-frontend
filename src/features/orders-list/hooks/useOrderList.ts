@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 
-export const useOrderList = (createdBy: "client" | "user") => {
+export const useOrderList = () => {
   const [searchParams] = useSearchParams();
 
   const form = useForm<OrdersFilters>({
@@ -23,12 +23,8 @@ export const useOrderList = (createdBy: "client" | "user") => {
 
   const { data, isLoading, refetch, onChangeFilters, filters, pagination } =
     useQueryPagination<OrderWithProduct, OrderFilters>({
-      queryKey: ["orders", createdBy],
-      queryFn: (pagination) =>
-        OrderRequests.index({
-          ...pagination,
-          q: { ...pagination.q, created_by_eq: createdBy },
-        }),
+      queryKey: ["orders"],
+      queryFn: (pagination) => OrderRequests.index(pagination),
       initialFilters: {
         client_id_eq: searchParams.get("client_id_eq")
           ? Number(searchParams.get("client_id_eq"))

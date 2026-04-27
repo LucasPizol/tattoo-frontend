@@ -221,10 +221,7 @@ export const RoutesProvider = () => {
             />
             <Route path="/termos-de-uso" element={<TermsOfUsage />} />
             <Route path="/metodos-de-pagamento" element={<PaymentMethods />} />
-            <Route
-              path="/vendas/usuarios"
-              element={<OrdersList createdBy="user" />}
-            />
+            <Route path="/vendas/usuarios" element={<OrdersList />} />
             <Route path="/pedidos/:id" element={<Order />} />
             <Route path="/estoque" element={<StockMovements />} />
             <Route path="/comissoes" element={<Comissions />} />

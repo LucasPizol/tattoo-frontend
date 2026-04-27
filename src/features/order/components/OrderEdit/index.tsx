@@ -15,7 +15,6 @@ import { Table } from "@/components/ui/Table";
 import { Tag } from "@/components/ui/Tag";
 import { Visible } from "@/components/Visible";
 import { usePaymentMethodList } from "@/features/payment-methods/hooks/usePaymentMethodList";
-import { MercadoPagoTerminalsRequests } from "@/services/requests/mercado-pago/terminals";
 import { OrderProductsService } from "@/services/requests/order-products";
 import type { OrderProduct } from "@/services/requests/order-products/types";
 import { OrderRequests } from "@/services/requests/orders";
@@ -58,7 +57,6 @@ export const OrderEdit = (props: OrderEditProps) => {
   const { id } = useParams();
   const { paymentMethods } = usePaymentMethodList();
 
-  const [terminalId, setTerminalId] = useState<string | null>(null);
   const {
     removeProduct,
     updateProductQuantity,
@@ -117,12 +115,6 @@ export const OrderEdit = (props: OrderEditProps) => {
 
   const handleConfirmOrder = useCallback(async () => {
     try {
-      if (terminalId) {
-        await MercadoPagoTerminalsRequests.requestOrder(terminalId, Number(id));
-        toast.success("Pedido enviado para o terminal com sucesso!");
-        refetch();
-        return;
-      }
       await OrderRequests.update(Number(id), {
         status: OrderStatus.PAID,
       });
@@ -131,7 +123,7 @@ export const OrderEdit = (props: OrderEditProps) => {
     } catch (error) {
       toast.error("Erro ao criar pedido");
     }
-  }, [id, refetch, terminalId]);
+  }, [id, refetch]);
 
   const handleAddProducts = async (products: SelectionModalProduct[]) => {
     try {
@@ -479,11 +471,7 @@ export const OrderEdit = (props: OrderEditProps) => {
       fullWidthLabel
       trigger={confirmTrigger}
     >
-      <ConfirmOrderContent
-        order={order}
-        terminalId={terminalId}
-        setTerminalId={setTerminalId}
-      />
+      <ConfirmOrderContent order={order} />
     </ConfirmModal>
   );
 
@@ -858,11 +846,7 @@ export const OrderEdit = (props: OrderEditProps) => {
                     </Button>
                   }
                 >
-                  <ConfirmOrderContent
-                    order={order}
-                    terminalId={terminalId}
-                    setTerminalId={setTerminalId}
-                  />
+                  <ConfirmOrderContent order={order} />
                 </ConfirmModal>
               )
             )}
