@@ -1,9 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from "@/services/api";
-import {
-  type BillingStatus,
-  billingStatusSchema,
-} from "@/schemas/billing";
+import { type BillingStatus, billingStatusSchema } from "@/schemas/billing";
 import type { CheckoutErrorCode } from "./types";
 
 export type { CheckoutErrorCode };
@@ -12,7 +9,11 @@ export class CheckoutSessionError extends Error {
   readonly code: CheckoutErrorCode;
   readonly status: number | null;
 
-  constructor(code: CheckoutErrorCode, status: number | null, message?: string) {
+  constructor(
+    code: CheckoutErrorCode,
+    status: number | null,
+    message?: string,
+  ) {
     super(message ?? code);
     this.name = "CheckoutSessionError";
     this.code = code;
