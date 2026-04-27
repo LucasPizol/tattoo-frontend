@@ -3,12 +3,6 @@
   flex-direction: column;
   position: relative;
 
-  &.hasPrefixIcon {
-    .label {
-      left: 28px !important;
-    }
-  }
-
   &.fullWidth {
     width: 100%;
   }
@@ -51,36 +45,6 @@
   }
 }
 
-.label {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--input-label-color, var(--text-tertiary));
-  background-color: transparent;
-  padding: 0 4px;
-  pointer-events: none;
-  transition: all 0.18s ease-in-out;
-  z-index: 1;
-
-  .required {
-    color: var(--color-error);
-    margin-left: 2px;
-  }
-
-  &.floating {
-    top: 0;
-    left: 10px;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--amber);
-    background-color: var(--input-surface, var(--parchment-raised));
-    padding: 0 4px;
-  }
-}
-
 .inputContainer {
   display: flex;
   align-items: center;
@@ -115,40 +79,6 @@
   &:focus-within {
     border-color: var(--amber);
     box-shadow: 0 0 0 3px var(--amber-glow);
-
-    .label {
-      color: var(--amber);
-    }
-  }
-
-  &.focused {
-    input {
-      padding-top: 12px;
-    }
-  }
-
-  input:placeholder-shown ~ .label {
-    top: 50%;
-    left: 14px;
-    font-size: 14px;
-    color: var(--input-label-color, var(--text-tertiary));
-    background-color: transparent;
-  }
-
-  input:not(:placeholder-shown) ~ .label,
-  input:focus ~ .label {
-    top: 0;
-    left: 10px;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--amber);
-    background-color: var(--input-surface, var(--parchment-raised));
-    padding: 0 4px;
-  }
-
-  input:not(:placeholder-shown),
-  input:focus {
-    padding-top: 12px;
   }
 }
 
@@ -164,14 +94,6 @@
   .inputContainer {
     border-color: var(--color-error);
     box-shadow: none;
-  }
-
-  .label {
-    color: var(--color-error);
-
-    &.floating {
-      color: var(--color-error);
-    }
   }
 }
 

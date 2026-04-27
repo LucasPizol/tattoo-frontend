@@ -461,7 +461,6 @@ export const DateRangePicker = ({
       {label && <label className={styles.label}>{label}</label>}
       <div ref={triggerRef} className={styles.trigger}>
         <Input
-          noForm
           value={formatInputValue()}
           placeholder={placeholder}
           readOnly

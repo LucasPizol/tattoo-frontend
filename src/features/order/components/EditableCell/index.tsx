@@ -70,7 +70,6 @@ export const EditableCell = ({
     return (
       <Input
         ref={inputRef}
-        noForm
         value={value}
         mask={(v) => (mask ? String(mask(v)) : String(v))}
         onChange={async (e) => {

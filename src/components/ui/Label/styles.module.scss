@@ -1,0 +1,23 @@
+.label {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-label);
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  &.disabled {
+    opacity: 0.5;
+  }
+
+  &.error {
+    color: var(--color-error);
+  }
+
+  .required {
+    color: var(--color-error);
+    margin-left: 2px;
+  }
+}

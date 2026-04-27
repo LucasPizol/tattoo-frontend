@@ -4,7 +4,7 @@
   gap: 12px;
   padding: 10px 12px;
   border-radius: var(--input-border-radius);
-  color: var(--text-inverse-dim);
+  color: var(--sidebar-fg-dim);
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
   font-size: 14px;
@@ -12,12 +12,12 @@
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.07);
-    color: var(--text-inverse);
+    color: var(--sidebar-fg);
   }
 
   &.active {
     background-color: var(--amber);
-    color: var(--ink);
+    color: var(--sidebar-fg-on-brand);
     font-weight: 600;
   }
 }

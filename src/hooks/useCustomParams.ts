@@ -16,7 +16,13 @@ export const useCustomParams = <T>() => {
     );
     const paramsToSet = Object.fromEntries(paramsWithoutUndefined);
 
-    setSearchParams(paramsToSet as unknown as URLSearchParamsInit);
+    const isParamsEmpty = Object.keys(paramsToSet).length === 0;
+
+    if (isParamsEmpty) {
+      setSearchParams(undefined);
+    } else {
+      setSearchParams(paramsToSet as unknown as URLSearchParamsInit);
+    }
   };
 
   return [params, setParams] as [

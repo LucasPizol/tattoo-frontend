@@ -65,9 +65,9 @@ export const useQueryPagination = <T, C>({
     error,
     refetch,
     filters,
-    onChangeFilters: (filters: C) => {
+    onChangeFilters: (filters: C, shouldSetParams = true) => {
       setFilters(filters);
-      setParams({ ...params, filters });
+      if (shouldSetParams) setParams({ ...params, filters });
     },
     isPending,
     isRefetching,

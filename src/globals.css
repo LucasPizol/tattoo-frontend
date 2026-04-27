@@ -1,69 +1,99 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap");
 
+/* Tokens compartilhados (não variam com o tema) */
 :root {
-  /* ─── Ink palette ─────────────────────────────────────── */
-  --ink:         #131313;
-  --ink-deep:    #0a0908;
-  --ink-raised:  #222020;
+  --ink:         #0D0D0F;
+  --ink-deep:    #000000;
+  --ink-raised:  #1A1A1D;
 
-  /* ─── Amber — único acento ────────────────────────────── */
-  --amber:       #e6b966;
-  --amber-dim:   #c9923a;
-  --amber-dark:  #b8832e;
-  --amber-pale:  rgba(230, 185, 102, 0.12);
-  --amber-glow:  rgba(230, 185, 102, 0.22);
+  --amber:       #D4AF37;
+  --amber-dim:   #b8962e;
+  --amber-dark:  #9e8026;
+  --amber-pale:  rgba(212, 175, 55, 0.12);
+  --amber-glow:  rgba(212, 175, 55, 0.22);
 
-  /* ─── Superfícies (warm light) ────────────────────────── */
-  --parchment-muted:   #f0ebe3;
-  --parchment:         #f7f4f0;
-  --parchment-raised:  #ffffff;
+  /* Barra lateral: fundo --ink; texto sempre claro (não use --text-inverse, que muda o sentido por tema) */
+  --sidebar-fg:       rgba(242, 242, 242, 0.95);
+  --sidebar-fg-dim:   rgba(242, 242, 242, 0.7);
+  --sidebar-fg-muted: rgba(242, 242, 242, 0.42);
+  /* Item ativo: texto escuro sobre faixa âmbar */
+  --sidebar-fg-on-brand: var(--ink);
 
-  /* ─── Superfícies (auth dark) ─────────────────────────── */
-  --surface-auth:        #0f0d0c;
-  --surface-auth-raised: #1a1714;
-  --surface-auth-card:   #201d1a;
+  /* Superfícies de auth (login) — geralmente escuro em ambos */
+  --surface-auth:        #0D0D0F;
+  --surface-auth-raised: #1A1A1D;
+  --surface-auth-card:   #2E2E33;
 
-  /* ─── Texto hierarquia ────────────────────────────────── */
-  --text-primary:      #1a1614;
-  --text-secondary:    #4a4540;
-  --text-tertiary:     #8c8680;
-  --text-muted:        #b5b0aa;
-
-  --text-inverse:      #f5f0e8;
-  --text-inverse-dim:  rgba(245, 240, 232, 0.55);
-  --text-inverse-muted: rgba(245, 240, 232, 0.32);
-
-  /* ─── Bordas ──────────────────────────────────────────── */
-  --border:          rgba(26, 22, 18, 0.09);
-  --border-strong:   rgba(26, 22, 18, 0.16);
-  --border-inverse:  rgba(255, 255, 255, 0.1);
-  --border-inverse-strong: rgba(255, 255, 255, 0.18);
-
-  /* ─── Semânticas ──────────────────────────────────────── */
+  /* Semânticas de estado (ajustes finos por tema abaixo) */
   --color-danger:               #c0392b;
   --color-danger-hover:         #a93226;
   --color-danger-active:        #922b21;
   --color-danger-text:          #ffffff;
   --color-danger-tertiary-hover: rgba(192, 57, 43, 0.1);
-  --color-danger-bg:            rgba(192, 57, 43, 0.08);
-
   --color-error:        #dc2626;
-  --color-error-bg:     rgba(220, 38, 38, 0.08);
   --color-error-border: #dc2626;
-
-  --color-success-bg:     rgba(72, 165, 111, 0.1);
   --color-success-border: #48a56f;
 
-  /* ─── Gray scale (warm-tinted) ────────────────────────── */
-  --color-gray-25:   #faf8f5;
-  --color-gray-50:   #f5f1ec;
-  --color-gray-100:  #e8e2da;
-  --color-gray-200:  #d0c8be;
-  --color-gray-300:  #b5a99e;
-  --color-gray-400:  #8c8075;
-  --color-gray-500:  #6b6058;
+  --font-family: "Poppins", sans-serif;
+  --font-mono:   "Courier New", monospace;
+  --font-size-h1: 32px;
+  --font-weight-h1: 600;
+  --font-size-h2: 24px;
+  --font-weight-h2: 600;
+  --font-size-h3: 18px;
+  --font-weight-h3: 500;
+  --font-size-body1: 16px;
+  --font-weight-body1: 400;
+  --font-size-body2: 14px;
+  --font-weight-body2: 400;
+  --font-size-caption: 12px;
+  --font-weight-caption: 400;
+  --font-size-label: 13px;
+  --font-weight-label: 500;
 
-  /* ─── Aliases de compatibilidade ─────────────────────── */
+  --border-radius: 8px;
+  --shape-border-radius: 16px;
+  --input-border-radius: 6px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --spacing: 4px;
+  --page-padding: 24px;
+}
+
+/* ─── Tema claro ───────────────────────────────────────── */
+html[data-theme="light"] {
+  color-scheme: light;
+
+  --parchment-muted:   #F2F2F2;
+  --parchment:         #F7F7F7;
+  --parchment-raised:  #ffffff;
+
+  --text-primary:      #0D0D0F;
+  --text-secondary:    #2E2E33;
+  --text-tertiary:     #A1A1AA;
+  --text-muted:        #A1A1AA;
+  --text-inverse:      #F2F2F2;
+  --text-inverse-dim:  rgba(242, 242, 242, 0.55);
+  --text-inverse-muted: rgba(242, 242, 242, 0.32);
+
+  --border:          rgba(13, 13, 15, 0.09);
+  --border-strong:   rgba(13, 13, 15, 0.16);
+  --border-inverse:  rgba(255, 255, 255, 0.1);
+  --border-inverse-strong: rgba(255, 255, 255, 0.18);
+
+  --color-danger-bg:  rgba(192, 57, 43, 0.08);
+  --color-error-bg:   rgba(220, 38, 38, 0.08);
+  --color-success-bg:  rgba(72, 165, 111, 0.1);
+
+  --color-gray-25:   #FAFAFA;
+  --color-gray-50:   #F2F2F2;
+  --color-gray-100:  #E5E5E5;
+  --color-gray-200:  #D4D4D4;
+  --color-gray-300:  #A1A1AA;
+  --color-gray-400:  #71717A;
+  --color-gray-500:  #2E2E33;
+
   --color-primary:        var(--ink);
   --color-primary-hover:  var(--ink-raised);
   --color-primary-active: var(--ink-deep);
@@ -83,20 +113,82 @@
   --color-background: var(--parchment-raised);
   --color-border:     var(--border);
 
-  /* ─── Shape & spacing ─────────────────────────────────── */
-  --border-radius:       8px;
-  --shape-border-radius: 16px;
-  --input-border-radius: 6px;
-  --radius-sm:           4px;
-  --radius-md:           8px;
-  --radius-lg:           14px;
+  /* Botões primary (fundo escuro) */
+  --app-primary-cta-bg: var(--ink);
+  --app-primary-cta-fg: var(--text-inverse);
+  --app-primary-cta-border: var(--ink);
+  --app-primary-cta-hover-bg: var(--ink-raised);
+  --app-primary-cta-hover-border: var(--ink-raised);
+  --app-primary-cta-active-bg: var(--ink-deep);
+  --app-primary-outline-fg: var(--ink);
+  --app-primary-outline-border: var(--ink);
+  --app-primary-outline-hover-bg: var(--ink);
+  --app-primary-outline-hover-fg: var(--text-inverse);
+}
 
-  --spacing:       4px;
-  --page-padding:  24px;
+/* ─── Tema escuro (padrão do app) ─────────────────────── */
+html[data-theme="dark"] {
+  color-scheme: dark;
 
-  /* ─── Tipografia ──────────────────────────────────────── */
-  --font-family: "Montserrat", sans-serif;
-  --font-mono:   "Courier New", monospace;
+  --parchment-muted:   #0D0D0F;
+  --parchment:         #121214;
+  --parchment-raised:  #1A1A1D;
+
+  --text-primary:      #F2F2F2;
+  --text-secondary:     rgba(242, 242, 242, 0.85);
+  --text-tertiary:     #A1A1AA;
+  --text-muted:        #8E8E96;
+  --text-inverse:      #0D0D0F;
+  --text-inverse-dim:  rgba(13, 13, 15, 0.65);
+  --text-inverse-muted: rgba(13, 13, 15, 0.45);
+
+  --border:          rgba(255, 255, 255, 0.08);
+  --border-strong:   rgba(255, 255, 255, 0.12);
+  --border-inverse:  rgba(255, 255, 255, 0.1);
+  --border-inverse-strong: rgba(255, 255, 255, 0.16);
+
+  --color-danger-bg:  rgba(192, 57, 43, 0.2);
+  --color-error-bg:   rgba(220, 38, 38, 0.15);
+  --color-success-bg: rgba(72, 165, 111, 0.15);
+
+  --color-gray-25:   #1E1E22;
+  --color-gray-50:   #2A2A30;
+  --color-gray-100:  #34343C;
+  --color-gray-200:  #3E3E48;
+  --color-gray-300:  #A1A1AA;
+  --color-gray-400:  #A1A1AA;
+  --color-gray-500:  #E4E4E7;
+
+  --color-primary:        var(--amber);
+  --color-primary-hover:  var(--amber-dim);
+  --color-primary-active: var(--amber-dark);
+  --color-primary-bg:     var(--amber-pale);
+  --color-primary-text:   var(--ink);
+
+  --color-secondary:        var(--amber);
+  --color-secondary-hover:  var(--amber-dim);
+  --color-secondary-active: var(--amber-dark);
+  --color-secondary-text:   var(--ink);
+
+  --color-tertiary:        transparent;
+  --color-tertiary-hover:  rgba(255, 255, 255, 0.06);
+  --color-tertiary-active: rgba(255, 255, 255, 0.1);
+  --color-tertiary-text:   var(--text-primary);
+
+  --color-background: var(--parchment-raised);
+  --color-border:     var(--border);
+
+  /* CTA: âmbar no escuro (contraste com fundo) */
+  --app-primary-cta-bg: var(--amber);
+  --app-primary-cta-fg: var(--ink);
+  --app-primary-cta-border: var(--amber);
+  --app-primary-cta-hover-bg: var(--amber-dim);
+  --app-primary-cta-hover-border: var(--amber-dim);
+  --app-primary-cta-active-bg: var(--amber-dark);
+  --app-primary-outline-fg: var(--amber);
+  --app-primary-outline-border: var(--amber);
+  --app-primary-outline-hover-bg: rgba(212, 175, 55, 0.15);
+  --app-primary-outline-hover-fg: var(--amber);
 }
 
 * {

@@ -105,7 +105,6 @@ export const StockSelectionModal = ({
 
           return (
             <Select
-              noForm
               options={options}
               value={product.stock?.id}
               onSelect={(option) => {

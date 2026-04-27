@@ -4,6 +4,7 @@
   align-items: center;
   padding: 16px;
   background-color: var(--color-background);
+  color: var(--text-primary);
   flex-wrap: wrap;
   gap: 12px;
 
@@ -32,7 +33,7 @@
     border: 1px solid var(--color-border);
 
     &:hover:not(:disabled) {
-      background-color: #eeeeee;
+      background-color: var(--color-tertiary-hover);
     }
 
     &:disabled:not(.active) {
@@ -58,7 +59,7 @@
 
 .paginationInfo {
   font-size: 14px;
-  color: #475569;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 

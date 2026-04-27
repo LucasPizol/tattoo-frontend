@@ -93,7 +93,6 @@ export const Pagination = ({
   return (
     <div className={cn(styles.pagination, className)}>
       <Select
-        noForm
         value={perPage}
         options={[
           { label: "10 itens por página", value: 10 },

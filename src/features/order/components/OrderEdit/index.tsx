@@ -504,9 +504,7 @@ export const OrderEdit = (props: OrderEditProps) => {
                   <Tag key={condition.value}>{condition.name}</Tag>
                 ))}
               </div>
-              {order?.client?.healthNotes && (
-                <p>{order.client.healthNotes}</p>
-              )}
+              {order?.client?.healthNotes && <p>{order.client.healthNotes}</p>}
             </div>
           </Alert>
         </Visible>
@@ -660,7 +658,6 @@ export const OrderEdit = (props: OrderEditProps) => {
               key={order?.orderPaymentMethods?.length ?? 0}
             >
               <Select
-                noForm
                 label="Método"
                 placeholder="Selecione"
                 options={availablePaymentMethods.map((method) => ({
@@ -673,7 +670,6 @@ export const OrderEdit = (props: OrderEditProps) => {
                 onClear={() => setNewPaymentMethodId(null)}
               />
               <Input
-                noForm
                 label="Valor"
                 placeholder="R$ 0,00"
                 value={newPaymentValue}

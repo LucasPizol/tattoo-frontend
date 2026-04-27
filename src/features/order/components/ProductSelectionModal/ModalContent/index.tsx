@@ -90,7 +90,6 @@ const ModalContent = ({
     <div className={styles.content}>
       <div className={styles.searchContainer}>
         <Input
-          noForm
           onDebounceChange={(value) => {
             onFinishFilters({
               name_cont: value,
@@ -101,7 +100,6 @@ const ModalContent = ({
           autoFocus
         />
         <Select
-          noForm
           onSelect={(value) => {
             onFinishFilters({
               material_id_eq: value?.value,
@@ -123,7 +121,6 @@ const ModalContent = ({
           loading={isLoadingCategories}
         />
         <Select
-          noForm
           onSelect={(value) => {
             onFinishFilters({
               product_type_eq: value?.value,
@@ -145,7 +142,6 @@ const ModalContent = ({
           loading={isLoadingProductTypes}
         />
         <Select
-          noForm
           onSelect={(value) => {
             onFinishFilters({
               stocks_user_id_eq: value?.value,

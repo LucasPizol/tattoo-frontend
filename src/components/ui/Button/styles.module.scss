@@ -38,20 +38,20 @@
     gap: 8px;
   }
 
-  /* ── Primary: ink fill ── */
+  /* ── Primary: tema (ink no claro, âmbar no escuro) ── */
   &.primary {
-    background-color: var(--ink);
-    color: var(--text-inverse);
-    border-color: var(--ink);
+    background-color: var(--app-primary-cta-bg);
+    color: var(--app-primary-cta-fg);
+    border-color: var(--app-primary-cta-border);
 
     &:hover:not([disabled]) {
-      background-color: var(--ink-raised);
-      border-color: var(--ink-raised);
+      background-color: var(--app-primary-cta-hover-bg);
+      border-color: var(--app-primary-cta-hover-border);
     }
 
     &:active:not([disabled]) {
-      background-color: var(--ink-deep);
-      border-color: var(--ink-deep);
+      background-color: var(--app-primary-cta-active-bg);
+      border-color: var(--app-primary-cta-active-bg);
     }
 
     &.danger {
@@ -72,12 +72,12 @@
 
     &.outline {
       background-color: transparent;
-      border-color: var(--ink);
-      color: var(--ink);
+      border-color: var(--app-primary-outline-border);
+      color: var(--app-primary-outline-fg);
 
       &:hover:not([disabled]) {
-        background-color: var(--ink);
-        color: var(--text-inverse);
+        background-color: var(--app-primary-outline-hover-bg);
+        color: var(--app-primary-outline-hover-fg);
       }
     }
   }

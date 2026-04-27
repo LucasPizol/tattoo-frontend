@@ -7,7 +7,7 @@ import { masks } from "@/utils/masks";
 import { showError } from "@/utils/show-error";
 import { useCallback, useMemo } from "react";
 import { PopoverInputWrapper } from "../PopoverInputWrapper";
-import { SearchableSelect } from "../SearchableSelect";
+import { Select } from "../ui/Select";
 import { Button } from "../ui/Button";
 import { useModal } from "../ui/Modal/useModal";
 import styles from "./styles.module.scss";
@@ -110,20 +110,21 @@ export const ClientSelector = ({
         disabledHelperText={disabledHelperText}
         disabled={disabled}
       >
-        <SearchableSelect
+        <Select
+          searchable
           label={label || "Selecione um cliente"}
           placeholder={placeholder || "Selecione um cliente"}
           disabled={disabled}
-          isLoading={isLoading || isLoadingClients}
+          loading={isLoading || isLoadingClients}
           options={clientsOptions || []}
           value={value?.id}
           link={link}
-          mask={(value) => {
+          searchMask={(value) => {
             return isNaN(Number(value?.[0])) ? value : masks.formatCpf(value);
           }}
           onSelect={async ({ value, label }) => {
             await onChange?.({
-              id: value,
+              id: value as number,
               name: label,
             });
           }}
@@ -136,7 +137,7 @@ export const ClientSelector = ({
           createItem={
             uncreatable
               ? undefined
-              : (searchTerm) => (
+              : (searchTerm: string) => (
                 <Button
                   onClick={() =>
                     open({

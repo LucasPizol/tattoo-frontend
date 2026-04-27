@@ -142,7 +142,6 @@ export const DashboardFilters = memo(
         >
           <div className={styles.filterItems}>
             <Select
-              noForm
               label="Período rápido"
               options={QUICK_RANGES}
               value={quickRange}
