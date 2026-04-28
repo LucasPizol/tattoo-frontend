@@ -83,8 +83,8 @@ export const PaymentMethodsContent = () => {
   ];
 
   return (
-    <>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+    <div className={styles.paymentMethodsContainer}>
+      <div className={styles.paymentMethodsHeader}>
         <Button onClick={() => open()}>Novo Método de Pagamento</Button>
       </div>
       <FiltersCard form={form} onFinishFilters={onFinishFilters}>
@@ -95,9 +95,7 @@ export const PaymentMethodsContent = () => {
           prefixIcon={<MdSearch />}
           className={styles.searchInput}
           onDebounceChange={async (value) => {
-            onFinishFilters({
-              name_cont: value,
-            });
+            onFinishFilters({ name_cont: value });
           }}
         />
       </FiltersCard>
@@ -124,6 +122,6 @@ export const PaymentMethodsContent = () => {
           placeholder="Taxa sobre o método de pagamento"
         />
       </Modal>
-    </>
+    </div>
   );
 };

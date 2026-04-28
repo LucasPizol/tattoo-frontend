@@ -2,19 +2,12 @@ import { Button } from "@/components/ui/Button";
 import { Typography } from "@/components/ui/Typography";
 import { useSessionContext } from "@/context/useSession";
 import { useEntitlement } from "@/hooks/useEntitlement";
-import {
-  CheckoutSessionError,
-  createOnboardingCheckoutSession,
-  billingService,
-} from "@/services/requests/billing";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { MdCheckCircle, MdRadioButtonUnchecked } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useOnboarding } from "./hooks/useOnboarding";
 import type { OnboardingStepName } from "@/services/requests/onboarding";
-import { BILLING_STATUS_QUERY_KEY } from "@/features/config/components/SubscriptionCard/useSubscription";
 import styles from "./styles.module.scss";
 
 type StepDef = {
@@ -79,71 +72,6 @@ const ProgressBar = ({
     </Typography.Caption>
   </div>
 );
-
-const TrialCTACard = () => {
-  const queryClient = useQueryClient();
-  const { data: billingStatus, isLoading } = useQuery({
-    queryKey: BILLING_STATUS_QUERY_KEY,
-    queryFn: billingService.getBillingStatus,
-  });
-
-  const checkoutMutation = useMutation({
-    mutationFn: createOnboardingCheckoutSession,
-    onSuccess: ({ url }) => {
-      window.location.href = url;
-    },
-    onError: (error) => {
-      if (error instanceof CheckoutSessionError) {
-        if (error.code === "already_subscribed") {
-          queryClient.invalidateQueries({ queryKey: BILLING_STATUS_QUERY_KEY });
-          return;
-        }
-        if (error.code === "price_unavailable") {
-          toast.error("Plano indisponível no momento. Contate o suporte.");
-          return;
-        }
-      }
-      toast.error("Não foi possível iniciar o checkout. Tente novamente.");
-    },
-  });
-
-  if (isLoading) return null;
-
-  const isActive =
-    billingStatus?.has_active_subscription &&
-    (billingStatus.status === "active" || billingStatus.status === "trialing");
-
-  if (isActive) {
-    return (
-      <div className={styles.trialCard}>
-        <div className={styles.trialCardActive}>
-          <MdCheckCircle size={20} color="var(--color-success, #22c55e)" />
-          <Typography.Body2>Plano ativo. Aproveite o Rainbow!</Typography.Body2>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={styles.trialCard}>
-      <div className={styles.trialCardContent}>
-        <Typography.Body1 className={styles.trialTitle}>
-          Teste gratuito de 14 dias com acesso completo ao Studio
-        </Typography.Body1>
-        <Typography.Body2 className={styles.trialDescription}>
-          Adicione um cartão para continuar após o teste.
-        </Typography.Body2>
-        <Button
-          onClick={() => checkoutMutation.mutate()}
-          loading={checkoutMutation.isPending}
-          size="small"
-        >
-          Ativar plano
-        </Button>
-      </div>
-    </div>
-  );
-};
 
 type StepCardProps = {
   step: StepDef;
@@ -278,8 +206,6 @@ export const OnboardingPage = () => {
 
   return (
     <div className={styles.container}>
-      <TrialCTACard />
-
       <div className={styles.header}>
         <Typography.Title level={2}>
           Vamos configurar seu studio

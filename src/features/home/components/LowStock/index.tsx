@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { Loading } from "@/components/ui/Loading";
 import type { LowStockProduct } from "../../types";
-import { MdOutlineInventory } from "react-icons/md";
+import { MdArrowForward, MdOutlineInventory } from "react-icons/md";
 import { Link } from "react-router-dom";
 import styles from "./styles.module.scss";
 
@@ -19,7 +19,7 @@ export const LowStock = ({ products, isLoading }: LowStockProps) => {
       icon={<MdOutlineInventory />}
       actions={
         <Link to="/estoque" className={styles.headerLink}>
-          Ver estoque →
+          Ver estoque <span className={styles.arrow}><MdArrowForward size={14} /></span>
         </Link>
       }
     >
@@ -28,7 +28,12 @@ export const LowStock = ({ products, isLoading }: LowStockProps) => {
           <Loading size={24} />
         </div>
       ) : !products?.length ? (
-        <p className={styles.empty}>Nenhum produto com estoque baixo.</p>
+        <div className={styles.empty}>
+          <span className={styles.emptyIcon}>
+            <MdOutlineInventory size={20} />
+          </span>
+          Nenhum produto com estoque baixo.
+        </div>
       ) : (
         <div className={styles.list}>
           {products.map((product) => (

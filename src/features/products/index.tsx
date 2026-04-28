@@ -2,7 +2,6 @@ import { Action } from "@/components/Action";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { FiltersCard } from "@/components/FiltersCard";
 import { PageWrapper } from "@/components/PageWrapper";
-import { CatalogViewer } from "@/components/ProductCatalog/CatalogViewer";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { IconButton } from "@/components/ui/IconButton";
@@ -206,9 +205,6 @@ export const Products = () => {
                         })),
                         requireResponsible: product.requireResponsible,
                         productType: product.productType.key || undefined,
-                        carousel: product.carousel,
-                        featured: product.featured,
-                        new: product.new,
                         userId: product.user?.id || undefined,
                         images: [],
                         loadedImages: product.images.map((image) => ({
@@ -267,16 +263,13 @@ export const Products = () => {
       title="Produtos"
       subtitle="Gerencie seus produtos e mantenha as informações atualizadas"
       actions={
-        <div className={styles.headerButtons}>
-          <CatalogViewer />
-          <Button
-            variant="primary"
-            prefixIcon={<MdAdd />}
-            onClick={() => openProductForm()}
-          >
-            Adicionar Produto
-          </Button>
-        </div>
+        <Button
+          variant="primary"
+          prefixIcon={<MdAdd />}
+          onClick={() => openProductForm()}
+        >
+          Adicionar Produto
+        </Button>
       }
     >
       <FiltersCard

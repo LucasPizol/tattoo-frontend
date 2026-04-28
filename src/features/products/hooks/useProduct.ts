@@ -14,49 +14,28 @@ const defaultValues: ProductFilters = {
   quantity_lteq: undefined,
   material_id_eq: undefined,
   product_type_eq: undefined,
-  featured_eq: undefined,
-  new_eq: undefined,
-  carousel_eq: undefined,
   user_id_eq: undefined,
   without_stock: undefined,
   stocks_user_id_eq: undefined,
-  not_featured_eq: undefined,
 };
 
 export const useProduct = ({
   perPage = 20,
   disabled = false,
 }: UseProductProps = {}) => {
-  const { mutateAsync: deleteProduct, isPending: isDestroying } = useDeleteProduct();
+  const { mutateAsync: deleteProduct, isPending: isDestroying } =
+    useDeleteProduct();
 
   const form = useForm<ProductFilters>({
     defaultValues,
   });
 
-  const {
-    products,
-    isLoading,
-    pagination,
-    refetch,
-    onChangeFilters,
-    filters,
-  } = useProductsQuery({ perPage, disabled });
+  const { products, isLoading, pagination, refetch, onChangeFilters, filters } =
+    useProductsQuery({ perPage, disabled });
 
   const onFinishFilters = useCallback(
-    (filters: ProductFilters) => {
-      onChangeFilters({
-        ...filters,
-        not_featured_eq: filters.featured_eq
-          ? false
-          : filters.not_featured_eq
-            ? true
-            : undefined,
-        featured_eq: filters.featured_eq
-          ? true
-          : filters.not_featured_eq
-            ? false
-            : undefined,
-      });
+    (filters: ProductFilters, shouldSetParams = true) => {
+      onChangeFilters(filters, shouldSetParams);
     },
     [onChangeFilters],
   );
@@ -68,10 +47,13 @@ export const useProduct = ({
     [deleteProduct],
   );
 
-  const clearFilters = useCallback(() => {
-    form.reset(defaultValues);
-    onFinishFilters(defaultValues);
-  }, [form]);
+  const clearFilters = useCallback(
+    (shouldSetParams = true) => {
+      form.reset(defaultValues);
+      onFinishFilters(defaultValues, shouldSetParams);
+    },
+    [form],
+  );
 
   return {
     products,

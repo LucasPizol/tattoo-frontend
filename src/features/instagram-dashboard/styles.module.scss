@@ -16,10 +16,10 @@
 }
 
 .statCard {
-  background: white;
+  background: var(--surface-2);
   border-radius: var(--border-radius);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
@@ -45,13 +45,13 @@
 .statValue {
   font-size: 30px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   line-height: 1;
 }
 
 .statLabel {
   font-size: 13px;
-  color: #64748b;
+  color: var(--text-tertiary);
   font-weight: 500;
 }
 

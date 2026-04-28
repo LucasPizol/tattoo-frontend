@@ -54,7 +54,6 @@
   transition: border-color 0.18s, box-shadow 0.18s;
   position: relative;
   background-color: var(--input-surface, var(--parchment-raised));
-  min-height: 44px;
 
   input {
     flex: 1;
@@ -63,7 +62,7 @@
     font-size: 14px;
     color: var(--input-text-color, var(--text-primary));
     background-color: transparent;
-    padding: 8px 16px;
+    padding: 6px 12px;
     width: 100%;
 
     &::placeholder {

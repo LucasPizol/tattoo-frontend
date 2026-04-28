@@ -34,9 +34,6 @@ export type Product = {
     thumbnailUrl: string;
     id: number;
   }[];
-  featured: boolean;
-  new: boolean;
-  carousel: boolean;
   user: User | null;
 };
 
@@ -48,9 +45,6 @@ export type ProductCreatePayload = {
   require_responsible: boolean;
   images: File[];
   quantity?: number;
-  featured: boolean;
-  new: boolean;
-  carousel: boolean;
 };
 
 export type ProductWithMaterial = Product & {
@@ -71,11 +65,7 @@ export type ProductFilters = {
   quantity_lteq?: number;
   material_id_eq?: number;
   product_type_eq?: string;
-  featured_eq?: boolean;
-  new_eq?: boolean;
-  carousel_eq?: boolean;
   user_id_eq?: number | null;
   without_stock?: boolean;
   stocks_user_id_eq?: number | null;
-  not_featured_eq?: boolean;
 };

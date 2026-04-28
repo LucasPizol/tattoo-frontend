@@ -17,6 +17,7 @@ import { PaymentMethodsContent } from "@/features/payment-methods/PaymentMethods
 import { TagsContent } from "@/features/tags/TagsContent";
 import { CategoriesContent } from "@/features/categories/CategoriesContent";
 import styles from "./styles.module.scss";
+import { Select } from "@/components/ui/Select";
 
 const GeralTab = () => {
   const [confirmation, setConfirmation] = useState("");
@@ -45,22 +46,19 @@ const GeralTab = () => {
   }, [session?.user]);
 
   return (
-    <>
+    <div className={styles.configContainer}>
       <Card title="Aparência">
         <div className={styles.themeRow}>
-          <label className={styles.themeLabel} htmlFor="app-theme">
-            Tema da interface
-          </label>
-          <select
-            id="app-theme"
-            className={styles.themeSelect}
+          <Select
+            label="Tema da interface"
+            options={[
+              { label: "Escuro (padrão)", value: "dark" },
+              { label: "Claro", value: "light" },
+              { label: "Seguir o sistema", value: "system" },
+            ]}
             value={theme}
-            onChange={(e) => setTheme(e.target.value as ThemeMode)}
-          >
-            <option value="dark">Escuro (padrão)</option>
-            <option value="light">Claro</option>
-            <option value="system">Seguir o sistema</option>
-          </select>
+            onSelect={(option) => setTheme(option.value as ThemeMode)}
+          />
         </div>
         <p className={styles.themeHint}>
           Aplicado agora:{" "}
@@ -122,7 +120,7 @@ const GeralTab = () => {
           </Button>
         </Form>
       </Card>
-    </>
+    </div>
   );
 };
 
@@ -138,11 +136,11 @@ export const Config = () => (
       <Tabs.Tab label="Financeiro">
         <PaymentMethodsContent />
       </Tabs.Tab>
-      <Tabs.Tab label="Catálogo">
-        <>
-          <TagsContent />
-          <CategoriesContent />
-        </>
+      <Tabs.Tab label="Categorias">
+        <CategoriesContent />
+      </Tabs.Tab>
+      <Tabs.Tab label="Tags">
+        <TagsContent />
       </Tabs.Tab>
     </Tabs>
   </PageWrapper>

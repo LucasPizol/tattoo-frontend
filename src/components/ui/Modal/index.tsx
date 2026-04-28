@@ -14,6 +14,10 @@ type ModalPropsBase<C> = {
   showFooter?: boolean;
   submitLabel?: string;
   cancelLabel?: string;
+  /** Botão principal (Salvar / confirmar) com estilo destrutivo */
+  submitDanger?: boolean;
+  /** Botão Cancelar com estilo destrutivo (ex.: texto vermelho) */
+  cancelDanger?: boolean;
   loading?: boolean;
   closeOnOverlayClick?: boolean;
   closeOnEscape?: boolean;

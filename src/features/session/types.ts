@@ -10,6 +10,7 @@ export type CompanyEntitlements = {
   instagram_raffles: boolean;
   whatsapp_messaging: boolean;
   ai_sales_report: boolean;
+  google_calendar_sync: boolean;
 };
 
 export type LoginResponse = {

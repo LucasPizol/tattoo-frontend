@@ -14,16 +14,26 @@
   );
 }
 
-.card {
+.card,
+.cardWide {
   background: var(--surface-auth-raised);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-inverse);
   box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5);
   padding: 40px;
   width: 100%;
-  max-width: 480px;
   position: relative;
   overflow: hidden;
+
+  --input-surface: rgba(255, 255, 255, 0.05);
+  --input-border-color: rgba(255, 255, 255, 0.12);
+  --input-text-color: var(--text-inverse);
+  --input-label-color: var(--text-inverse-dim);
+  --input-placeholder-color: rgba(245, 240, 232, 0.2);
+  --input-icon-color: var(--text-inverse-dim);
+  --stepper-line: rgba(255, 255, 255, 0.12);
+  --stepper-border: rgba(255, 255, 255, 0.18);
+  --stepper-text: rgba(255, 255, 255, 0.3);
 
   &::before {
     content: "";
@@ -34,19 +44,14 @@
     height: 2px;
     background: linear-gradient(90deg, var(--amber-dark), var(--amber), var(--amber-dim));
   }
+}
 
-  /* Contexto escuro para inputs */
-  --input-surface: rgba(255, 255, 255, 0.05);
-  --input-border-color: rgba(255, 255, 255, 0.12);
-  --input-text-color: var(--text-inverse);
-  --input-label-color: var(--text-inverse-dim);
-  --input-placeholder-color: rgba(245, 240, 232, 0.2);
-  --input-icon-color: var(--text-inverse-dim);
+.card {
+  max-width: 480px;
+}
 
-  /* Stepper no contexto dark */
-  --stepper-line: rgba(255, 255, 255, 0.12);
-  --stepper-border: rgba(255, 255, 255, 0.18);
-  --stepper-text: rgba(255, 255, 255, 0.3);
+.cardWide {
+  max-width: 700px;
 }
 
 .header {
@@ -79,24 +84,11 @@
   }
 }
 
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 14px 0 6px;
-  color: var(--text-inverse-muted);
+.googleComingSoon {
+  text-align: center;
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-
-  &::before,
-  &::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--border-inverse);
-  }
+  color: var(--text-inverse-muted);
+  margin: 0 0 16px;
 }
 
 .form {
@@ -175,8 +167,13 @@
   }
 }
 
+.planPickerWrap {
+  margin-top: 20px;
+}
+
 @media (max-width: 480px) {
-  .card {
+  .card,
+  .cardWide {
     padding: 28px 20px;
   }
 

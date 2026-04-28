@@ -3,10 +3,12 @@ import { MdDelete, MdLink } from "react-icons/md";
 import styles from "./styles.module.scss";
 import { useInstagramAccountList } from "../instagram-posts/http/queries/useInstagramAccountList";
 import { useDestroyInstagramAccount } from "./http/mutations/connectionMutations";
-import { FaInstagram, FaWhatsapp, FaGoogle, FaCalendarAlt } from "react-icons/fa";
+import { FaInstagram, FaWhatsapp, FaGoogle } from "react-icons/fa";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { PageWrapper } from "@/components/PageWrapper";
 import { WhatsappButton } from "@/components/SocialMediaButtons/WhastappButton";
+import { GoogleCalendarCard } from "./components/GoogleCalendarCard";
+import { useEntitlement } from "@/hooks/useEntitlement";
 
 type ConnectionCardConfig = {
   id: string;
@@ -24,8 +26,10 @@ const CONNECTION_CARDS: ConnectionCardConfig[] = [
     name: "Instagram",
     description: "Publique posts e gerencie seu perfil diretamente",
     icon: <FaInstagram size={28} />,
-    gradient: "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
+    gradient:
+      "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
     connectButton: <InstagramButton />,
+    comingSoon: false,
   },
   {
     id: "whatsapp",
@@ -34,14 +38,6 @@ const CONNECTION_CARDS: ConnectionCardConfig[] = [
     icon: <FaWhatsapp size={28} />,
     gradient: "linear-gradient(135deg, #25d366 0%, #128c7e 100%)",
     connectButton: <WhatsappButton />,
-  },
-  {
-    id: "google-calendar",
-    name: "Google Calendar",
-    description: "Sincronize seus agendamentos automaticamente",
-    icon: <FaCalendarAlt size={28} />,
-    gradient: "linear-gradient(135deg, #4285f4 0%, #34a853 50%, #fbbc04 75%, #ea4335 100%)",
-    connectButton: null,
     comingSoon: true,
   },
   {
@@ -58,38 +54,42 @@ const CONNECTION_CARDS: ConnectionCardConfig[] = [
 export const Connections = () => {
   const { accounts } = useInstagramAccountList();
   const { mutateAsync: destroyAccount } = useDestroyInstagramAccount();
+  const hasGoogleCalendarSync = useEntitlement("google_calendar_sync");
 
   return (
     <PageWrapper title="Conexões" subtitle="Gerencie suas integrações">
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Conexões disponíveis</h2>
         <div className={styles.connectionsGrid}>
-          {CONNECTION_CARDS.map((card) => (
-            <div
-              key={card.id}
-              className={`${styles.connectionCard} ${card.comingSoon ? styles.comingSoon : ""}`}
-            >
+          {hasGoogleCalendarSync && <GoogleCalendarCard />}
+          {[...CONNECTION_CARDS]
+            .sort((a, b) => Number(!!a.comingSoon) - Number(!!b.comingSoon))
+            .map((card) => (
               <div
-                className={styles.connectionIcon}
-                style={{ background: card.gradient }}
+                key={card.id}
+                className={`${styles.connectionCard} ${card.comingSoon ? styles.comingSoon : ""}`}
               >
-                {card.icon}
+                <div
+                  className={styles.connectionIcon}
+                  style={{ background: card.gradient }}
+                >
+                  {card.icon}
+                </div>
+                <div className={styles.connectionInfo}>
+                  <span className={styles.connectionName}>{card.name}</span>
+                  <span className={styles.connectionDescription}>
+                    {card.description}
+                  </span>
+                </div>
+                <div className={styles.connectionAction}>
+                  {card.comingSoon ? (
+                    <span className={styles.comingSoonBadge}>Em breve</span>
+                  ) : (
+                    card.connectButton
+                  )}
+                </div>
               </div>
-              <div className={styles.connectionInfo}>
-                <span className={styles.connectionName}>{card.name}</span>
-                <span className={styles.connectionDescription}>
-                  {card.description}
-                </span>
-              </div>
-              <div className={styles.connectionAction}>
-                {card.comingSoon ? (
-                  <span className={styles.comingSoonBadge}>Em breve</span>
-                ) : (
-                  card.connectButton
-                )}
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </section>
 

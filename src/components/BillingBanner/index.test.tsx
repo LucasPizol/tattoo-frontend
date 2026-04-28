@@ -16,7 +16,6 @@ vi.mock("@/services/requests/billing", async () => {
   return {
     ...actual,
     billingService: {
-      createCheckoutSession: vi.fn(),
       createPortalSession: vi.fn(),
       getBillingStatus: vi.fn(),
     },

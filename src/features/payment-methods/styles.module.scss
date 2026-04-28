@@ -19,6 +19,17 @@
   }
 }
 
+.paymentMethodsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.paymentMethodsHeader {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .actionsModalContent {
   display: flex;
   flex-direction: column;

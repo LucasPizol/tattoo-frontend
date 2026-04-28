@@ -1,21 +1,9 @@
 // ============================================================================
-// TABLE - LAYOUT (cores via tokens de tema)
+// TABLE
 // ============================================================================
 
-$padding-desktop: 14px 16px;
-$padding-tablet: 10px 12px;
-$padding-mobile: 8px 10px;
-
-$font-desktop: 14px;
-$font-tablet: 13px;
-$font-mobile: 12px;
-
-$min-width-desktop: 100px;
-$min-width-tablet: 80px;
-$min-width-mobile: 60px;
-
 // ============================================================================
-// TABLE - CONTAINER
+// CONTAINER
 // ============================================================================
 
 .container {
@@ -25,50 +13,49 @@ $min-width-mobile: 60px;
   flex: 1;
   width: 100%;
   overflow: hidden;
-  overflow-x: auto;
-  font-size: $font-desktop;
-  background-color: var(--parchment-raised);
+  background-color: var(--surface-2);
   color: var(--text-primary);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--font-size-body2);
 }
 
 .pagination {
   position: sticky;
   top: 10px;
   z-index: 20;
-  background-color: var(--parchment-raised);
+  background-color: var(--surface-3);
   color: var(--text-primary);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
-  padding: 16px;
-  margin-bottom: 8px;
-  box-shadow: 0 1px 3px var(--color-border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-2);
+  box-shadow: var(--shadow-sm);
 }
 
 .wrapper {
   position: relative;
+  overflow-x: auto;
   overflow-y: hidden;
-
-  &.hasScroll::after {
-    opacity: 1;
-  }
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 
   &::-webkit-scrollbar {
     height: 6px;
   }
 
   &::-webkit-scrollbar-track {
-    background: var(--parchment);
-    border-radius: 3px;
+    background: var(--surface-1);
+    border-radius: var(--radius-sm);
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--color-gray-200);
-    border-radius: 3px;
+    background: var(--border-strong);
+    border-radius: var(--radius-sm);
 
     &:hover {
-      background: var(--color-gray-300);
+      background: var(--border);
     }
   }
 }
@@ -77,129 +64,163 @@ $min-width-mobile: 60px;
   display: grid;
   width: 100%;
   min-width: 100px;
-  background-color: var(--parchment-raised);
-  transition: all 0.2s ease-in-out;
-
-  &:focus-within {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
 }
 
 // ============================================================================
-// TABLE - HEADER
+// HEADER
 // ============================================================================
 
+// These wrappers are structural only — no box, no hover needed
 .header {
   display: contents;
 }
 
 .headerRow {
   display: contents;
-  text-transform: uppercase;
 }
 
 .headerCell {
   position: sticky;
   top: 0;
-  z-index: 10;
-  padding: $padding-desktop;
-  min-width: $min-width-desktop;
-  font-size: 12px;
+  z-index: 1;
+  padding: 10px var(--space-6);
+  font-size: 11px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   text-transform: uppercase;
+  letter-spacing: 0.06em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  background-color: var(--parchment);
+  background-color: var(--surface-3);
   border-bottom: 1px solid var(--border);
-  transition: background-color 0.2s ease;
   display: flex;
   align-items: center;
-  justify-content: center;
 
   &.sortable {
     cursor: pointer;
+    user-select: none;
+
+    // Hover gated to pointer devices only — avoids sticky-hover on touch
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px var(--space-4);
   }
 }
 
 // ============================================================================
-// TABLE - SORTING
+// SORTING
 // ============================================================================
 
 .sortableContent {
   display: flex;
   align-items: center;
-  gap: 4px;
-  justify-content: flex-start;
+  gap: var(--space-1);
 }
 
+// Fixed-width slot so non-sortable columns don't shift layout
 .sortIcons {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 14px;
+  flex-shrink: 0;
 }
 
 .sortIcon {
   opacity: 0.3;
-  transition: opacity 0.15s ease;
+  transition: opacity 150ms ease;
 
   &.active {
     opacity: 1;
   }
 
   &.sortIconUp {
-    transform: translateY(4px);
+    transform: translateY(3px);
   }
 
   &.sortIconDown {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 }
 
 // ============================================================================
-// TABLE - BODY
+// BODY
 // ============================================================================
 
 .body {
   display: contents;
 }
 
+// Each row is a real CSS-subgrid row so :hover fires on the full row strip,
+// not on individual cells. display:contents on bodyRow was the hover-flicker
+// root cause: browsers don't reliably fire :hover on display:contents elements,
+// so moving between cells produced a momentary mouseleave on the row.
 .bodyRow {
-  display: contents;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
 
-  .bodyCell {
-    transition: background-color 0.2s ease;
-    border-bottom: 1px solid var(--color-border);
+  // Row separator — last row gets no bottom border
+  &:not(:last-child) .bodyCell {
+    border-bottom: 1px solid var(--border-subtle);
   }
 
-  &:hover .bodyCell {
-    background-color: var(--color-tertiary-hover);
+  // Hover gated: (hover: hover) prevents touch-tap sticky-hover on iOS/Android
+  @media (hover: hover) and (pointer: fine) {
+    &:hover .bodyCell {
+      background-color: var(--surface-overlay);
+    }
   }
 }
 
-// Wrapper para RowForm - precisa ser transparente no grid
-.rowFormWrapper {
-  display: contents;
+.clickable {
+  .bodyCell {
+    cursor: pointer;
+  }
+
+  // Clickable rows get a slightly stronger tint so the affordance is clear.
+  // No !important — specificity is handled by the selector chain.
+  @media (hover: hover) and (pointer: fine) {
+    &:hover .bodyCell {
+      background-color: var(--surface-overlay);
+    }
+  }
+
+  &:focus-visible .bodyCell {
+    outline: 2px solid var(--amber);
+    outline-offset: -2px;
+  }
 }
 
 .bodyCell {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  min-width: $min-width-desktop;
-  font-size: $font-desktop;
+  padding: 12px var(--space-6);
+  font-size: var(--font-size-body2);
   line-height: 1.5;
   color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background-color: var(--surface-2);
+  transition: background-color 150ms ease;
+
+  @media (max-width: 768px) {
+    padding: 10px var(--space-4);
+    font-size: var(--font-size-caption);
+  }
 }
 
 // ============================================================================
-// TABLE - ALIGNMENT
+// ALIGNMENT
 // ============================================================================
 
 .left {
@@ -218,28 +239,10 @@ $min-width-mobile: 60px;
 }
 
 // ============================================================================
-// TABLE - CLICKABLE ROW
+// EMPTY & LOADING STATES
 // ============================================================================
 
-.clickable {
-  .bodyCell {
-    cursor: pointer;
-  }
-
-  &:hover .bodyCell {
-    background-color: var(--color-tertiary-active) !important;
-  }
-
-  &:focus-within .bodyCell {
-    outline: 2px solid var(--color-primary);
-    outline-offset: -2px;
-  }
-}
-
-// ============================================================================
-// TABLE - EMPTY & LOADING STATES
-// ============================================================================
-
+// Spans the full grid width via inline style gridColumn on the element
 .emptyContainer {
   display: flex;
   flex-direction: column;
@@ -247,7 +250,11 @@ $min-width-mobile: 60px;
   justify-content: center;
   width: 100%;
   height: 200px;
-  padding: 16px;
+  padding: var(--space-6);
+
+  @media (max-width: 480px) {
+    height: 150px;
+  }
 }
 
 .emptyContent {
@@ -255,56 +262,37 @@ $min-width-mobile: 60px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: var(--space-3);
   text-align: center;
-
   color: var(--text-tertiary);
+}
 
-  span {
-    color: inherit;
-    font-size: 16px;
-  }
+// Amber ring icon block — matches Home empty states pattern
+.emptyIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--amber-pale);
+  border: 1px solid var(--amber-glow);
+  color: var(--amber);
+  flex-shrink: 0;
+}
 
-  svg {
-    color: var(--text-tertiary);
-    flex-shrink: 0;
-  }
+.emptyLabel {
+  font-size: var(--font-size-caption);
+  color: var(--text-tertiary);
+  font-weight: 500;
 }
 
 // ============================================================================
-// TABLE - RESPONSIVE (TABLET)
+// PAGINATION STRIP
 // ============================================================================
 
-@media (max-width: 768px) {
-  .container {
-    font-size: $font-tablet;
-  }
-
-  .headerCell,
-  .bodyCell {
-    padding: $padding-tablet;
-    font-size: $font-tablet;
-    min-width: $min-width-tablet;
-  }
-}
-
-// ============================================================================
-// TABLE - RESPONSIVE (MOBILE)
-// ============================================================================
-
-@media (max-width: 480px) {
-  .headerCell,
-  .bodyCell {
-    padding: $padding-mobile;
-    font-size: $font-mobile;
-    min-width: $min-width-mobile;
-  }
-
-  .emptyContainer {
-    height: 150px;
-  }
-
-  .emptyContent span {
-    font-size: 14px;
-  }
+// Bottom pagination rendered inside .container gets a surface-3 strip
+.paginationStrip {
+  border-top: 1px solid var(--border-subtle);
+  background-color: var(--surface-3);
 }

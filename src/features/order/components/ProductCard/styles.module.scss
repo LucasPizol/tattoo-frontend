@@ -3,10 +3,10 @@
 }
 
 .productCard {
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border);
   border-radius: var(--border-radius);
   padding: 8px;
-  background: white;
+  background: var(--surface-3);
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
@@ -18,13 +18,13 @@
 
   &:hover:not(.disabled) {
     border-color: var(--color-primary);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    box-shadow: var(--shadow-sm);
   }
 
   &.selected {
     border-color: var(--color-primary);
-    background: var(--color-secondary);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    background: var(--amber-pale);
+    box-shadow: var(--shadow-md);
   }
 
   .productData {
@@ -48,11 +48,7 @@
     align-items: center;
     justify-content: center;
 
-    background-color: var(--color-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+    background-color: var(--surface-2);
     border-radius: var(--border-radius);
 
     img {
@@ -74,7 +70,7 @@
 .productName {
   font-size: 14px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
   margin: 0;
   line-height: 1.4;
   flex: 1;
@@ -109,7 +105,7 @@
   border-radius: 4px;
 
   span {
-    color: white !important;
+    color: var(--color-primary-text) !important;
     font-size: 11px;
     text-transform: uppercase;
   }
@@ -118,7 +114,7 @@
 .materialLabel,
 .priceLabel {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-tertiary);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -126,19 +122,19 @@
 
 .materialName {
   font-size: 14px;
-  color: #374151;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .price {
   font-size: 16px;
-  color: #059669;
+  color: var(--color-success-border);
   font-weight: 700;
 }
 
 .stockCount {
   font-size: 13px;
-  color: #6b7280;
+  color: var(--text-tertiary);
   font-weight: 500;
 }
 

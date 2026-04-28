@@ -5,7 +5,6 @@
   gap: 0;
   padding: 8px 16px;
   border-radius: var(--input-border-radius);
-  border: 1.5px solid transparent;
   font-size: 14px;
   font-weight: 600;
   font-family: var(--font-family);
@@ -18,12 +17,12 @@
   }
 
   &.small {
-    padding: 4px 10px;
+    padding: 4px 8px;
     font-size: 12px;
   }
 
   &.medium {
-    padding: 10px 20px;
+    padding: 6px 12px;
     font-size: 13px;
   }
 
@@ -38,11 +37,10 @@
     gap: 8px;
   }
 
-  /* ── Primary: tema (ink no claro, âmbar no escuro) ── */
   &.primary {
     background-color: var(--app-primary-cta-bg);
     color: var(--app-primary-cta-fg);
-    border-color: var(--app-primary-cta-border);
+    border: 1px solid var(--app-primary-cta-border);
 
     &:hover:not([disabled]) {
       background-color: var(--app-primary-cta-hover-bg);
@@ -56,12 +54,12 @@
 
     &.danger {
       background-color: var(--color-danger);
-      border-color: var(--color-danger);
+      border-color: var(--color-danger-active);
       color: var(--color-danger-text);
 
       &:hover:not([disabled]) {
         background-color: var(--color-danger-hover);
-        border-color: var(--color-danger-hover);
+        border-color: var(--color-danger-active);
       }
 
       &:active:not([disabled]) {
@@ -82,21 +80,21 @@
     }
   }
 
-  /* ── Secondary: amber fill ── */
+  /* ── Secondary: amber fill, borda âmbar levemente mais escura ── */
   &.secondary {
     background-color: var(--amber);
-    border-color: var(--amber);
+    border: 1px solid var(--amber-dark);
     color: var(--ink);
     font-weight: 600;
 
     &:hover:not([disabled]) {
       background-color: var(--amber-dim);
-      border-color: var(--amber-dim);
+      border-color: var(--amber-darker);
     }
 
     &:active:not([disabled]) {
       background-color: var(--amber-dark);
-      border-color: var(--amber-dark);
+      border-color: var(--amber-darker);
     }
 
     &.danger {
@@ -106,7 +104,13 @@
 
       &:hover:not([disabled]) {
         background-color: var(--color-danger);
-        border-color: var(--color-danger);
+        border-color: var(--color-danger-active);
+        color: var(--color-danger-text);
+      }
+
+      &:active:not([disabled]) {
+        background-color: var(--color-danger-active);
+        border-color: var(--color-danger-active);
         color: var(--color-danger-text);
       }
     }

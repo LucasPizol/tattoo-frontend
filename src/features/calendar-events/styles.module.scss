@@ -1,3 +1,75 @@
 .calendarEventsContainer {
   padding: 0;
 }
+
+// Inline notice — sits above the calendar when the month is empty
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  font-size: var(--font-size-body2);
+  color: var(--text-secondary);
+}
+
+.noticeIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--amber-pale);
+  color: var(--amber);
+  flex-shrink: 0;
+}
+
+// Mobile-only FAB — operator floor reality: phone in one hand
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--amber);
+  color: var(--text-on-amber);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.18),
+    0 2px 4px rgba(0, 0, 0, 0.10);
+  z-index: 90;
+  transition:
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 180ms ease;
+
+  &:hover {
+    transform: scale(1.04);
+    box-shadow:
+      0 10px 24px rgba(0, 0, 0, 0.22),
+      0 4px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+// Hide the desktop "Novo evento" action on mobile (FAB takes over)
+@media (max-width: 768px) {
+  .desktopAction {
+    display: none;
+  }
+}

@@ -4,6 +4,7 @@ import { cn } from "@/utils/cn";
 import { forwardRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import styles from "./styles.module.scss";
+import { Label } from "../Label";
 
 interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: React.ReactNode;
@@ -80,7 +81,7 @@ const FormCheckbox = forwardRef<HTMLInputElement, CheckboxProps>(
             }}
           />
           {label && (
-            <label
+            <Label
               className={cn(styles.label, {
                 [styles.horizontal]: layout === "horizontal",
                 [styles.vertical]: layout === "vertical",
@@ -89,7 +90,7 @@ const FormCheckbox = forwardRef<HTMLInputElement, CheckboxProps>(
             >
               {label}
               {props.required && <span className={styles.required}>*</span>}
-            </label>
+            </Label>
           )}
         </div>
         {error && <p className={styles.errorMessage}>{error}</p>}

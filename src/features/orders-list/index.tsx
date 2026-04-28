@@ -9,7 +9,13 @@ import { MultiSelect } from "@/components/ui/MultiSelect";
 import { Table } from "@/components/ui/Table";
 import { Tag, type TagColor } from "@/components/ui/Tag";
 import { OrderStatus, type Order } from "@/services/requests/orders/types";
-import { MdAdd, MdArrowBack, MdDelete, MdSearch, MdShoppingBag } from "react-icons/md";
+import {
+  MdAdd,
+  MdArrowBack,
+  MdDelete,
+  MdSearch,
+  MdShoppingBag,
+} from "react-icons/md";
 import {
   useCreateOrder,
   useDeleteOrder,

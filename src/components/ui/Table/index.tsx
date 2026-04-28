@@ -177,8 +177,10 @@ const EmptyState = ({ colSpan }: StateProps) => (
     style={{ gridColumn: `span ${colSpan}` }}
   >
     <div className={styles.emptyContent}>
-      <MdOutlineSearchOff size={48} />
-      <span>Nenhum dado encontrado</span>
+      <div className={styles.emptyIcon}>
+        <MdOutlineSearchOff size={22} />
+      </div>
+      <span className={styles.emptyLabel}>Nenhum dado encontrado</span>
     </div>
   </div>
 );
@@ -190,7 +192,6 @@ const LoadingState = ({ colSpan }: StateProps) => (
   >
     <div className={styles.emptyContent}>
       <Loading size={32} />
-      <span>Carregando dados...</span>
     </div>
   </div>
 );
@@ -369,13 +370,15 @@ const TableInner = <T extends DefaultColumn>({
         </div>
 
         {!isEmpty && pagination && (
-          <Pagination
-            pagination={paginationConfig!}
-            onChange={(page, perPage) => {
-              setHeight(0);
-              pagination.onChange(page, perPage);
-            }}
-          />
+          <div className={styles.paginationStrip}>
+            <Pagination
+              pagination={paginationConfig!}
+              onChange={(page, perPage) => {
+                setHeight(0);
+                pagination.onChange(page, perPage);
+              }}
+            />
+          </div>
         )}
       </div>
     </>

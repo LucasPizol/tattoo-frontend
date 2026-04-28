@@ -24,7 +24,7 @@ export const Button = ({
   prefixIcon,
   suffixIcon,
   className,
-  danger,
+  danger = false,
   size = "medium",
   fullWidth = false,
   titleExpanded = false,
@@ -32,6 +32,7 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const isButtonLoading = loading || isLoading;
 
   return (
     <button
@@ -46,7 +47,7 @@ export const Button = ({
         [styles.fullWidth]: fullWidth,
         [styles.outline]: outline,
       })}
-      data-loading={loading || isLoading}
+      data-loading={isButtonLoading}
       disabled={disabled || loading}
       {...props}
       onClick={async (e) => {
@@ -60,7 +61,7 @@ export const Button = ({
         }
       }}
     >
-      {prefixIcon && (
+      {prefixIcon && !isButtonLoading && (
         <div
           className={styles.icon}
           style={{
@@ -70,14 +71,24 @@ export const Button = ({
           {prefixIcon}
         </div>
       )}
-      <Loading
-        size={isLoading || loading ? 14 : 0}
-        color={
-          variant === "primary"
-            ? "var(--color-primary)"
-            : "var(--color-secondary)"
-        }
-      />
+      {isButtonLoading && (
+        <Loading
+          size={14}
+          color={
+            variant === "primary"
+              ? danger
+                ? "var(--color-danger-text)"
+                : "var(--app-primary-cta-fg)"
+              : variant === "secondary"
+                ? danger
+                  ? "var(--color-danger)"
+                  : "var(--app-secondary-cta-fg)"
+                : danger
+                  ? "var(--color-danger)"
+                  : "var(--app-tertiary-cta-fg)"
+          }
+        />
+      )}
       <span
         style={{
           flex: titleExpanded ? 1 : undefined,

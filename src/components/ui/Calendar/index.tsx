@@ -125,9 +125,7 @@ export const Calendar = <T extends CalendarEvent>({
 
   const parseDateTime = (dateTimeStr: string): Date => {
     const cleanStr = dateTimeStr.replace(" ", "T");
-    const date = new Date(cleanStr);
-    date.setHours(date.getHours() + 3);
-    return date;
+    return new Date(cleanStr);
   };
 
   const getTimeFromDateTime = (dateTimeStr: string): string => {
@@ -137,7 +135,7 @@ export const Calendar = <T extends CalendarEvent>({
 
   const getDateFromDateTime = (dateTimeStr: string): string => {
     const date = parseDateTime(dateTimeStr);
-    return date.toISOString().split("T")[0];
+    return formatDate(date.getFullYear(), date.getMonth(), date.getDate());
   };
 
   const calculateEventPosition = (event: CalendarEvent) => {
@@ -404,7 +402,7 @@ export const Calendar = <T extends CalendarEvent>({
                       style={{
                         top: position.top,
                         height: position.height,
-                        backgroundColor: event.color || "#3b82f6",
+                        ...(event.color ? { backgroundColor: event.color, borderLeftColor: event.color } : {}),
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -461,7 +459,7 @@ export const Calendar = <T extends CalendarEvent>({
             aria-label="Mês anterior"
             className={styles.navigationButton}
           >
-            <MdChevronLeft size={20} color="#fff" />
+            <MdChevronLeft size={20} color="currentColor" />
           </IconButton>
 
           <Form
@@ -496,7 +494,7 @@ export const Calendar = <T extends CalendarEvent>({
             aria-label="Próximo mês"
             className={styles.navigationButton}
           >
-            <MdChevronRight size={20} color="#fff" />
+            <MdChevronRight size={20} color="currentColor" />
           </IconButton>
         </div>
 
@@ -566,7 +564,7 @@ export const Calendar = <T extends CalendarEvent>({
                     <div
                       key={event.id}
                       className={styles.event}
-                      style={{ backgroundColor: event.color || "#3b82f6" }}
+                      style={event.color ? { backgroundColor: event.color, borderLeftColor: event.color } : undefined}
                       onClick={(e) => {
                         e.stopPropagation();
                         onEventClick?.(event as T);

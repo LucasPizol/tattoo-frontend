@@ -34,7 +34,12 @@ export const ConfirmModal = ({
 
   return (
     <>
-      <Modal {...modalProps} title={title} disabled={disabled}>
+      <Modal
+        {...modalProps}
+        title={title}
+        disabled={disabled}
+        submitDanger={danger}
+      >
         {children || <p>Tem certeza que deseja realizar esta ação?</p>}
       </Modal>
       {trigger ? (

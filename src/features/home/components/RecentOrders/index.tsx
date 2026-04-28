@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { Loading } from "@/components/ui/Loading";
 import type { RecentOrder } from "../../types";
-import { MdDescription } from "react-icons/md";
+import { MdArrowForward, MdDescription, MdReceiptLong } from "react-icons/md";
 import { Link } from "react-router-dom";
 import styles from "./styles.module.scss";
 
@@ -28,7 +28,7 @@ export const RecentOrders = ({ orders, isLoading }: RecentOrdersProps) => {
       icon={<MdDescription />}
       actions={
         <Link to="/vendas/usuarios" className={styles.headerLink}>
-          Ver todos →
+          Ver todos <span className={styles.arrow}><MdArrowForward size={14} /></span>
         </Link>
       }
     >
@@ -37,7 +37,12 @@ export const RecentOrders = ({ orders, isLoading }: RecentOrdersProps) => {
           <Loading size={24} />
         </div>
       ) : !orders?.length ? (
-        <p className={styles.empty}>Nenhum orçamento recente.</p>
+        <div className={styles.empty}>
+          <span className={styles.emptyIcon}>
+            <MdReceiptLong size={20} />
+          </span>
+          Nenhum orçamento recente.
+        </div>
       ) : (
         <div className={styles.list}>
           {orders.map((order) => {

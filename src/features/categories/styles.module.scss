@@ -25,6 +25,17 @@
   }
 }
 
+.categoriesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.categoriesHeader {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .actions {
   display: flex;
   gap: 8px;

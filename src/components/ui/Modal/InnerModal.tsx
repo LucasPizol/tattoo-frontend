@@ -25,6 +25,8 @@ type InnerModalProps = {
   fullScreen?: boolean;
   noForm?: boolean;
   leftFooterContent?: React.ReactNode;
+  submitDanger?: boolean;
+  cancelDanger?: boolean;
 };
 
 const InnerModal = ({
@@ -39,6 +41,8 @@ const InnerModal = ({
   showFooter = true,
   submitLabel = "Salvar",
   cancelLabel = "Cancelar",
+  submitDanger: _submitDanger = false,
+  cancelDanger: _cancelDanger = false,
   className,
   disabled,
   fullScreen = false,
@@ -134,9 +138,9 @@ const InnerModal = ({
                   <div className={styles.modalFooterActions}>
                     <Button
                       type="button"
-                      variant="secondary"
                       onClick={onClose}
                       disabled={isLoading}
+                      danger
                     >
                       {cancelLabel}
                     </Button>
@@ -189,6 +193,7 @@ const InnerModal = ({
                       variant="secondary"
                       onClick={onClose}
                       disabled={isLoading}
+                      danger
                     >
                       {cancelLabel}
                     </Button>

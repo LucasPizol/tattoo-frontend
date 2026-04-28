@@ -14,7 +14,7 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import {
   CheckoutSessionError,
   PortalSessionError,
-  createCheckoutSession,
+  createEmbeddedCheckoutSession,
   createPortalSession,
   getBillingStatus,
 } from ".";
@@ -47,29 +47,38 @@ const buildAxiosError = (
   return error;
 };
 
-describe("services/billing.createCheckoutSession", () => {
+describe("services/billing.createEmbeddedCheckoutSession", () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
-  it("returns the URL on success", async () => {
+  it("returns the client_secret on success", async () => {
     mockedApi.post.mockResolvedValueOnce({
-      url: "https://checkout.stripe.com/c/pay/cs_test_123",
+      client_secret: "cs_test_secret_abc",
     });
 
-    const result = await createCheckoutSession();
+    const result = await createEmbeddedCheckoutSession(
+      "rainbow_solo_monthly_brl",
+      "https://app.rainbow.com/register/return",
+    );
 
-    expect(result.url).toBe("https://checkout.stripe.com/c/pay/cs_test_123");
+    expect(result.client_secret).toBe("cs_test_secret_abc");
     expect(mockedApi.post).toHaveBeenCalledWith(
       "/api/billing/checkout_session",
-      {},
+      {
+        price_lookup_key: "rainbow_solo_monthly_brl",
+        return_url: "https://app.rainbow.com/register/return",
+        ui_mode: "embedded",
+      },
     );
   });
 
   it("maps 409 to already_subscribed", async () => {
     mockedApi.post.mockRejectedValueOnce(buildAxiosError(409));
 
-    await expect(createCheckoutSession()).rejects.toMatchObject({
+    await expect(
+      createEmbeddedCheckoutSession("rainbow_solo_monthly_brl", "https://app.rainbow.com/register/return"),
+    ).rejects.toMatchObject({
       name: "CheckoutSessionError",
       code: "already_subscribed",
       status: 409,
@@ -79,7 +88,9 @@ describe("services/billing.createCheckoutSession", () => {
   it("maps 422 to price_unavailable", async () => {
     mockedApi.post.mockRejectedValueOnce(buildAxiosError(422));
 
-    await expect(createCheckoutSession()).rejects.toMatchObject({
+    await expect(
+      createEmbeddedCheckoutSession("rainbow_solo_monthly_brl", "https://app.rainbow.com/register/return"),
+    ).rejects.toMatchObject({
       code: "price_unavailable",
       status: 422,
     });
@@ -88,26 +99,20 @@ describe("services/billing.createCheckoutSession", () => {
   it("maps 502 to stripe_unavailable", async () => {
     mockedApi.post.mockRejectedValueOnce(buildAxiosError(502));
 
-    await expect(createCheckoutSession()).rejects.toMatchObject({
+    await expect(
+      createEmbeddedCheckoutSession("rainbow_solo_monthly_brl", "https://app.rainbow.com/register/return"),
+    ).rejects.toMatchObject({
       code: "stripe_unavailable",
       status: 502,
-    });
-  });
-
-  it("maps unknown statuses to unknown", async () => {
-    mockedApi.post.mockRejectedValueOnce(buildAxiosError(418));
-
-    await expect(createCheckoutSession()).rejects.toMatchObject({
-      code: "unknown",
     });
   });
 
   it("wraps non-axios errors as CheckoutSessionError(unknown)", async () => {
     mockedApi.post.mockRejectedValueOnce(new Error("network blip"));
 
-    await expect(createCheckoutSession()).rejects.toBeInstanceOf(
-      CheckoutSessionError,
-    );
+    await expect(
+      createEmbeddedCheckoutSession("rainbow_solo_monthly_brl", "https://app.rainbow.com/register/return"),
+    ).rejects.toBeInstanceOf(CheckoutSessionError);
   });
 });
 

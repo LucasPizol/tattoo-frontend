@@ -22,15 +22,8 @@ const capitalize = (value: string) => {
 export const ptBrToUtc = (date: string, time: string) => {
   const [day, month, year] = date.split("/");
   const [hour, minute] = time.split(":");
-  const localDate = new Date(
-    Number(year),
-    Number(month) - 1,
-    Number(day),
-    Number(hour),
-    Number(minute),
-  );
-  localDate.setHours(localDate.getHours() - 3);
-  return localDate.toISOString();
+  const iso = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T${hour.padStart(2, "0")}:${minute.padStart(2, "0")}:00-03:00`;
+  return new Date(iso).toISOString();
 };
 
 type CalendarEventModalProps = ModalPropsForm<

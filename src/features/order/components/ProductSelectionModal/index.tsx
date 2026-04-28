@@ -106,7 +106,7 @@ const ProductSelectionModal = ({
         fullScreen
         onClose={() => {
           modalProps.onClose();
-          productData.clearFilters();
+          productData.clearFilters(false);
         }}
         leftFooterContent={
           selectedProducts.length > 0 && (

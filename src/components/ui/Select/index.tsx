@@ -12,6 +12,7 @@ import { Button } from "../Button";
 import { Label } from "../Label";
 import { Loading } from "../Loading";
 import styles from "./styles.module.scss";
+import { Input } from "../Input";
 
 const SELECT_CLOSE_EVENT = "select:close-others";
 
@@ -73,7 +74,7 @@ export const Select = <T,>({
   className,
   required,
   id,
-  clear = true,
+  clear = false,
   createItem,
   initialValue,
   disabled,
@@ -276,18 +277,16 @@ export const Select = <T,>({
         onClick={(e) => e.stopPropagation()}
       >
         {searchable && (
-          <div className={styles.searchContainer}>
-            <MdSearch size={16} className={styles.searchIcon} />
-            <input
-              ref={searchInputRef}
-              type="text"
-              className={styles.searchInput}
-              placeholder={searchPlaceholder}
-              value={searchTerm}
-              onChange={handleSearchChange}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
+          <Input
+            ref={searchInputRef}
+            type="text"
+            className={styles.searchInput}
+            placeholder={searchPlaceholder}
+            value={searchTerm}
+            onChange={handleSearchChange}
+            prefixIcon={<MdSearch size={16} className={styles.searchIcon} />}
+            onClick={(e) => e.stopPropagation()}
+          />
         )}
 
         {renderCreateItem()}
@@ -412,7 +411,7 @@ export const Select = <T,>({
                 <MdClose
                   className={styles.icon_clear}
                   size={16}
-                  style={{ color: "#777", cursor: "pointer" }}
+                  style={{ color: "var(--text-tertiary)", cursor: "pointer" }}
                 />
               )}
             </div>

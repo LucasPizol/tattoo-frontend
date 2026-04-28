@@ -44,6 +44,9 @@ export type Raffle = {
   instagramPostId?: number | null;
   createdAt: string;
   updatedAt: string;
+  status: "pending" | "drawn";
+  sampleCandidates: string[] | null;
+  poolSize: number | null;
 };
 
 export type RaffleDetail = Raffle & {

@@ -1,0 +1,44 @@
+.cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.iconPuck {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 144px;
+  height: 144px;
+  border-radius: 50%;
+  background: var(--amber-pale);
+}
+
+.icon {
+  color: var(--amber);
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 420px;
+}
+
+.buttonWrap {
+  width: 100%;
+  max-width: 320px;
+
+  @media (max-width: 640px) {
+    max-width: 100%;
+  }
+}

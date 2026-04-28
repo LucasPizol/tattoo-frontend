@@ -7,6 +7,7 @@ import type { BillingStatus } from "@/schemas/billing";
 
 import { useSubscription } from "./useSubscription";
 import styles from "./styles.module.scss";
+import { Link } from "react-router-dom";
 
 const formatBrazilianDate = (iso: string | null): string => {
   if (!iso) return "";
@@ -59,9 +60,7 @@ export const SubscriptionCard = () => {
     status,
     isLoading,
     pollTimedOut,
-    isCheckoutPending,
     isPortalPending,
-    startCheckout,
     startPortal,
     reload,
   } = useSubscription();
@@ -73,6 +72,20 @@ export const SubscriptionCard = () => {
 
   const renderBody = () => {
     if (derivedState === "loading") return <Skeleton />;
+
+    if (derivedState === "no_subscription" || derivedState === "canceled_or_incomplete") {
+      return (
+        <div className={styles.body}>
+          <h4 className={styles.headline}>Nenhuma assinatura ativa</h4>
+          <p className={styles.copy}>
+            Contrate um plano para continuar usando o Rainbow.
+          </p>
+          <Link to="/register">
+            <Button variant="primary">Continuar contratação</Button>
+          </Link>
+        </div>
+      );
+    }
 
     if (derivedState === "trialing") {
       const trialEnd = formatBrazilianDate(status?.trial_end ?? null);
@@ -94,9 +107,13 @@ export const SubscriptionCard = () => {
 
     if (derivedState === "active") {
       const periodEnd = formatBrazilianDate(status?.current_period_end ?? null);
+      const isSolo = status?.plan_lookup_key?.includes("solo");
+      const planName = status?.plan_lookup_key?.includes("studio")
+        ? "Studio"
+        : "Solo";
       return (
         <div className={styles.body}>
-          <h4 className={styles.headline}>Plano Solo ativo</h4>
+          <h4 className={styles.headline}>Plano {planName} ativo</h4>
           <p className={styles.copy}>Próxima cobrança em {periodEnd}.</p>
           <Button
             variant="secondary"
@@ -106,6 +123,16 @@ export const SubscriptionCard = () => {
           >
             Gerenciar assinatura
           </Button>
+          {isSolo && (
+            <button
+              type="button"
+              className={styles.upgradeButton}
+              onClick={() => startPortal()}
+              disabled={isPortalPending}
+            >
+              {isPortalPending ? "Abrindo portal..." : "Fazer upgrade para Studio"}
+            </button>
+          )}
         </div>
       );
     }
@@ -129,23 +156,7 @@ export const SubscriptionCard = () => {
       );
     }
 
-    // canceled_or_incomplete and no_subscription share the activation CTA.
-    return (
-      <div className={styles.body}>
-        <h4 className={styles.headline}>Ative seu plano Solo</h4>
-        <p className={styles.copy}>
-          14 dias grátis. Cancele quando quiser. Pagamento via cartão ou boleto.
-        </p>
-        <Button
-          variant="primary"
-          onClick={startCheckout}
-          loading={isCheckoutPending}
-          disabled={isCheckoutPending}
-        >
-          Assinar Solo (R$ 79/mês)
-        </Button>
-      </div>
-    );
+    return null;
   };
 
   return (

@@ -247,6 +247,7 @@ export const RaffleForm = () => {
             type="button"
             variant="secondary"
             onClick={() => navigate("/sorteios")}
+            danger
           >
             Cancelar
           </Button>

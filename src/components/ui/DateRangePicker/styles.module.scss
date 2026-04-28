@@ -1,18 +1,6 @@
 // ============================================================================
-// DATE RANGE PICKER - VARIABLES
-// ============================================================================
-
-$primary-color: var(--color-primary, #3b82f6);
-$border-color: var(--color-border, #e2e8f0);
-$text-color: #334155;
-$text-muted: #64748b;
-$bg-hover: #f1f5f9;
-$bg-range: #dbeafe;
-$bg-today: #eff6ff;
-$bg-disabled: #f8fafc;
-
-// ============================================================================
-// DATE RANGE PICKER - CONTAINER
+// DATE RANGE PICKER
+// All colors flow through CSS tokens — no raw hex.
 // ============================================================================
 
 .container {
@@ -22,9 +10,9 @@ $bg-disabled: #f8fafc;
 .label {
   display: block;
   margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: $text-color;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-label);
+  color: var(--text-secondary);
 }
 
 .input {
@@ -35,24 +23,17 @@ $bg-disabled: #f8fafc;
   }
 }
 
-// ============================================================================
-// DATE RANGE PICKER - TRIGGER
-// ============================================================================
-
 .trigger {
   width: 100%;
   cursor: pointer;
 }
 
-// ============================================================================
-// DATE RANGE PICKER - POPOVER
-// ============================================================================
-
+// ── Popover ────────────────────────────────────────────────────────────────
 .popover {
-  background: white;
+  background: var(--surface-3);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid $border-color;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
 }
 
 .popoverContent {
@@ -71,10 +52,7 @@ $bg-disabled: #f8fafc;
   }
 }
 
-// ============================================================================
-// DATE RANGE PICKER - CALENDAR
-// ============================================================================
-
+// ── Calendar ───────────────────────────────────────────────────────────────
 .calendar {
   flex: 1;
   min-width: 280px;
@@ -96,25 +74,30 @@ $bg-disabled: #f8fafc;
   padding: 0;
   border: none;
   background: transparent;
-  color: $text-color;
+  color: var(--text-secondary);
   cursor: pointer;
   border-radius: 6px;
   transition: background-color 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: $bg-hover;
+    background: var(--surface-overlay);
   }
 
   &:disabled {
     opacity: 0.3;
     cursor: not-allowed;
   }
+
+  @media (max-width: 768px) {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 .monthYear {
   font-size: 16px;
   font-weight: 600;
-  color: $text-color;
+  color: var(--text-primary);
 }
 
 .weekdays {
@@ -131,7 +114,7 @@ $bg-disabled: #f8fafc;
   height: 32px;
   font-size: 12px;
   font-weight: 600;
-  color: $text-muted;
+  color: var(--text-tertiary);
   text-transform: uppercase;
 }
 
@@ -150,7 +133,7 @@ $bg-disabled: #f8fafc;
   padding: 0;
   border: none;
   background: transparent;
-  color: $text-color;
+  color: var(--text-primary);
   font-size: 14px;
   cursor: pointer;
   border-radius: 6px;
@@ -158,33 +141,29 @@ $bg-disabled: #f8fafc;
   position: relative;
 
   &:hover:not(:disabled) {
-    background: $bg-hover;
+    background: var(--surface-overlay);
   }
 
   &.otherMonth {
-    color: $text-muted;
-    opacity: 0.4;
+    color: var(--text-tertiary);
+    opacity: 0.5;
   }
 
   &.today {
     font-weight: 600;
-    background: $bg-today;
-    color: $primary-color;
+    background: var(--amber-pale);
+    color: var(--color-primary);
   }
 
   &.disabled {
     opacity: 0.3;
     cursor: not-allowed;
-    background: $bg-disabled;
-
-    &:hover {
-      background: $bg-disabled;
-    }
+    background: transparent;
   }
 
   &.inRange {
-    background: $bg-range;
-    color: $primary-color;
+    background: var(--amber-pale);
+    color: var(--color-primary);
     border-radius: 0;
 
     &:first-child {
@@ -198,20 +177,10 @@ $bg-disabled: #f8fafc;
     }
   }
 
-  &.start {
-    background: $primary-color;
-    color: white;
-    font-weight: 600;
-    border-radius: 6px;
-
-    &:hover {
-      opacity: 0.9;
-    }
-  }
-
+  &.start,
   &.end {
-    background: $primary-color;
-    color: white;
+    background: var(--color-primary);
+    color: var(--color-primary-text);
     font-weight: 600;
     border-radius: 6px;
 
@@ -220,22 +189,18 @@ $bg-disabled: #f8fafc;
     }
   }
 
-  // Quando start e end são o mesmo dia
   &.start.end {
     border-radius: 6px;
   }
 }
 
-// ============================================================================
-// DATE RANGE PICKER - ACTIONS
-// ============================================================================
-
+// ── Actions ────────────────────────────────────────────────────────────────
 .actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-top: 16px;
-  border-top: 1px solid $border-color;
+  border-top: 1px solid var(--border);
 }
 
 .secondaryActions {
@@ -247,7 +212,7 @@ $bg-disabled: #f8fafc;
   padding: 0;
   border: none;
   background: transparent;
-  color: $primary-color;
+  color: var(--color-primary);
   font-size: 14px;
   cursor: pointer;
   text-decoration: underline;
@@ -258,10 +223,7 @@ $bg-disabled: #f8fafc;
   }
 }
 
-// ============================================================================
-// DATE RANGE PICKER - RESPONSIVE
-// ============================================================================
-
+// ── Responsive ─────────────────────────────────────────────────────────────
 @media (max-width: 768px) {
   .popoverContent {
     min-width: auto;

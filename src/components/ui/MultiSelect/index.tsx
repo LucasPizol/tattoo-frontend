@@ -289,7 +289,7 @@ export const MultiSelect = <T,>({
               <MdClose
                 className={styles.icon_clear}
                 size={16}
-                style={{ color: "#777", cursor: "pointer" }}
+                style={{ color: "var(--text-tertiary)", cursor: "pointer" }}
               />
             )}
           </div>

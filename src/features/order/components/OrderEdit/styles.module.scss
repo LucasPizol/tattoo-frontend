@@ -1,75 +1,115 @@
+// OrderEdit — two-column layout on desktop, single-column on mobile
+// Left: editor cards (client → products → payment → attachments)
+// Right: sticky summary panel with running total + primary CTA
+
 .orderEdit {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 800px;
   width: 100%;
-  margin: 0 auto;
-  padding-bottom: 24px;
+  padding-bottom: var(--space-6);
 
   @media (max-width: 768px) {
     padding-bottom: 100px;
   }
 }
 
-// Cards
+// ── Layout shell ──────────────────────────────────────────────────────────────
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  align-items: start;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 300px;
+    gap: var(--space-5);
+  }
+}
+
+.editorColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+// The summary column is position: sticky on desktop so it stays visible
+// while the operator scrolls the editor cards on the left
+.summaryColumn {
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: block;
+    position: sticky;
+    // 80px accounts for the PageWrapper top bar height
+    top: 80px;
+  }
+}
+
+// ── Card primitive ─────────────────────────────────────────────────────────────
+
 .card {
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
   overflow: hidden;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
-  border-bottom: 1px solid #f1f5f9;
-  background: #f8fafc;
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-3);
 
   @media (max-width: 540px) {
-    padding: 12px 16px;
+    padding: var(--space-3) var(--space-4);
   }
 }
 
 .cardTitle {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: var(--space-2);
+  font-size: var(--font-size-label);
   font-weight: 600;
-  color: #334155;
+  color: var(--text-primary);
 
   svg {
-    color: #64748b;
+    color: var(--text-tertiary);
   }
 }
 
 .cardBody {
-  padding: 20px;
+  padding: var(--space-5);
 
   @media (max-width: 540px) {
-    padding: 16px;
+    padding: var(--space-4);
   }
 }
 
-// Client section
+// ── Client section ─────────────────────────────────────────────────────────────
+
 .clientBody {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .clientObs {
-  padding: 10px 14px;
-  background: #fffbeb;
-  border-radius: 8px;
-  font-size: 13px;
-  color: #92400e;
+  padding: var(--space-2) var(--space-3);
+  background: var(--alert-warn-bg);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-caption);
+  color: var(--alert-warn-fg);
   line-height: 1.5;
 }
 
-// Products
+// ── Products table ─────────────────────────────────────────────────────────────
+
 .productsTable {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -86,7 +126,7 @@
 }
 
 .image {
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .productInfo {
@@ -95,8 +135,8 @@
   gap: 2px;
 
   strong {
-    color: #334155;
-    font-size: 13px;
+    color: var(--text-primary);
+    font-size: var(--font-size-label);
     font-weight: 500;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -105,8 +145,8 @@
   }
 
   .material {
-    color: #94a3b8;
-    font-size: 11px;
+    color: var(--text-tertiary);
+    font-size: var(--font-size-caption);
   }
 }
 
@@ -117,23 +157,24 @@
 
   .valueLabelText {
     font-weight: 400;
-    font-size: 11px;
-    color: #94a3b8;
+    font-size: var(--font-size-caption);
+    color: var(--text-tertiary);
   }
 }
 
 .totalValue {
-  color: #059669;
+  color: var(--color-success-border);
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .emptyState {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px 20px;
-  color: #94a3b8;
-  font-size: 13px;
+  padding: var(--space-8) var(--space-5);
+  color: var(--text-tertiary);
+  font-size: var(--font-size-label);
 }
 
 .actions {
@@ -142,15 +183,18 @@
 }
 
 .actionButton {
-  color: #cbd5e1;
-  transition: color 0.15s;
+  color: var(--text-tertiary);
+  transition: color 150ms ease;
 
-  &:hover {
-    color: #ef4444;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-error);
+    }
   }
 }
 
-// Payment methods
+// ── Payment methods ────────────────────────────────────────────────────────────
+
 .paymentMethodsList {
   list-style: none;
   padding: 0;
@@ -162,10 +206,10 @@
 .paymentMethodItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  font-size: 13px;
-  border-bottom: 1px solid #f1f5f9;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  font-size: var(--font-size-label);
+  border-bottom: 1px solid var(--border-subtle);
 
   &:last-child {
     border-bottom: none;
@@ -175,7 +219,7 @@
 .paymentMethodName {
   flex: 2;
   font-weight: 500;
-  color: #334155;
+  color: var(--text-primary);
 }
 
 .paymentMethodValue {
@@ -183,18 +227,19 @@
   min-width: 90px;
   text-align: right;
   flex: 1;
+  font-variant-numeric: tabular-nums;
 
   &.paymentMethodValueNotEditable {
-    color: #059669;
+    color: var(--color-success-border);
   }
 }
 
 .addPaymentMethod {
   display: flex;
-  gap: 10px;
+  gap: var(--space-2);
   align-items: flex-end;
-  padding-top: 12px;
-  border-top: 1px solid #f1f5f9;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
 
   > *:first-child {
     flex: 1;
@@ -223,118 +268,189 @@
   height: fit-content;
 }
 
-// Quick actions
-.quickActions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 20px;
-  border-top: 1px solid #f1f5f9;
+// ── Summary panel (desktop right column) ─────────────────────────────────────
 
-  @media (max-width: 540px) {
-    padding: 16px;
-  }
-}
-
-// Summary
-.summaryBody {
+// The summary panel is the focal element on desktop — it earns more presence
+// than the editor cards: amber-glow border + shadow-sm lift
+.summaryPanel {
+  border: 1px solid var(--amber-glow);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+}
+
+.summaryHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.summaryHeaderIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  background: var(--amber-pale);
+  color: var(--amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.summaryHeaderLabel {
+  font-size: var(--font-size-label);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.summaryBody {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
 }
 
 .summaryLine {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
-  color: #64748b;
+  font-size: var(--font-size-label);
+  color: var(--text-tertiary);
 
-  span:last-child,
-  > :last-child {
+  span:last-child {
     font-weight: 500;
-    color: #334155;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
   }
 }
 
-.redValue {
-  color: #ef4444 !important;
+.summaryLineNegative {
+  span:last-child {
+    color: var(--color-error) !important;
+  }
 }
 
-.comissionsTags {
+// Indented per-artist commission breakdown
+.comissionsList {
   list-style: none;
   padding: 0;
-  margin: 0 0 0 16px;
-}
-
-.comissionTag {
-  font-size: 12px;
-  color: #64748b;
-}
-
-.comissionTagContent {
+  margin: 0 0 0 var(--space-4);
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 2px 0;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.comissionTagLabel {
-  flex: 1;
-  font-weight: 500;
-  color: #94a3b8;
-}
-
-.comissionTagValue {
-  font-weight: 500;
-  color: #64748b;
-}
-
-.comissionTagActions {
+.comissionItem {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-size-caption);
+}
+
+.comissionName {
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.comissionValue {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.summaryDivider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--space-1) 0;
 }
 
 .summaryTotal {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding-top: 16px;
-  border-top: 1px solid #e2e8f0;
-  margin-top: 6px;
 
+  // Label is quieter so the number anchors the eye without competition
   span {
-    font-size: 14px;
-    font-weight: 600;
-    color: #334155;
+    font-size: var(--font-size-label);
+    font-weight: 500;
+    color: var(--text-tertiary);
   }
 }
 
+// Amber while the order is open (in-progress signal); green once confirmed (settled signal)
 .totalValueBig {
-  font-size: 28px;
+  font-size: var(--font-size-h2);
   font-weight: 700;
-  color: #059669;
+  color: var(--amber);
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-// Sticky footer (mobile)
+.totalValueBigSettled {
+  color: var(--color-success-border);
+}
+
+// Payment method breakdown inside the summary panel
+.paymentBreakdown {
+  margin-top: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.paymentBreakdownLine {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-caption);
+  color: var(--text-tertiary);
+
+  span:last-child {
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.summaryAction {
+  padding: var(--space-5);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.confirmButton {
+  width: 100%;
+  padding: 14px;
+  font-size: var(--font-size-body2);
+  font-weight: 600;
+}
+
+// ── Sticky mobile footer ──────────────────────────────────────────────────────
+// Shown only on mobile where the summary panel is hidden
+
 .stickyFooter {
   display: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1023px) {
     display: flex;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 100;
-    background: white;
-    border-top: 1px solid #e2e8f0;
-    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
-    padding: 12px 20px;
+    background: var(--surface-3);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.10);
+    padding: var(--space-3) var(--space-5);
+    padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
     align-items: center;
-    gap: 16px;
+    gap: var(--space-4);
   }
 }
 
@@ -345,16 +461,17 @@
   min-width: 0;
 
   span {
-    font-size: 11px;
-    color: #64748b;
+    font-size: var(--font-size-caption);
+    color: var(--text-tertiary);
     font-weight: 500;
   }
 
   strong {
-    font-size: 20px;
+    font-size: var(--font-size-h3);
     font-weight: 700;
-    color: #059669;
+    color: var(--amber);
     letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -362,39 +479,23 @@
   flex-shrink: 0;
 }
 
-// Desktop footer action
-.desktopAction {
-  padding: 20px;
-  border-top: 1px solid #f1f5f9;
+// ── Alerts ────────────────────────────────────────────────────────────────────
 
-  @media (max-width: 768px) {
-    display: none;
-  }
-}
-
-.confirmButton {
-  width: 100%;
-  padding: 14px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-// Alerts
 .alerts {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-2);
 }
 
 .alertContent {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: center;
 
   @media (max-width: 540px) {
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: var(--space-2);
   }
 }
 
@@ -404,79 +505,82 @@
   flex: 1;
 
   h3 {
-    font-size: 14px;
+    font-size: var(--font-size-body2);
     font-weight: 600;
     margin: 0 0 2px;
   }
 
   p {
     margin: 0;
-    font-size: 13px;
+    font-size: var(--font-size-label);
     line-height: 1.4;
   }
 }
 
-.title {
-  color: #f59e0b;
+.alertTitle {
+  color: var(--alert-warn-fg);
 }
 
-.titleInfo {
-  color: #3b82f6;
+.alertTitleInfo {
+  color: var(--alert-info-fg);
 }
 
 .healthConditionsTags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
 }
 
 .syncWarning {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 14px;
-  background: #fef3c7;
-  border-radius: 8px;
-  font-size: 12px;
-  color: #92400e;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  background: var(--alert-warn-bg);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-caption);
+  color: var(--alert-warn-fg);
   font-weight: 500;
 }
 
-// Attachments
+// ── Attachments ───────────────────────────────────────────────────────────────
+
 .attachmentsBody {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
-// Confirm Modal
+// ── Confirm modal content ─────────────────────────────────────────────────────
+
 .confirmContent {
   p {
-    margin-bottom: 12px;
-    color: #475569;
+    margin-bottom: var(--space-3);
+    color: var(--text-secondary);
   }
 }
 
 .confirmSummary {
-  background: var(--color-background);
-  border-radius: 8px;
-  padding: 12px;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .confirmRow {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: var(--font-size-label);
 
   span {
-    color: #64748b;
+    color: var(--text-tertiary);
   }
 
   strong {
-    color: #334155;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
   }
 }

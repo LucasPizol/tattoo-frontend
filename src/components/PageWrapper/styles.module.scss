@@ -10,18 +10,21 @@
 
 .header {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 8px;
+  gap: 16px;
   padding: var(--page-padding);
-  padding-bottom: 0;
+  padding-bottom: 16px;
   padding-top: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
 }
 
 .headerContent {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  min-width: 0;
 }
 
 .backButtonContainer {
@@ -30,19 +33,31 @@
   gap: 8px;
 }
 
+.backButton {
+  width: 36px;
+  height: 36px;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .title {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 800;
   color: var(--text-primary);
   margin: 0;
   letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-tertiary);
   margin: 0;
   font-weight: 500;
+  letter-spacing: 0.005em;
 }
 
 .content {
@@ -55,22 +70,25 @@
   padding-bottom: 0;
 
   @media (max-width: 768px) {
-    padding-top: 0;
-    padding-bottom: 0;
     padding-left: 0;
     padding-right: 0;
   }
 }
 
 @media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    align-items: stretch;
+  .container {
     gap: 16px;
   }
 
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+
   .title {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .subtitle {

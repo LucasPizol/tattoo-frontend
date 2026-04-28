@@ -12,10 +12,7 @@ const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
 const simplifyTime = (date: string) => {
-  const dateObj = new Date(date);
-  dateObj.setHours(dateObj.getHours() + 3);
-
-  return dateObj.toTimeString().slice(0, 5);
+  return new Date(date).toTimeString().slice(0, 5);
 };
 
 const getEndTime = (startTime: string) => {
@@ -36,50 +33,43 @@ export const CalendarEvents = () => {
     end_at_lteq: endOfMonth.toISOString(),
   });
 
+  const openNewEvent = (overrides: Record<string, unknown> = {}) =>
+    open({
+      title: "",
+      description: "",
+      type: undefined,
+      clientId: undefined,
+      startAt: new Date().toLocaleDateString("pt-BR"),
+      startTime: undefined,
+      endTime: undefined,
+      ...overrides,
+    });
+
   return (
     <PageWrapper
       title="Agenda"
       subtitle="Gerencie os eventos de sua agenda"
       actions={
-        <Button
-          prefixIcon={<MdAdd />}
-          onClick={() => {
-            open({
-              title: "",
-              description: "",
-              type: undefined,
-              clientId: undefined,
-              startAt: new Date().toLocaleDateString("pt-BR"),
-              startTime: undefined,
-              endTime: undefined,
-            });
-          }}
-        >
-          Novo evento
-        </Button>
+        <div className={styles.desktopAction}>
+          <Button prefixIcon={<MdAdd />} onClick={() => openNewEvent()}>
+            Novo evento
+          </Button>
+        </div>
       }
       containerClassName={styles.calendarEventsContainer}
     >
       {!isLoading && data.length === 0 && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            padding: "12px 16px",
-            borderRadius: "var(--border-radius)",
-            background: "var(--parchment-raised)",
-            border: "1px solid var(--border)",
-            marginBottom: 16,
-            fontSize: "var(--font-size-body2)",
-            color: "var(--text-secondary)",
-          }}
-        >
-          <MdCalendarToday size={20} style={{ color: "var(--amber)", flexShrink: 0 }} />
-          Nenhum atendimento este mês. Clique em um dia do calendário ou em{" "}
-          <strong>Novo evento</strong> para começar.
+        <div className={styles.notice}>
+          <span className={styles.noticeIcon}>
+            <MdCalendarToday size={18} />
+          </span>
+          <span>
+            Nenhum atendimento este mês. Toque em um dia do calendário ou em{" "}
+            <strong>Novo evento</strong> para começar.
+          </span>
         </div>
       )}
+
       <Calendar
         events={data.map((event) => ({
           ...event,
@@ -89,19 +79,22 @@ export const CalendarEvents = () => {
           date: event.startAt,
         }))}
         onEventClick={(data) => {
-          open({
-            title: data.title,
-            description: data.description,
-            type: data.eventType.value,
-            clientId: data.client?.id,
-            startAt: new Date(data.startAt).toLocaleDateString("pt-BR"),
-            startTime: simplifyTime(data.startAt),
-            endTime: simplifyTime(data.endAt),
-            phone: data.phone,
-            clientName: data.clientName,
-            whatsappMessage: data.whatsappMessage,
-            sendWhatsappMessage: data.sendWhatsappMessage,
-          }, data);
+          open(
+            {
+              title: data.title,
+              description: data.description,
+              type: data.eventType.value,
+              clientId: data.client?.id,
+              startAt: new Date(data.startAt).toLocaleDateString("pt-BR"),
+              startTime: simplifyTime(data.startAt),
+              endTime: simplifyTime(data.endAt),
+              phone: data.phone,
+              clientName: data.clientName,
+              whatsappMessage: data.whatsappMessage,
+              sendWhatsappMessage: data.sendWhatsappMessage,
+            },
+            data,
+          );
         }}
         onDateClick={(date) => {
           open({
@@ -120,6 +113,16 @@ export const CalendarEvents = () => {
         initialMonth={today.getMonth()}
         initialYear={today.getFullYear()}
       />
+
+      <button
+        type="button"
+        aria-label="Novo evento"
+        className={styles.fab}
+        onClick={() => openNewEvent()}
+      >
+        <MdAdd size={28} />
+      </button>
+
       <CalendarEventModal {...modalProps} />
     </PageWrapper>
   );

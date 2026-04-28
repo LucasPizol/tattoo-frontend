@@ -1,13 +1,17 @@
 import { cn } from "@/utils/cn";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
+  MdClose,
   MdExpandLess,
   MdExpandMore,
   MdKeyboardArrowDown,
   MdSearch,
 } from "react-icons/md";
+import { Input } from "../Input";
+import { Label } from "../Label";
 import { Tag } from "../Tag";
+import { Visible } from "../../Visible";
 import styles from "./styles.module.scss";
 
 export interface TreeNode {
@@ -27,11 +31,15 @@ interface TreeSelectProps {
   disabled?: boolean;
   allowClear?: boolean;
   showSearch?: boolean;
-  label?: string;
+  label?: React.ReactNode;
+  required?: boolean;
+  error?: string;
   size?: "small" | "medium" | "large";
   canOpenDisabled?: boolean;
   canSelectRoot?: boolean;
   onClear?: () => void;
+  noResultsText?: string;
+  searchPlaceholder?: string;
 }
 
 export const TreeSelect: React.FC<TreeSelectProps> = ({
@@ -43,18 +51,21 @@ export const TreeSelect: React.FC<TreeSelectProps> = ({
   disabled = false,
   allowClear = true,
   showSearch = true,
-  size = "medium",
-  label: _label,
+  label,
+  required,
+  error,
   canOpenDisabled = false,
   canSelectRoot = false,
   onClear,
+  noResultsText = "Nenhum resultado encontrado",
+  searchPlaceholder = "Buscar...",
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [expandedKeys, setExpandedKeys] = useState<Set<number>>(new Set());
   const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [dropdownPosition, setDropdownPosition] = useState({
     top: 0,
     left: 0,
@@ -62,14 +73,10 @@ export const TreeSelect: React.FC<TreeSelectProps> = ({
   });
 
   useEffect(() => {
-    if (values) {
+    if (values && values.length > 0) {
       const findNode = (nodes: TreeNode[]): TreeNode | null => {
         for (const node of nodes) {
-          if (
-            node.id.toString() ===
-            values.find((v) => v.id === node.id)?.id.toString()
-          )
-            return node;
+          if (values.some((v) => v.id === node.id)) return node;
           if (node.children) {
             const found = findNode(node.children);
             if (found) return found;
@@ -77,7 +84,6 @@ export const TreeSelect: React.FC<TreeSelectProps> = ({
         }
         return null;
       };
-
       setSelectedNode(findNode(data));
     } else {
       setSelectedNode(null);
@@ -85,36 +91,48 @@ export const TreeSelect: React.FC<TreeSelectProps> = ({
   }, [values, data]);
 
   const toggleExpanded = (nodeId: number) => {
-    const newExpandedKeys = new Set(expandedKeys);
-    if (newExpandedKeys.has(nodeId)) {
-      newExpandedKeys.delete(nodeId);
-    } else {
-      newExpandedKeys.add(nodeId);
-    }
-    setExpandedKeys(newExpandedKeys);
+    setExpandedKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(nodeId)) next.delete(nodeId);
+      else next.add(nodeId);
+      return next;
+    });
   };
 
   const handleClose = () => {
     setIsOpen(false);
+    setSearchValue("");
   };
 
-  const handleToggle = (e: React.MouseEvent) => {
+  const updateDropdownPosition = () => {
+    if (selectRef.current) {
+      const rect = selectRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+      });
+    }
+  };
+
+  const handleToggle = (e: React.MouseEvent | React.KeyboardEvent) => {
     if (disabled && !canOpenDisabled) return;
-
     e.stopPropagation();
-    const newIsOpen = !isOpen;
-    setIsOpen(newIsOpen);
-
-    if (newIsOpen) {
-      setTimeout(updateDropdownPosition, 0);
+    const next = !isOpen;
+    setIsOpen(next);
+    if (next) {
+      setTimeout(() => {
+        updateDropdownPosition();
+        searchInputRef.current?.focus();
+      }, 0);
     }
   };
 
   useEffect(() => {
+    if (!isOpen) return;
     document.addEventListener("click", handleClose);
     window.addEventListener("resize", updateDropdownPosition);
     window.addEventListener("scroll", updateDropdownPosition, true);
-
     return () => {
       document.removeEventListener("click", handleClose);
       window.removeEventListener("resize", updateDropdownPosition);
@@ -122,19 +140,103 @@ export const TreeSelect: React.FC<TreeSelectProps> = ({
     };
   }, [isOpen]);
 
-  const updateDropdownPosition = () => {
-    if (selectRef.current) {
-      const rect = selectRef.current.getBoundingClientRect();
-      setDropdownPosition({
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX,
-        width: rect.width,
-      });
-    }
+  const handleSelect = (node: TreeNode) => {
+    if (node.disabled || node.selectable === false) return;
+    setSelectedNode(node);
+    onChange?.({ id: node.id, title: node.title });
+    setSearchValue("");
+  };
+
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedNode(null);
+    onClear?.();
+    setSearchValue("");
+  };
+
+  const filteredData = useMemo(() => {
+    if (!searchValue) return data;
+    const term = searchValue.toLowerCase();
+    const filterNodes = (nodes: TreeNode[]): TreeNode[] => {
+      return nodes
+        .map((node) => {
+          const matches = node.title.toLowerCase().includes(term);
+          const children = node.children ? filterNodes(node.children) : [];
+          if (matches || children.length > 0) {
+            return {
+              ...node,
+              children: children.length > 0 ? children : undefined,
+            };
+          }
+          return null;
+        })
+        .filter(Boolean) as TreeNode[];
+    };
+    return filterNodes(data);
+  }, [data, searchValue]);
+
+  const renderTreeNode = (node: TreeNode, level: number = 0) => {
+    const hasChildren = !!node.children && node.children.length > 0;
+    const isExpanded = expandedKeys.has(node.id);
+    const isSelected =
+      selectedNode?.id === node.id ||
+      (values?.some((v) => v.id === node.id) ?? false);
+    const isDisabled = node.disabled || node.selectable === false;
+
+    return (
+      <div key={node.id} className={styles.treeNode}>
+        <div
+          className={cn(styles.option, {
+            [styles.option_selected]: isSelected,
+            [styles.option_disabled]: isDisabled,
+          })}
+          style={{ paddingLeft: `${level * 16 + 10}px` }}
+          onClick={() => {
+            if (hasChildren && !canSelectRoot) {
+              toggleExpanded(node.id);
+              return;
+            }
+            handleSelect(node);
+          }}
+        >
+          {hasChildren ? (
+            <button
+              type="button"
+              className={cn(styles.expandButton, {
+                [styles.expanded]: isExpanded,
+              })}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleExpanded(node.id);
+              }}
+              disabled={isDisabled && !canOpenDisabled}
+              aria-label={isExpanded ? "Recolher" : "Expandir"}
+            >
+              {isExpanded ? (
+                <MdExpandLess size={16} />
+              ) : (
+                <MdExpandMore size={16} />
+              )}
+            </button>
+          ) : (
+            <span className={styles.expandSpacer} aria-hidden="true" />
+          )}
+          <span className={styles.treeNodeTitle}>{node.title}</span>
+        </div>
+
+        {hasChildren && isExpanded && (
+          <div className={styles.treeNodeChildren}>
+            {node.children!.map((child) => renderTreeNode(child, level + 1))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const renderDropdown = () => {
     if (!isOpen) return null;
+    const root = document.querySelector("#modal-root") as HTMLElement | null;
+    if (!root) return null;
 
     return createPortal(
       <div
@@ -149,173 +251,81 @@ export const TreeSelect: React.FC<TreeSelectProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {showSearch && (
-          <div className={styles.searchWrapper}>
-            <MdSearch size={16} className={styles.searchIcon} />
-            <input
-              ref={inputRef}
-              type="text"
-              className={styles.searchInput}
-              placeholder="Buscar..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
+          <Input
+            ref={searchInputRef}
+            type="text"
+            className={styles.searchInput}
+            placeholder={searchPlaceholder}
+            value={searchValue}
+            onChange={(e) =>
+              setSearchValue((e.target as HTMLInputElement).value)
+            }
+            prefixIcon={<MdSearch size={16} className={styles.searchIcon} />}
+            onClick={(e) => e.stopPropagation()}
+            noForm
+          />
         )}
 
         <div className={styles.treeContainer}>
           {filteredData.length > 0 ? (
             filteredData.map((node) => renderTreeNode(node))
           ) : (
-            <div className={styles.emptyText}>Nenhum resultado encontrado</div>
+            <div className={styles.noResults}>{noResultsText}</div>
           )}
         </div>
       </div>,
-      document.querySelector("#modal-root") as HTMLElement,
+      root,
     );
   };
 
-  const handleSelect = (node: TreeNode) => {
-    if (node.disabled || node.selectable === false) return;
-
-    setSelectedNode(node);
-    onChange?.({
-      id: node.id,
-      title: node.title,
-    });
-    setSearchValue("");
-  };
-
-  const handleClear = () => {
-    setSelectedNode(null);
-    onClear?.();
-    setSearchValue("");
-  };
-
-  const filteredData = React.useMemo(() => {
-    if (!searchValue) return data;
-
-    const filterNodes = (nodes: TreeNode[]): TreeNode[] => {
-      return nodes
-        .map((node) => {
-          const matchesSearch = node.title
-            .toLowerCase()
-            .includes(searchValue.toLowerCase());
-          const children = node.children ? filterNodes(node.children) : [];
-
-          if (matchesSearch || children.length > 0) {
-            return {
-              ...node,
-              children: children.length > 0 ? children : undefined,
-            };
-          }
-          return null;
-        })
-        .filter(Boolean) as TreeNode[];
-    };
-
-    return filterNodes(data);
-  }, [data, searchValue]);
-
-  const renderTreeNode = (node: TreeNode, level: number = 0) => {
-    const hasChildren = node.children && node.children.length > 0;
-    const isExpanded = expandedKeys.has(node.id);
-    const isSelected = selectedNode?.id === node.id;
-    const isDisabled = node.disabled || node.selectable === false;
-
-    return (
-      <div key={node.id} className={styles.treeNode}>
-        <div
-          className={cn(styles.treeNodeContent, {
-            [styles.selected]: isSelected,
-            [styles.disabled]: isDisabled,
-            [styles.hovered]: !isDisabled && !canOpenDisabled,
-          })}
-          style={{ paddingLeft: `${level * 20 + 8}px` }}
-          onClick={() => {
-            if (hasChildren && !canSelectRoot) {
-              toggleExpanded(node.id);
-              return;
-            }
-            handleSelect(node);
-          }}
-        >
-          <div className={styles.treeNodeLeft}>
-            {hasChildren && (
-              <button
-                type="button"
-                className={cn(styles.expandButton, {
-                  [styles.expanded]: isExpanded,
-                  [styles.disabled]: isDisabled && !canOpenDisabled,
-                })}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleExpanded(node.id);
-                }}
-                disabled={isDisabled && !canOpenDisabled}
-              >
-                {isExpanded ? (
-                  <MdExpandLess size={14} />
-                ) : (
-                  <MdExpandMore size={14} />
-                )}
-              </button>
-            )}
-            <span className={styles.treeNodeTitle}>{node.title}</span>
-          </div>
-        </div>
-
-        {hasChildren && isExpanded && (
-          <div className={styles.treeNodeChildren}>
-            {node.children!.map((child) => renderTreeNode(child, level + 1))}
-          </div>
-        )}
-      </div>
-    );
-  };
+  const hasMultiValues = !!values && values.length > 0;
 
   return (
     <div
-      ref={selectRef}
-      className={cn(styles.container, className, {
+      className={cn(styles.select, className, {
+        [styles.error]: !!error,
         [styles.disabled]: disabled,
-        [styles.open]: isOpen,
-        [styles.small]: size === "small",
-        [styles.large]: size === "large",
       })}
     >
-      {/* {label && <label className={styles.label}>{label}</label>} */}
+      {label && (
+        <Label required={required} disabled={disabled} error={!!error}>
+          {label}
+        </Label>
+      )}
+
       <div
-        className={styles.selector}
+        ref={selectRef}
+        className={cn(styles.selectContainer, {
+          [styles.selectContainer_open]: isOpen,
+        })}
         onClick={handleToggle}
         tabIndex={0}
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-disabled={disabled}
         onKeyDown={(e) => {
           if (disabled) return;
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            handleToggle(e as any);
+            handleToggle(e);
           } else if (e.key === "Escape") {
-            setIsOpen(false);
+            handleClose();
           }
         }}
       >
-        <div className={styles.selectorValue}>
-          {values && values.length > 0 ? (
-            values.map((v) => (
-              <Tag
-                key={v.id}
-                color="blue"
-                size="medium"
-                onRemove={() => {
-                  onChange?.({
-                    id: v.id,
-                    title: v.title,
-                  });
-                }}
-              >
-                {v.title}
-              </Tag>
-            ))
+        <div className={styles.selectContent}>
+          {hasMultiValues ? (
+            <div className={styles.tagsContainer}>
+              {values!.map((v) => (
+                <Tag
+                  key={v.id}
+                  size="small"
+                  onRemove={() => onChange?.({ id: v.id, title: v.title })}
+                >
+                  {v.title}
+                </Tag>
+              ))}
+            </div>
           ) : selectedNode ? (
             <span className={styles.selectedValue}>{selectedNode.title}</span>
           ) : (
@@ -323,24 +333,29 @@ export const TreeSelect: React.FC<TreeSelectProps> = ({
           )}
         </div>
 
-        <div className={styles.selectorSuffix}>
-          {allowClear && selectedNode && (
-            <button
-              className={styles.clearButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClear();
-              }}
-            >
-              ×
-            </button>
-          )}
-          <MdKeyboardArrowDown
-            size={16}
-            className={cn(styles.arrow, { [styles.arrowUp]: isOpen })}
-          />
-        </div>
+        <Visible
+          condition={allowClear && (!!selectedNode || hasMultiValues) && !disabled}
+        >
+          <button
+            type="button"
+            className={styles.clearButton}
+            onClick={handleClear}
+            aria-label="Limpar seleção"
+          >
+            <MdClose size={16} />
+          </button>
+        </Visible>
+
+        <span
+          className={cn(styles.arrow, { [styles.arrowOpen]: isOpen })}
+          aria-hidden="true"
+        >
+          <MdKeyboardArrowDown size={18} />
+        </span>
       </div>
+
+      {error && <p className={styles.errorMessage}>{error}</p>}
+
       {renderDropdown()}
     </div>
   );

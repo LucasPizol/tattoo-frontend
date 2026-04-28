@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { Loading } from "@/components/ui/Loading";
 import type { ScheduleItem } from "../../types";
-import { MdCalendarToday } from "react-icons/md";
+import { MdArrowForward, MdCalendarToday, MdEventAvailable } from "react-icons/md";
 import { Link } from "react-router-dom";
 import styles from "./styles.module.scss";
 
@@ -30,7 +30,7 @@ export const TodaySchedule = ({ items, isLoading }: TodayScheduleProps) => {
       icon={<MdCalendarToday />}
       actions={
         <Link to="/agenda" className={styles.headerLink}>
-          Ver agenda completa →
+          Ver agenda <span className={styles.arrow}><MdArrowForward size={14} /></span>
         </Link>
       }
     >
@@ -39,7 +39,12 @@ export const TodaySchedule = ({ items, isLoading }: TodayScheduleProps) => {
           <Loading size={24} />
         </div>
       ) : !items?.length ? (
-        <p className={styles.empty}>Nenhum agendamento para hoje.</p>
+        <div className={styles.empty}>
+          <span className={styles.emptyIcon}>
+            <MdEventAvailable size={22} />
+          </span>
+          Nenhum agendamento para hoje.
+        </div>
       ) : (
         <div className={styles.list}>
           {items.map((item) => {

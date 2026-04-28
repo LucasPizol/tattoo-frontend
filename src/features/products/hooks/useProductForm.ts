@@ -43,9 +43,6 @@ export const useProductForm = () => {
       require_responsible: data.requireResponsible,
       images: data.images ?? [],
       quantity: data.quantity,
-      featured: data.featured ?? false,
-      new: data.new ?? false,
-      carousel: data.carousel ?? false,
       user_id: data.userId,
     };
 

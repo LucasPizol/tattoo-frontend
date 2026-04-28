@@ -1,5 +1,6 @@
 import type { HomeStats } from "../../types";
 import {
+  MdArrowForward,
   MdCalendarToday,
   MdPeople,
   MdAttachMoney,
@@ -49,16 +50,19 @@ export const StatCards = ({ stats, isLoading }: StatCardsProps) => {
   return (
     <div className={styles.grid}>
       {cards.map((card) => (
-        <div key={card.key} className={styles.card}>
+        <Link key={card.key} to={card.link.to} className={styles.card}>
           <div className={styles.iconWrapper}>{card.icon}</div>
           <span className={styles.label}>{card.label}</span>
           <span className={styles.value}>
             {isLoading ? <Loading size={20} /> : stats ? card.getValue(stats) : "—"}
           </span>
-          <Link to={card.link.to} className={styles.link}>
-            {card.link.label} →
-          </Link>
-        </div>
+          <span className={styles.link}>
+            {card.link.label}
+            <span className={styles.arrow}>
+              <MdArrowForward size={14} />
+            </span>
+          </span>
+        </Link>
       ))}
     </div>
   );

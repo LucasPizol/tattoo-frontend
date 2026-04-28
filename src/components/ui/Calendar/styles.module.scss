@@ -1,116 +1,131 @@
 .calendar {
   width: 100%;
   margin: 0 auto;
-  background: var(--color-background);
-  border-radius: var(--border-radius);
+  background: var(--surface-2);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.08),
-    0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--color-gray-200);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
 }
 
+// ─── Header ────────────────────────────────────────────────────────────────
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
-  background: var(--color-primary);
-  border-bottom: 2px solid var(--color-primary-active);
+  padding: var(--space-4) var(--space-6);
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--border);
 
   @media (max-width: 768px) {
-    padding: 1.25rem 1.5rem;
+    padding: var(--space-3) var(--space-4);
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-3);
   }
 
   @media (max-width: 480px) {
-    padding: 1rem;
+    padding: var(--space-3);
   }
 }
 
 .navigation {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-3);
 
   @media (max-width: 768px) {
     width: 100%;
 
-    .navigationButton {
-      width: 36px;
-      aspect-ratio: 1/1;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &:hover {
-        background-color: var(--color-primary-hover);
-      }
-    }
-
     .monthYear {
       flex: 1;
     }
+  }
+}
 
-    .monthYear {
-      display: flex;
-    }
+// nav arrows: 44px minimum touch target on mobile
+.navigationButton {
+  min-width: 44px;
+  min-height: 44px;
+
+  @media (min-width: 769px) {
+    min-width: 36px;
+    min-height: 36px;
   }
 }
 
 .monthYear {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.25rem;
+  gap: var(--space-2);
+  font-size: var(--font-size-body1);
   font-weight: 600;
   flex: 1;
 
   @media (max-width: 768px) {
-    font-size: 1rem;
+    font-size: var(--font-size-body2);
   }
 }
 
+// Month/year selects: override the default Select trigger to look like quiet button chips
+// Using !important on visual properties to beat .selectContainer base styles
 .monthSelect,
 .yearSelect {
-  border-radius: var(--input-border-radius, 8px);
-  font-size: inherit;
-  font-weight: inherit;
-  padding: 0.5rem 0.75rem;
-  cursor: pointer;
-  background-color: var(--color-background);
-  width: 130px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.2s ease;
+  border-radius: var(--radius-md) !important;
+  padding: var(--space-2) var(--space-3) !important;
+  background-color: var(--surface-3) !important;
+  border: 1px solid var(--border) !important;
+  min-height: unset !important;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.5);
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: var(--surface-overlay) !important;
+    border-color: var(--border-strong) !important;
   }
 
-  &:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
-    background-color: var(--color-background);
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
+  // focus state handled via :focus-within on the container
+  &:focus,
+  &[data-open="true"] {
+    border-color: var(--amber) !important;
+    box-shadow: 0 0 0 2px var(--amber-glow) !important;
+    background-color: var(--surface-3) !important;
   }
 }
 
+.monthSelect {
+  width: 130px !important;
+
+  @media (max-width: 768px) {
+    width: 100% !important;
+  }
+}
+
+.yearSelect {
+  width: 90px !important;
+
+  @media (max-width: 768px) {
+    width: 100% !important;
+  }
+}
+
+// ─── View controls ─────────────────────────────────────────────────────────
+.viewControls {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  @media (max-width: 768px) {
+    gap: var(--space-1);
+  }
+}
+
+// ─── Weekday header row ─────────────────────────────────────────────────────
 .weekHeader {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background: linear-gradient(
-    to bottom,
-    var(--color-gray-50) 0%,
-    var(--color-gray-25) 100%
-  );
-  border-bottom: 2px solid var(--color-gray-200);
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--border-subtle);
   width: 100%;
 
   &.weekHeaderWeek {
@@ -119,128 +134,114 @@
 }
 
 .weekDay {
-  padding: 1rem 0.5rem;
+  padding: var(--space-3) var(--space-2);
   text-align: center;
   font-weight: 600;
-  font-size: 0.875rem;
-  color: var(--color-gray-500);
+  font-size: 11px;
+  color: var(--text-tertiary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-right: 1px solid var(--color-gray-200);
-  background: var(--color-background);
+  letter-spacing: 0.06em;
+  border-right: 1px solid var(--border-subtle);
+  background: var(--surface-3);
 
   &:last-child {
     border-right: none;
   }
 
   @media (max-width: 768px) {
-    padding: 0.75rem 0.25rem;
-    font-size: 0.75rem;
+    padding: var(--space-2) var(--space-1);
+    font-size: 10px;
   }
 }
 
+// ─── Month grid ─────────────────────────────────────────────────────────────
 .calendarGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(6, 1fr);
 }
 
-.dayNumber {
-  margin-left: 4px;
-  margin-top: 4px;
-  margin-bottom: 4px;
-}
-
 .dayCell {
   position: relative;
-  border-right: 1px solid var(--color-gray-200);
-  border-bottom: 1px solid var(--color-gray-200);
-  background: var(--color-background);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-2);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 150ms ease;
   display: flex;
   flex-direction: column;
   min-height: 100px;
-  padding: 0.25rem;
+  padding: var(--space-1);
   max-height: 120px;
   overflow-x: hidden;
   overflow-y: auto;
 
+  &:nth-child(7n) {
+    border-right: none;
+  }
+
   &:hover:not(.otherMonth) {
-    background: var(--color-primary-bg);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+    background: var(--surface-overlay);
   }
 
   &.otherMonth {
-    background: var(--color-gray-25);
-    color: var(--color-gray-400);
+    background: var(--surface-1);
     cursor: default;
-    opacity: 0.6;
-
-    &:hover {
-      background: var(--color-gray-25);
-      transform: none;
-    }
 
     .dayNumber {
-      color: var(--color-gray-400);
+      color: var(--text-tertiary);
+      opacity: 0.5;
     }
   }
 
+  // Today: amber-pale bg + 2px amber left border, number in amber circle
   &.today {
-    background: linear-gradient(
-      135deg,
-      var(--color-primary-bg) 0%,
-      rgba(64, 24, 77, 0.08) 100%
-    );
-    border-left: 3px solid var(--color-primary);
+    background: var(--amber-pale);
+    border-left: 2px solid var(--amber);
 
     .dayNumber {
-      background: var(--color-primary);
-      color: var(--color-primary-text);
+      background: var(--amber);
+      color: var(--text-on-amber);
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      box-shadow: 0 2px 4px rgba(64, 24, 77, 0.3);
-    }
-  }
-
-  &.hasEvents {
-    &::after {
-      content: "";
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      width: 8px;
-      height: 8px;
-      background: var(--color-primary);
-      border-radius: 50%;
-      box-shadow: 0 1px 2px rgba(64, 24, 77, 0.4);
     }
   }
 
   @media (max-width: 768px) {
     min-height: 60px;
-    padding: 0.125rem;
+    padding: 2px;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 50px;
+    padding: 2px;
   }
 }
 
 .dayNumber {
-  padding: 0.5rem;
+  padding: var(--space-1) var(--space-2);
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: var(--font-size-caption);
   line-height: 1;
+  color: var(--text-secondary);
 
   @media (max-width: 768px) {
-    padding: 0.25rem;
-    font-size: 0.75rem;
+    padding: var(--space-1);
+    font-size: 11px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2px;
+    font-size: 10px;
   }
 }
 
+// ─── Event pills ────────────────────────────────────────────────────────────
 .eventsContainer {
   flex: 1;
   display: flex;
@@ -249,52 +250,62 @@
 }
 
 .event {
-  background: var(--color-primary);
-  color: var(--color-primary-text);
-  border-radius: var(--border-radius, 4px);
+  background: var(--amber-pale);
+  color: var(--amber-dim);
+  border-radius: var(--radius-sm);
   padding: 2px 6px;
-  font-size: 0.75rem;
+  font-size: 11px;
   line-height: 1.3;
   cursor: pointer;
-  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 4px;
-  min-height: 18px;
-  box-shadow: 0 1px 2px rgba(64, 24, 77, 0.2);
-  border-left: 3px solid var(--color-primary-active);
+  min-height: 22px;
+  border-left: 2px solid var(--amber);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+  overflow: hidden;
 
   &:hover {
-    background: var(--color-primary-hover);
-    transform: translateX(2px);
-    box-shadow: 0 2px 4px rgba(64, 24, 77, 0.3);
+    background: var(--amber);
+    color: var(--text-on-amber);
+    border-left-color: var(--amber-dim);
   }
 
   @media (max-width: 768px) {
-    font-size: 0.625rem;
+    font-size: 10px;
     padding: 1px 4px;
-    min-height: 14px;
+    min-height: 16px;
     border-left-width: 2px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 9px;
+    padding: 1px 3px;
+    min-height: 14px;
   }
 }
 
 .eventTitle {
   flex: 1;
-  truncate: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .eventTime {
-  font-size: 0.625rem;
-  opacity: 0.9;
+  font-size: 10px;
+  opacity: 0.85;
+  flex-shrink: 0;
 
   @media (max-width: 768px) {
     display: none;
   }
 }
 
+// ─── Add-event button ────────────────────────────────────────────────────────
 .addEventBtn {
   position: absolute;
   top: 6px;
@@ -302,26 +313,32 @@
   width: 24px;
   height: 24px;
   border: none;
-  background: var(--color-primary);
-  color: var(--color-primary-text);
+  background: var(--amber);
+  color: var(--text-on-amber);
   border-radius: 50%;
-  font-size: 0.875rem;
+  font-size: var(--font-size-body2);
   font-weight: 600;
   cursor: pointer;
   display: none;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(64, 24, 77, 0.3);
+  transition: background-color 150ms ease;
   z-index: 10;
 
   &:hover {
-    background: var(--color-primary-hover);
-    box-shadow: 0 3px 6px rgba(64, 24, 77, 0.4);
+    background: var(--amber-dim);
   }
 
   &:active {
     transform: scale(0.95);
+  }
+
+  @media (max-width: 480px) {
+    width: 20px;
+    height: 20px;
+    font-size: 13px;
+    top: 4px;
+    right: 4px;
   }
 }
 
@@ -337,103 +354,52 @@
 @media (max-width: 480px) {
   .calendar {
     border-radius: 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
     border-left: none;
     border-right: none;
   }
-
-  .header {
-    padding: 1rem;
-  }
-
-  .monthYear {
-    font-size: 0.875rem;
-  }
-
-  .weekDay {
-    padding: 0.5rem 0.125rem;
-    font-size: 0.625rem;
-  }
-
-  .calendarGrid {
-    min-height: 300px;
-  }
-
-  .dayCell {
-    min-height: 50px;
-    padding: 0.125rem;
-  }
-
-  .dayNumber {
-    padding: 0.125rem;
-  }
-
-  .event {
-    font-size: 0.5rem;
-    padding: 1px 3px;
-    min-height: 12px;
-  }
-
-  .addEventBtn {
-    width: 20px;
-    height: 20px;
-    font-size: 0.75rem;
-    top: 4px;
-    right: 4px;
-  }
-
-  .dayCell.hasEvents .addEventBtn {
-    right: 14px;
-  }
 }
 
-// Estados de foco e acessibilidade
+// ─── Focus / accessibility ────────────────────────────────────────────────
 .dayCell:focus {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--amber);
   outline-offset: -2px;
   z-index: 1;
 }
 
 .event:focus {
-  outline: 2px solid rgba(255, 255, 255, 0.8);
-  outline-offset: 2px;
-  border-radius: var(--border-radius, 4px);
+  outline: 2px solid var(--amber-dim);
+  outline-offset: 1px;
 }
 
 .addEventBtn:focus {
-  outline: 2px solid var(--color-primary-text);
+  outline: 2px solid var(--amber-dim);
   outline-offset: 2px;
 }
 
 .weekEvent:focus {
-  outline: 2px solid rgba(255, 255, 255, 0.8);
-  outline-offset: 2px;
+  outline: 2px solid var(--amber-dim);
+  outline-offset: 1px;
 }
 
 .hourSlot:focus {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--amber);
   outline-offset: -2px;
   z-index: 1;
 }
 
-// Animações suaves
+// ─── Reduced-motion guard (global media handled in globals.css — this backs it up locally)
 .dayCell,
 .event,
 .addEventBtn,
 .weekEvent {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
 }
 
-.viewControls {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    gap: 0.25rem;
-  }
-}
-
+// ─── Week view ───────────────────────────────────────────────────────────────
 .weekView {
   width: 100%;
   display: flex;
@@ -453,12 +419,8 @@
 }
 
 .timeColumn {
-  border-right: 2px solid var(--color-gray-200);
-  background: linear-gradient(
-    to right,
-    var(--color-gray-25) 0%,
-    var(--color-gray-50) 100%
-  );
+  border-right: 1px solid var(--border-subtle);
+  background: var(--surface-3);
   position: relative;
   z-index: 1;
 
@@ -472,7 +434,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--border-subtle);
   position: relative;
 
   @media (max-width: 768px) {
@@ -481,45 +443,45 @@
 }
 
 .timeLabel {
-  font-size: 0.75rem;
-  color: var(--color-gray-500);
+  font-size: 11px;
+  color: var(--text-tertiary);
   font-weight: 500;
-  padding: 0.25rem;
+  padding: var(--space-1);
   text-align: center;
   position: absolute;
   top: -8px;
-  background: var(--color-gray-25);
+  background: var(--surface-3);
 
   @media (max-width: 768px) {
-    font-size: 0.625rem;
+    font-size: 10px;
     top: -6px;
   }
 }
 
 .dayColumn {
   position: relative;
-  border-right: 1px solid var(--color-gray-200);
-  background: var(--color-background);
+  border-right: 1px solid var(--border-subtle);
+  background: var(--surface-2);
 
   &:last-child {
     border-right: none;
   }
 
   &:hover {
-    background: var(--color-gray-25);
+    background: var(--surface-overlay);
   }
 }
 
 .hourSlot {
   height: 60px;
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--border-subtle);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 150ms ease;
   position: relative;
 
   &:hover {
-    background: var(--color-primary-bg);
-    border-left: 2px solid var(--color-primary);
+    background: var(--amber-pale);
+    border-left: 2px solid var(--amber);
   }
 
   @media (max-width: 768px) {
@@ -527,15 +489,11 @@
   }
 }
 
-// Cabeçalho da semana - redefinido para visualização semanal
+// Week view: weekday header (re-declared for the .weekView context)
 .weekView .weekHeader {
   display: grid;
-  background: linear-gradient(
-    to bottom,
-    var(--color-gray-50) 0%,
-    var(--color-gray-25) 100%
-  );
-  border-bottom: 2px solid var(--color-gray-200);
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--border-subtle);
 
   @media (max-width: 768px) {
     grid-template-columns: 60px repeat(7, 1fr);
@@ -543,18 +501,19 @@
 }
 
 .weekView .weekDay {
-  padding: 1rem 0.5rem;
+  padding: var(--space-3) var(--space-2);
   text-align: center;
-  border-right: 1px solid var(--color-gray-200);
+  border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-1);
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
+  transition: background-color 150ms ease;
+  background: var(--surface-3);
 
   &:hover {
-    background: var(--color-gray-50);
+    background: var(--surface-overlay);
   }
 
   &:last-child {
@@ -562,31 +521,31 @@
   }
 
   @media (max-width: 768px) {
-    padding: 0.75rem 0.25rem;
-    gap: 0.25rem;
+    padding: var(--space-2) var(--space-1);
   }
 }
 
 .weekDayName {
   font-weight: 600;
-  font-size: 0.875rem;
-  color: var(--color-gray-500);
+  font-size: 11px;
+  color: var(--text-tertiary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 
   @media (max-width: 768px) {
-    font-size: 0.75rem;
+    font-size: 10px;
   }
 }
 
 .weekDayNumber {
   font-weight: 700;
-  font-size: 1.25rem;
-  color: var(--color-gray-500);
+  font-size: var(--font-size-h3);
+  color: var(--text-secondary);
 
+  // Today marker in week header: 36px amber circle
   &.today {
-    background: var(--color-primary);
-    color: white;
+    background: var(--amber);
+    color: var(--text-on-amber);
     border-radius: 50%;
     width: 36px;
     height: 36px;
@@ -597,7 +556,7 @@
   }
 
   @media (max-width: 768px) {
-    font-size: 1rem;
+    font-size: var(--font-size-body1);
 
     &.today {
       width: 28px;
@@ -606,35 +565,39 @@
   }
 }
 
-// Eventos na visualização semanal
+// Week events: amber-pale bg / amber-dim text; on hover full amber with ink text
 .weekEvent {
   position: absolute;
   left: 3px;
   right: 3px;
-  background: var(--color-primary);
-  color: var(--color-primary-text);
-  border-radius: var(--border-radius, 6px);
-  padding: 4px 8px;
+  background: var(--amber-pale);
+  color: var(--amber-dim);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
   cursor: pointer;
-  transition: all 0.2s ease;
   z-index: 2;
-  border-left: 4px solid var(--color-primary-active);
-  box-shadow: 0 2px 4px rgba(64, 24, 77, 0.2);
+  border-left: 3px solid var(--amber);
   min-height: 24px;
+  overflow: hidden;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
 
   &:hover {
-    transform: translateX(2px) scale(1.02);
-    box-shadow: 0 4px 12px rgba(64, 24, 77, 0.3);
+    background: var(--amber);
+    color: var(--text-on-amber);
+    box-shadow: var(--shadow-sm);
     z-index: 3;
-    background: var(--color-primary-hover);
+    border-left-color: var(--amber-dim);
     min-height: auto;
   }
 
   @media (max-width: 768px) {
-    padding: 2px 6px;
+    padding: 2px var(--space-1);
     left: 2px;
     right: 2px;
-    border-left-width: 3px;
+    border-left-width: 2px;
     min-height: 20px;
   }
 }
@@ -648,23 +611,46 @@
 
 .weekEventTitle {
   font-weight: 600;
-  font-size: 0.75rem;
+  font-size: var(--font-size-caption);
   line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
   @media (max-width: 768px) {
-    font-size: 0.625rem;
+    font-size: 10px;
   }
 }
 
 .weekEventTime {
-  font-size: 0.625rem;
-  opacity: 0.9;
+  font-size: 10px;
+  opacity: 0.85;
   line-height: 1.1;
 
   @media (max-width: 768px) {
-    font-size: 0.5rem;
+    font-size: 9px;
   }
 }
+
+// TODO: current-time indicator line (week view)
+// When wired up, render a <div className={styles.currentTimeLine} style={{ top: calculatedTop }} />
+// inside .weekGrid. Example style below is ready to use:
+// .currentTimeLine {
+//   position: absolute;
+//   left: 80px; // aligns past the time gutter
+//   right: 0;
+//   height: 2px;
+//   background: var(--amber);
+//   z-index: 4;
+//   pointer-events: none;
+//   &::before {
+//     content: "";
+//     position: absolute;
+//     left: -5px;
+//     top: -4px;
+//     width: 10px;
+//     height: 10px;
+//     border-radius: 50%;
+//     background: var(--amber);
+//   }
+// }

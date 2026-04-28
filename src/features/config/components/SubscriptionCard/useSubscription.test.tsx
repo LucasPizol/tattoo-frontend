@@ -12,10 +12,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import toast from "react-hot-toast";
 
-import {
-  CheckoutSessionError,
-  PortalSessionError,
-} from "@/services/requests/billing";
+import { PortalSessionError } from "@/services/requests/billing";
 
 vi.mock("@/services/requests/billing", async () => {
   const actual =
@@ -25,11 +22,9 @@ vi.mock("@/services/requests/billing", async () => {
   return {
     ...actual,
     billingService: {
-      createCheckoutSession: vi.fn(),
       createPortalSession: vi.fn(),
       getBillingStatus: vi.fn(),
     },
-    createCheckoutSession: vi.fn(),
     createPortalSession: vi.fn(),
     getBillingStatus: vi.fn(),
   };
@@ -47,7 +42,6 @@ import { billingService } from "@/services/requests/billing";
 import { useSubscription, BILLING_STATUS_QUERY_KEY } from "./useSubscription";
 
 const mockedService = billingService as unknown as {
-  createCheckoutSession: ReturnType<typeof vi.fn>;
   createPortalSession: ReturnType<typeof vi.fn>;
   getBillingStatus: ReturnType<typeof vi.fn>;
 };
@@ -178,105 +172,6 @@ describe("useSubscription — checkout=cancelled", () => {
       expect(toast).toHaveBeenCalledWith("Checkout cancelado."),
     );
     expect(window.location.search).not.toContain("checkout=cancelled");
-  });
-});
-
-describe("useSubscription — startCheckout mutation", () => {
-  it("redirects to the Stripe URL on success", async () => {
-    mockedService.getBillingStatus.mockResolvedValue(noSubscriptionResponse);
-    mockedService.createCheckoutSession.mockResolvedValue({
-      url: "https://checkout.stripe.com/c/pay/cs_test_abc",
-    });
-
-    const originalLocation = window.location;
-    // jsdom location is read-only; replace with mutable stub.
-    Object.defineProperty(window, "location", {
-      value: { ...originalLocation, href: "" },
-      writable: true,
-    });
-
-    const { result } = renderHook(() => useSubscription(), {
-      wrapper: buildWrapper(),
-    });
-
-    await act(async () => {
-      result.current.startCheckout();
-    });
-
-    await waitFor(() =>
-      expect(window.location.href).toBe(
-        "https://checkout.stripe.com/c/pay/cs_test_abc",
-      ),
-    );
-
-    Object.defineProperty(window, "location", {
-      value: originalLocation,
-      writable: true,
-    });
-  });
-
-  it("on 409 already_subscribed, refetches status (does not toast error)", async () => {
-    mockedService.getBillingStatus.mockResolvedValue(noSubscriptionResponse);
-    mockedService.createCheckoutSession.mockRejectedValueOnce(
-      new CheckoutSessionError("already_subscribed", 409),
-    );
-
-    const { result } = renderHook(() => useSubscription(), {
-      wrapper: buildWrapper(),
-    });
-
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
-
-    await act(async () => {
-      result.current.startCheckout();
-    });
-
-    await waitFor(() =>
-      expect(mockedService.getBillingStatus).toHaveBeenCalledTimes(2),
-    );
-    expect(toast.error).not.toHaveBeenCalled();
-  });
-
-  it("on 422 price_unavailable, toasts the catalog-missing message", async () => {
-    mockedService.getBillingStatus.mockResolvedValue(noSubscriptionResponse);
-    mockedService.createCheckoutSession.mockRejectedValueOnce(
-      new CheckoutSessionError("price_unavailable", 422),
-    );
-
-    const { result } = renderHook(() => useSubscription(), {
-      wrapper: buildWrapper(),
-    });
-
-    await act(async () => {
-      result.current.startCheckout();
-    });
-
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith(
-        "Plano indisponível no momento. Contate o suporte.",
-      ),
-    );
-  });
-
-  it("on 502 stripe_unavailable, toasts the retry message", async () => {
-    mockedService.getBillingStatus.mockResolvedValue(noSubscriptionResponse);
-    mockedService.createCheckoutSession.mockRejectedValueOnce(
-      new CheckoutSessionError("stripe_unavailable", 502),
-    );
-
-    const { result } = renderHook(() => useSubscription(), {
-      wrapper: buildWrapper(),
-    });
-
-    await act(async () => {
-      result.current.startCheckout();
-    });
-
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith(
-        "Não foi possível iniciar o checkout. Tente novamente.",
-      ),
-    );
   });
 });
 

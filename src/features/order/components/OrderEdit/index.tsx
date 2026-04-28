@@ -463,6 +463,25 @@ export const OrderEdit = (props: OrderEditProps) => {
     </Button>
   );
 
+  const reopenModal = (
+    <ConfirmModal
+      onSave={async () => {
+        await OrderRequests.reopen(Number(id));
+        refetch();
+      }}
+      title="Reabrir Pedido"
+      label="Reabrir Pedido"
+      fullWidthLabel
+      danger
+    >
+      <p>Tem certeza que deseja reabrir este pedido?</p>
+      <br />
+      <p>
+        Todos os itens serão <b>devolvidos ao estoque.</b>
+      </p>
+    </ConfirmModal>
+  );
+
   const confirmModal = order && (
     <ConfirmModal
       onSave={handleConfirmOrder}
@@ -475,343 +494,344 @@ export const OrderEdit = (props: OrderEditProps) => {
     </ConfirmModal>
   );
 
+  const summaryPanel = (
+    <aside className={styles.summaryPanel}>
+      {/* Running total header */}
+      <div className={styles.summaryHeader}>
+        <div className={styles.summaryHeaderIcon}>
+          <MdReceipt size={16} />
+        </div>
+        <span className={styles.summaryHeaderLabel}>Resumo</span>
+      </div>
+
+      <div className={styles.summaryBody}>
+        <div className={styles.summaryLine}>
+          <span>Produtos</span>
+          <span>{order?.productValue.formatted ?? "R$ 0,00"}</span>
+        </div>
+
+        <div className={cn(styles.summaryLine, (order?.comissionsValue?.value ?? 0) > 0 && styles.summaryLineNegative)}>
+          <span>Comissões</span>
+          <span>{order?.comissionsValue.formatted ?? "R$ 0,00"}</span>
+        </div>
+
+        <Visible condition={order?.comissions && order?.comissions.length > 0}>
+          <ul className={styles.comissionsList}>
+            {order?.comissions.map((comission) => (
+              <li key={comission.id} className={styles.comissionItem}>
+                <span className={styles.comissionName}>
+                  {comission.name.split(" ")[0]}
+                </span>
+                <span className={styles.comissionValue}>
+                  {comission.value.formatted}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Visible>
+
+        <div className={styles.summaryDivider} />
+
+        <div className={styles.summaryTotal}>
+          <span>Total</span>
+          <strong className={cn(styles.totalValueBig, isNotEditable && styles.totalValueBigSettled)}>
+            {order?.totalValue.formatted ?? "R$ 0,00"}
+          </strong>
+        </div>
+
+        {/* Payment breakdown — useful for edit-existing scenario */}
+        <Visible condition={(order?.orderPaymentMethods?.length ?? 0) > 0}>
+          <div className={styles.paymentBreakdown}>
+            {order?.orderPaymentMethods?.map((opm) => (
+              <div key={opm.id} className={styles.paymentBreakdownLine}>
+                <span>{opm.paymentMethodName}</span>
+                <span>{opm.value.formatted}</span>
+              </div>
+            ))}
+          </div>
+        </Visible>
+      </div>
+
+      {/* CTA lives inside the summary panel on desktop */}
+      <div className={styles.summaryAction}>
+        <Visible condition={order?.status !== OrderStatus.WAITING_FOR_PAYMENT}>
+          {isNotEditable ? reopenModal : confirmModal}
+        </Visible>
+        <Visible condition={order?.status === OrderStatus.WAITING_FOR_PAYMENT}>
+          <Button variant="primary" loading className={styles.confirmButton}>
+            Aguardando Pagamento
+          </Button>
+        </Visible>
+      </div>
+    </aside>
+  );
+
   return (
     <div className={styles.orderEdit}>
-      {/* Alerts */}
-      <div className={styles.alerts}>
-        <Visible condition={requireResponsible && !order?.client?.responsible}>
-          <Alert type="warning">
-            <div className={styles.alertContent}>
-              <div className={styles.alertContentData}>
-                <h3 className={styles.title}>Atenção</h3>
-                <p>
-                  O cliente é menor de idade e o pedido requer o cadastro de
-                  um(a) responsável.
-                </p>
-              </div>
-              <ResponsibleModal onSave={refetch} client={order?.client} />
-            </div>
-          </Alert>
-        </Visible>
-
-        <Visible condition={order?.client?.hasHealthConditions}>
-          <Alert type="warning">
-            <div className={styles.alertContentData}>
-              <h3 className={styles.title}>Atenção</h3>
-              <p>O cliente possui algumas condições de saúde</p>
-              <div className={styles.healthConditionsTags}>
-                {order?.client?.healthConditions?.map((condition) => (
-                  <Tag key={condition.value}>{condition.name}</Tag>
-                ))}
-              </div>
-              {order?.client?.healthNotes && <p>{order.client.healthNotes}</p>}
-            </div>
-          </Alert>
-        </Visible>
-
-        <Visible condition={requireResponsible && !!order?.client?.responsible}>
-          <Alert type="info">
-            <div className={styles.alertContentData}>
-              <h3 className={styles.titleInfo}>Responsável</h3>
-              <p>
-                {order?.client?.responsible?.name} -{" "}
-                {masks.formatCpf(order?.client?.responsible?.cpf ?? "")} -{" "}
-                {masks.formatPhone(order?.client?.responsible?.phone ?? "")}
-              </p>
-            </div>
-          </Alert>
-        </Visible>
-
-        {isPartsSynchronizedError && (
-          <div className={styles.syncWarning}>{isPartsSynchronizedError}</div>
-        )}
-      </div>
-
-      {/* Client Card */}
-      <Form form={form} onSubmit={() => {}}>
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <div className={styles.cardTitle}>
-              <MdPerson size={18} />
-              <span>Cliente</span>
-            </div>
-          </div>
-          <div className={cn(styles.cardBody, styles.clientBody)}>
-            <ClientSelector
-              label="Cliente"
-              placeholder="Selecione um cliente"
-              disabled={isNotEditable}
-              disabledHelperText={helperLabel}
-              selectCondition={(client) => client.id !== order?.client?.id}
-              link={
-                order?.client?.id
-                  ? {
-                      to: `/clientes/${order?.client?.id}/editar`,
-                      label: "Editar cliente",
-                    }
-                  : undefined
-              }
-              value={
-                order?.client
-                  ? { id: order.client.id, name: order.client.name }
-                  : undefined
-              }
-              onChange={handleClientChange}
-            />
-            <Visible condition={!!order?.client?.observations}>
-              <div className={styles.clientObs}>
-                {order?.client?.observations}
-              </div>
+      {/* Two-column shell: main editor + sticky summary */}
+      <div className={styles.layout}>
+        {/* ── Left column: editor ── */}
+        <div className={styles.editorColumn}>
+          {/* Alerts — surface first so operator sees blockers before anything */}
+          <div className={styles.alerts}>
+            <Visible condition={requireResponsible && !order?.client?.responsible}>
+              <Alert type="warning">
+                <div className={styles.alertContent}>
+                  <div className={styles.alertContentData}>
+                    <h3 className={styles.alertTitle}>Atenção</h3>
+                    <p>
+                      O cliente é menor de idade e o pedido requer o cadastro de
+                      um(a) responsável.
+                    </p>
+                  </div>
+                  <ResponsibleModal onSave={refetch} client={order?.client} />
+                </div>
+              </Alert>
             </Visible>
-          </div>
-        </div>
-      </Form>
 
-      {/* Products Card */}
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <div className={styles.cardTitle}>
-            <MdShoppingCart size={18} />
-            <span>Produtos ({orderProducts.length})</span>
-          </div>
-          <Visible condition={!isNotEditable}>
-            <Button onClick={() => openProductSelectionModal()}>
-              Adicionar
-            </Button>
-          </Visible>
-        </div>
+            <Visible condition={order?.client?.hasHealthConditions}>
+              <Alert type="warning">
+                <div className={styles.alertContentData}>
+                  <h3 className={styles.alertTitle}>Atenção</h3>
+                  <p>O cliente possui algumas condições de saúde</p>
+                  <div className={styles.healthConditionsTags}>
+                    {order?.client?.healthConditions?.map((condition) => (
+                      <Tag key={condition.value}>{condition.name}</Tag>
+                    ))}
+                  </div>
+                  {order?.client?.healthNotes && (
+                    <p>{order.client.healthNotes}</p>
+                  )}
+                </div>
+              </Alert>
+            </Visible>
 
-        {orderProducts.length === 0 && !isLoadingOrder ? (
-          <div className={styles.emptyState}>Nenhum produto adicionado</div>
-        ) : (
-          <div className={styles.productsTable}>
-            <Form form={form} onSubmit={() => {}}>
-              <Table
-                columns={columns}
-                data={orderProducts}
-                loading={isLoadingOrder}
-                className={styles.table}
-              />
-            </Form>
-          </div>
-        )}
-      </div>
+            <Visible condition={requireResponsible && !!order?.client?.responsible}>
+              <Alert type="info">
+                <div className={styles.alertContentData}>
+                  <h3 className={styles.alertTitleInfo}>Responsável</h3>
+                  <p>
+                    {order?.client?.responsible?.name} -{" "}
+                    {masks.formatCpf(order?.client?.responsible?.cpf ?? "")} -{" "}
+                    {masks.formatPhone(order?.client?.responsible?.phone ?? "")}
+                  </p>
+                </div>
+              </Alert>
+            </Visible>
 
-      {/* Payment Methods Card */}
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <div className={styles.cardTitle}>
-            <MdPayment size={18} />
-            <span>Pagamento</span>
-          </div>
-        </div>
-        <div className={styles.cardBody}>
-          {order?.orderPaymentMethods &&
-            order.orderPaymentMethods.length > 0 && (
-              <ul className={styles.paymentMethodsList}>
-                {order.orderPaymentMethods.map((opm) => (
-                  <li key={opm.id} className={styles.paymentMethodItem}>
-                    <span className={styles.paymentMethodName}>
-                      {opm.paymentMethodName}
-                    </span>
-                    {isNotEditable ? (
-                      <span
-                        className={cn(
-                          styles.paymentMethodValue,
-                          styles.paymentMethodValueNotEditable,
-                        )}
-                      >
-                        {opm.value.formatted}
-                      </span>
-                    ) : (
-                      <EditableCell
-                        value={opm.value.value}
-                        mask={(value) => masks.formatCurrency(value.toString())}
-                        alignment="right"
-                        className={styles.paymentMethodValue}
-                        onBlur={async (value) => {
-                          const newValue = masks.unformatCurrency(
-                            String(value),
-                          );
-                          await handleUpdatePaymentMethodValue(
-                            opm.id,
-                            newValue / 100,
-                          );
-                        }}
-                      />
-                    )}
-                    <Visible condition={!isNotEditable}>
-                      <IconButton
-                        onClick={() => handleRemovePaymentMethod(opm.id)}
-                      >
-                        <MdDelete size={16} className={styles.actionButton} />
-                      </IconButton>
-                    </Visible>
-                  </li>
-                ))}
-              </ul>
+            {isPartsSynchronizedError && (
+              <div className={styles.syncWarning}>{isPartsSynchronizedError}</div>
             )}
-
-          <Visible condition={!isNotEditable}>
-            <div
-              className={styles.addPaymentMethod}
-              key={order?.orderPaymentMethods?.length ?? 0}
-            >
-              <Select
-                label="Método"
-                placeholder="Selecione"
-                options={availablePaymentMethods.map((method) => ({
-                  label: method.name,
-                  value: method.id,
-                }))}
-                onSelect={(option) =>
-                  setNewPaymentMethodId(option?.value as number)
-                }
-                onClear={() => setNewPaymentMethodId(null)}
-              />
-              <Input
-                label="Valor"
-                placeholder="R$ 0,00"
-                value={newPaymentValue}
-                mask={(value) => masks.formatCurrency(value)}
-                onChange={(e) => setNewPaymentValue(e.target.value)}
-              />
-              <Button
-                onClick={handleAddPaymentMethod}
-                disabled={!newPaymentMethodId || !newPaymentValue}
-                className={styles.addPaymentMethodButton}
-                prefixIcon={<MdAdd />}
-              >
-                Adicionar
-              </Button>
-            </div>
-          </Visible>
-        </div>
-      </div>
-
-      {/* Summary Card */}
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <div className={styles.cardTitle}>
-            <MdReceipt size={18} />
-            <span>Resumo</span>
           </div>
-        </div>
-        <div className={styles.cardBody}>
-          <div className={styles.summaryBody}>
-            <div className={styles.summaryLine}>
-              <span>Produtos</span>
-              <span>{order?.productValue.formatted ?? "R$ 0,00"}</span>
+
+          {/* Client card */}
+          <Form form={form} onSubmit={() => {}}>
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <div className={styles.cardTitle}>
+                  <MdPerson size={18} />
+                  <span>Cliente</span>
+                </div>
+              </div>
+              <div className={cn(styles.cardBody, styles.clientBody)}>
+                <ClientSelector
+                  label="Cliente"
+                  placeholder="Selecione um cliente"
+                  disabled={isNotEditable}
+                  disabledHelperText={helperLabel}
+                  selectCondition={(client) => client.id !== order?.client?.id}
+                  link={
+                    order?.client?.id
+                      ? {
+                          to: `/clientes/${order?.client?.id}/editar`,
+                          label: "Editar cliente",
+                        }
+                      : undefined
+                  }
+                  value={
+                    order?.client
+                      ? { id: order.client.id, name: order.client.name }
+                      : undefined
+                  }
+                  onChange={handleClientChange}
+                />
+                <Visible condition={!!order?.client?.observations}>
+                  <div className={styles.clientObs}>
+                    {order?.client?.observations}
+                  </div>
+                </Visible>
+              </div>
+            </div>
+          </Form>
+
+          {/* Products card */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <div className={styles.cardTitle}>
+                <MdShoppingCart size={18} />
+                <span>Produtos ({orderProducts.length})</span>
+              </div>
+              <Visible condition={!isNotEditable}>
+                <Button onClick={() => openProductSelectionModal()}>
+                  Adicionar
+                </Button>
+              </Visible>
             </div>
 
-            <div className={styles.summaryLine}>
-              <span>Comissões</span>
-              <span className={styles.redValue}>
-                {order?.comissionsValue.formatted ?? "R$ 0,00"}
-              </span>
-            </div>
-
-            <Visible
-              condition={order?.comissions && order?.comissions.length > 0}
-            >
-              <ul className={styles.comissionsTags}>
-                {order?.comissions.map((comission) => (
-                  <li key={comission.id} className={styles.comissionTag}>
-                    <div className={styles.comissionTagContent}>
-                      <span className={styles.comissionTagLabel}>
-                        {comission.name.split(" ")[0]}
-                      </span>
-                      <span className={styles.comissionTagValue}>
-                        {comission.value.formatted}
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </Visible>
-
-            <div className={styles.summaryTotal}>
-              <span>Total</span>
-              <strong className={styles.totalValueBig}>
-                {order?.totalValue.formatted ?? "R$ 0,00"}
-              </strong>
-            </div>
-          </div>
-        </div>
-
-        <Visible condition={order?.status !== OrderStatus.WAITING_FOR_PAYMENT}>
-          <div className={styles.desktopAction}>
-            {isNotEditable ? (
-              <ConfirmModal
-                onSave={async () => {
-                  await OrderRequests.reopen(Number(id));
-                  refetch();
-                }}
-                title="Reabrir Pedido"
-                label="Reabrir Pedido"
-                fullWidthLabel
-                danger
-              >
-                <p>Tem certeza que deseja reabrir este pedido?</p>
-                <br />
-                <p>
-                  Todos os itens serão <b>devolvidos ao estoque.</b>
-                </p>
-              </ConfirmModal>
+            {orderProducts.length === 0 && !isLoadingOrder ? (
+              <div className={styles.emptyState}>Nenhum produto adicionado</div>
             ) : (
-              confirmModal
+              <div className={styles.productsTable}>
+                <Form form={form} onSubmit={() => {}}>
+                  <Table
+                    columns={columns}
+                    data={orderProducts}
+                    loading={isLoadingOrder}
+                    className={styles.table}
+                  />
+                </Form>
+              </div>
             )}
           </div>
-        </Visible>
 
-        <Visible condition={order?.status === OrderStatus.WAITING_FOR_PAYMENT}>
-          <div className={styles.desktopAction}>
-            <Button variant="primary" loading className={styles.confirmButton}>
-              Aguardando Pagamento
-            </Button>
+          {/* Payment methods card */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <div className={styles.cardTitle}>
+                <MdPayment size={18} />
+                <span>Pagamento</span>
+              </div>
+            </div>
+            <div className={styles.cardBody}>
+              {order?.orderPaymentMethods &&
+                order.orderPaymentMethods.length > 0 && (
+                  <ul className={styles.paymentMethodsList}>
+                    {order.orderPaymentMethods.map((opm) => (
+                      <li key={opm.id} className={styles.paymentMethodItem}>
+                        <span className={styles.paymentMethodName}>
+                          {opm.paymentMethodName}
+                        </span>
+                        {isNotEditable ? (
+                          <span
+                            className={cn(
+                              styles.paymentMethodValue,
+                              styles.paymentMethodValueNotEditable,
+                            )}
+                          >
+                            {opm.value.formatted}
+                          </span>
+                        ) : (
+                          <EditableCell
+                            value={opm.value.value}
+                            mask={(value) =>
+                              masks.formatCurrency(value.toString())
+                            }
+                            alignment="right"
+                            className={styles.paymentMethodValue}
+                            onBlur={async (value) => {
+                              const newValue = masks.unformatCurrency(
+                                String(value),
+                              );
+                              await handleUpdatePaymentMethodValue(
+                                opm.id,
+                                newValue / 100,
+                              );
+                            }}
+                          />
+                        )}
+                        <Visible condition={!isNotEditable}>
+                          <IconButton
+                            onClick={() => handleRemovePaymentMethod(opm.id)}
+                          >
+                            <MdDelete size={16} className={styles.actionButton} />
+                          </IconButton>
+                        </Visible>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+              <Visible condition={!isNotEditable}>
+                <div
+                  className={styles.addPaymentMethod}
+                  key={order?.orderPaymentMethods?.length ?? 0}
+                >
+                  <Select
+                    label="Método"
+                    placeholder="Selecione"
+                    options={availablePaymentMethods.map((method) => ({
+                      label: method.name,
+                      value: method.id,
+                    }))}
+                    onSelect={(option) =>
+                      setNewPaymentMethodId(option?.value as number)
+                    }
+                    onClear={() => setNewPaymentMethodId(null)}
+                  />
+                  <Input
+                    label="Valor"
+                    placeholder="R$ 0,00"
+                    value={newPaymentValue}
+                    mask={(value) => masks.formatCurrency(value)}
+                    onChange={(e) => setNewPaymentValue(e.target.value)}
+                  />
+                  <Button
+                    onClick={handleAddPaymentMethod}
+                    disabled={!newPaymentMethodId || !newPaymentValue}
+                    className={styles.addPaymentMethodButton}
+                    prefixIcon={<MdAdd />}
+                  >
+                    Adicionar
+                  </Button>
+                </div>
+              </Visible>
+            </div>
           </div>
-        </Visible>
-      </div>
 
-      {/* Attachments Card */}
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <div className={styles.cardTitle}>
-            <MdAttachFile size={18} />
-            <span>Anexos</span>
+          {/* Attachments card — below fold, accessed intentionally */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <div className={styles.cardTitle}>
+                <MdAttachFile size={18} />
+                <span>Anexos</span>
+              </div>
+            </div>
+            <div className={cn(styles.cardBody, styles.attachmentsBody)}>
+              <ImageUpload
+                label=" "
+                onChange={handleAttachImages}
+                showPreviewList={false}
+                acceptCapture
+                compressable
+              />
+              <ImagePreviewList
+                previews={
+                  attachedImages?.orderImages.map((image) => ({
+                    id: image.id,
+                    url: image.url,
+                    thumbnailUrl: image.thumbnailUrl,
+                  })) || []
+                }
+                onRemove={handleRemoveImage}
+              />
+            </div>
           </div>
         </div>
-        <div className={cn(styles.cardBody, styles.attachmentsBody)}>
-          <ImageUpload
-            label=" "
-            onChange={handleAttachImages}
-            showPreviewList={false}
-            acceptCapture
-            compressable
-          />
-          <ImagePreviewList
-            previews={
-              attachedImages?.orderImages.map((image) => ({
-                id: image.id,
-                url: image.url,
-                thumbnailUrl: image.thumbnailUrl,
-              })) || []
-            }
-            onRemove={handleRemoveImage}
-          />
+
+        {/* ── Right column: sticky summary panel (desktop only) ── */}
+        <div className={styles.summaryColumn}>
+          {summaryPanel}
         </div>
       </div>
 
-      {/* Sticky mobile footer */}
+      {/* Sticky mobile footer — total + CTA, replaces the summary panel on small screens */}
       <div className={styles.stickyFooter}>
         <div className={styles.stickyTotal}>
           <span>Total</span>
           <strong>{order?.totalValue.formatted ?? "R$ 0,00"}</strong>
         </div>
         <div className={styles.stickyAction}>
-          <Visible
-            condition={order?.status !== OrderStatus.WAITING_FOR_PAYMENT}
-          >
+          <Visible condition={order?.status !== OrderStatus.WAITING_FOR_PAYMENT}>
             {isNotEditable ? (
               <ConfirmModal
                 onSave={async () => {
@@ -847,9 +867,7 @@ export const OrderEdit = (props: OrderEditProps) => {
               )
             )}
           </Visible>
-          <Visible
-            condition={order?.status === OrderStatus.WAITING_FOR_PAYMENT}
-          >
+          <Visible condition={order?.status === OrderStatus.WAITING_FOR_PAYMENT}>
             <Button variant="primary" loading>
               Aguardando
             </Button>

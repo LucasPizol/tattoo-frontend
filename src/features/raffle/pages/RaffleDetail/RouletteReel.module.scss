@@ -1,0 +1,84 @@
+.container {
+  border: 1px solid var(--border-inverse-strong);
+  border-radius: var(--shape-border-radius);
+  background: var(--ink);
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.progressLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-inverse-dim);
+  margin: 0;
+  transition: color 300ms ease, opacity 300ms ease;
+}
+
+.progressLabelDone {
+  color: var(--amber);
+}
+
+.focalBar {
+  height: 72px;
+  background: var(--amber-pale);
+  border-top: 1px solid var(--amber);
+  border-bottom: 1px solid var(--amber);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0 16px;
+}
+
+.focalBarFlash {
+  animation: focalFlash 400ms ease forwards;
+}
+
+.focalName {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-inverse);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.spinningLabel {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  margin: 0;
+  animation: pulse 600ms ease-in-out infinite;
+}
+
+.spinningLabelHidden {
+  visibility: hidden;
+  animation: none;
+}
+
+@keyframes focalFlash {
+  0% {
+    background: var(--amber-pale);
+  }
+  50% {
+    background: rgba(212, 175, 55, 0.35);
+  }
+  100% {
+    background: var(--amber-pale);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

@@ -12,34 +12,51 @@
 }
 
 .headerLink {
-  font-size: 12px;
-  color: var(--amber);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-caption);
+  color: var(--text-tertiary);
   text-decoration: none;
   font-weight: 500;
   white-space: nowrap;
+  transition: color 180ms ease;
+
+  .arrow {
+    display: inline-flex;
+    transition: transform 180ms ease;
+  }
 
   &:hover {
-    text-decoration: underline;
+    color: var(--amber);
+
+    .arrow {
+      transform: translateX(3px);
+    }
   }
 }
 
 .loadingContainer {
   display: flex;
   justify-content: center;
-  padding: 32px;
+  padding: var(--space-8);
 }
 
 .empty {
-  color: var(--text-tertiary);
-  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-6);
   text-align: center;
-  padding: 24px;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-caption);
 }
 
 .inner {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .metrics {
@@ -64,17 +81,18 @@
   font-size: 13px;
   font-weight: 700;
   color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
 }
 
 .expense {
-  color: var(--color-error);
+  color: var(--alert-error-fg);
 }
 
 .profit {
-  color: var(--color-success-border);
+  color: var(--alert-success-fg);
 }
 
 .chartWrapper {
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--space-3);
 }

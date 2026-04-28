@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 
 import {
   type BillingState,
-  CheckoutSessionError,
   PortalSessionError,
   billingService,
 } from "@/services/requests/billing";
@@ -42,34 +41,11 @@ type UseSubscriptionResult = {
   isLoading: boolean;
   isPolling: boolean;
   pollTimedOut: boolean;
-  isCheckoutPending: boolean;
   isPortalPending: boolean;
-  startCheckout: () => void;
   startPortal: () => void;
   reload: () => void;
 };
 
-/**
- * Drives the SubscriptionCard state machine described in WI#3 brief §4.
- *
- * Responsibilities:
- *  - Fetch the current billing snapshot from GET /api/billing/status.
- *  - Run the post-redirect poll loop (2s interval, 30s cap) when the
- *    user lands with `?checkout=success`.
- *  - Show informational toast on `?checkout=cancelled`.
- *  - Trigger POST /api/billing/checkout_session and redirect to the
- *    returned Stripe URL. Branch error handling per the brief:
- *      409 -> silent refetch (race with webhook).
- *      422 -> toast `Plano indisponível no momento. Contate o suporte.`
- *      502 -> toast `Não foi possível iniciar o checkout. Tente novamente.`
- *  - Trigger POST /api/billing/portal_session and redirect to the
- *    returned Stripe Customer Portal URL (WI#4). Branch error handling:
- *      422 no_billing_account -> invalidate billing status (defensive
- *        recovery: card invariant said a subscription existed) AND
- *        toast the no-billing-account copy.
- *      502 stripe_unavailable / unknown -> toast the generic
- *        "Não foi possível abrir o portal. Tente novamente em instantes."
- */
 export const useSubscription = (): UseSubscriptionResult => {
   const queryClient = useQueryClient();
   const [isPolling, setIsPolling] = useState(false);
@@ -84,8 +60,6 @@ export const useSubscription = (): UseSubscriptionResult => {
     refetchIntervalInBackground: false,
   });
 
-  // Track poll attempts and stop conditions whenever the query resolves
-  // while polling.
   useEffect(() => {
     if (!isPolling) return;
 
@@ -95,7 +69,13 @@ export const useSubscription = (): UseSubscriptionResult => {
       setIsPolling(false);
       pollAttemptsRef.current = 0;
       stripCheckoutQueryParam();
-      toast.success("Plano Solo ativo. Aproveite!");
+      const key = query.data?.plan_lookup_key ?? "";
+      const planLabel = key.includes("solo")
+        ? "Solo"
+        : key.includes("studio")
+          ? "Studio"
+          : null;
+      toast.success(planLabel ? `Plano ${planLabel} ativo. Aproveite!` : "Plano ativo. Aproveite!");
       return;
     }
 
@@ -110,7 +90,6 @@ export const useSubscription = (): UseSubscriptionResult => {
     }
   }, [query.data, query.isFetching, isPolling]);
 
-  // Handle the redirect query params on mount exactly once.
   useEffect(() => {
     if (handledCheckoutParamRef.current) return;
     handledCheckoutParamRef.current = true;
@@ -126,46 +105,6 @@ export const useSubscription = (): UseSubscriptionResult => {
     }
   }, []);
 
-  const checkoutMutation = useMutation({
-    mutationFn: billingService.createCheckoutSession,
-    onSuccess: ({ url }) => {
-      if (typeof window !== "undefined") {
-        window.location.href = url;
-      }
-    },
-    onError: (error) => {
-      if (error instanceof CheckoutSessionError) {
-        switch (error.code) {
-          case "already_subscribed":
-            // Race condition: webhook just landed. Refetch and let the
-            // card re-render in the active/trialing state.
-            queryClient.invalidateQueries({
-              queryKey: BILLING_STATUS_QUERY_KEY,
-            });
-            return;
-          case "price_unavailable":
-            toast.error("Plano indisponível no momento. Contate o suporte.");
-            return;
-          case "stripe_unavailable":
-            toast.error(
-              "Não foi possível iniciar o checkout. Tente novamente.",
-            );
-            return;
-          default:
-            toast.error(
-              "Não foi possível iniciar o checkout. Tente novamente.",
-            );
-            return;
-        }
-      }
-      toast.error("Não foi possível iniciar o checkout. Tente novamente.");
-    },
-  });
-
-  const startCheckout = useCallback(() => {
-    checkoutMutation.mutate(undefined);
-  }, [checkoutMutation]);
-
   const portalMutation = useMutation({
     mutationFn: billingService.createPortalSession,
     onSuccess: ({ url }) => {
@@ -176,10 +115,6 @@ export const useSubscription = (): UseSubscriptionResult => {
     onError: (error) => {
       if (error instanceof PortalSessionError) {
         if (error.code === "no_billing_account") {
-          // Defensive: the card invariant says we only render the
-          // Manage CTA when a Subscription exists. Hitting this branch
-          // means the cached state diverged from the backend (e.g.,
-          // admin canceled in another tab). Refetch to recover.
           queryClient.invalidateQueries({
             queryKey: BILLING_STATUS_QUERY_KEY,
           });
@@ -188,7 +123,6 @@ export const useSubscription = (): UseSubscriptionResult => {
           );
           return;
         }
-        // stripe_unavailable | unknown
         toast.error(
           "Não foi possível abrir o portal. Tente novamente em instantes.",
         );
@@ -205,18 +139,18 @@ export const useSubscription = (): UseSubscriptionResult => {
   }, [portalMutation]);
 
   const reload = useCallback(() => {
-    if (typeof window !== "undefined") window.location.reload();
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    }
   }, []);
 
   return {
     status: query.data,
-    billingState: query.data?.billing_state ?? null,
+    billingState: (query.data?.status as BillingState) || null,
     isLoading: query.isLoading,
     isPolling,
     pollTimedOut,
-    isCheckoutPending: checkoutMutation.isPending,
     isPortalPending: portalMutation.isPending,
-    startCheckout,
     startPortal,
     reload,
   };

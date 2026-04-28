@@ -13,13 +13,11 @@ import {
   MdDashboard,
   MdGroup,
   MdLink,
-  MdLock,
   MdOutlineInventory,
   MdPostAdd,
   MdSettings,
   MdShoppingBag,
 } from "react-icons/md";
-import { Link } from "react-router-dom";
 import styles from "./styles.module.scss";
 
 type SidebarProps = {
@@ -30,14 +28,6 @@ type SidebarProps = {
 
 const SectionLabel = ({ children }: { children: React.ReactNode }) => (
   <span className={styles.sectionLabel}>{children}</span>
-);
-
-const LockedTeaser = ({ label }: { label: string }) => (
-  <Link to="/configuracoes" className={styles.lockedTeaser}>
-    <MdLock size={18} className={styles.lockedIcon} />
-    <span className={styles.lockedLabel}>{label}</span>
-    <span className={styles.lockedBadge}>Studio</span>
-  </Link>
 );
 
 export const Sidebar = ({
@@ -51,6 +41,10 @@ export const Sidebar = ({
   const hasInstagramRaffles = useEntitlement("instagram_raffles");
 
   const close = () => isMobile && setIsSidebarOpen(false);
+
+  // Solo plan = flat list, no section headers.
+  // Studio (hasCommissions) = grouped sections, since 10+ items deserve grouping.
+  const showSections = hasCommissions || hasInstagramRaffles;
 
   return (
     <aside
@@ -82,22 +76,26 @@ export const Sidebar = ({
         />
 
         <div className={styles.section}>
-          <SectionLabel>Vendas</SectionLabel>
+          {showSections && <SectionLabel>Vendas</SectionLabel>}
           <MenuItem
             icon={<MdShoppingBag size={20} />}
             label="Pedidos"
             href="/vendas/usuarios"
             onClick={close}
           />
-          {hasCommissions ? (
+          <MenuItem
+            icon={<MdOutlineInventory size={20} />}
+            label="Produtos"
+            href="/produtos"
+            onClick={close}
+          />
+          {hasCommissions && (
             <MenuItem
               icon={<MdAttachMoney size={20} />}
               label="Comissões"
               href="/comissoes"
               onClick={close}
             />
-          ) : (
-            <LockedTeaser label="Comissões" />
           )}
         </div>
 
@@ -111,7 +109,7 @@ export const Sidebar = ({
               onClick={close}
             />
             <Accordeon
-              variant="primary"
+              variant="tertiary"
               headerClassName={styles.instagramHeader}
               title={
                 <span className={styles.instagramTitle}>
@@ -133,7 +131,7 @@ export const Sidebar = ({
               />
               <MenuItem
                 icon={<MdComment size={20} />}
-                label="Últimos Comentários"
+                label="Comentários"
                 href="/instagram/comentarios"
                 onClick={close}
               />
@@ -142,7 +140,9 @@ export const Sidebar = ({
         )}
 
         <div className={styles.section}>
-          <SectionLabel>Gestão</SectionLabel>
+          {showSections && hasCommissions && (
+            <SectionLabel>Gestão</SectionLabel>
+          )}
           {hasCommissions && (
             <>
               <MenuItem

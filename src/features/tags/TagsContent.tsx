@@ -17,19 +17,33 @@ export const TagsContent = () => {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: 16,
+        }}
+      >
         <Button prefixIcon={<MdAdd />} variant="primary" onClick={() => open()}>
           Nova Tag
         </Button>
       </div>
-      <Card title="Tags" icon={<MdLocalOffer />} className={styles.categoriesCard}>
+      <Card
+        title="Tags"
+        icon={<MdLocalOffer />}
+        className={styles.categoriesCard}
+      >
         <div className={styles.categoriesList}>
           {data.length === 0 ? (
             <div className={styles.emptyState}>
               <MdLocalOffer size={36} className={styles.emptyIcon} />
               <h3>Nenhuma tag encontrada</h3>
               <p>Comece criando sua primeira tag</p>
-              <Button prefixIcon={<MdAdd />} variant="primary" onClick={() => open()}>
+              <Button
+                prefixIcon={<MdAdd />}
+                variant="primary"
+                onClick={() => open()}
+              >
                 Criar primeira tag
               </Button>
             </div>
@@ -40,7 +54,9 @@ export const TagsContent = () => {
                 tag={tag}
                 data={data}
                 open={open}
-                refetch={async () => { await refetch(); }}
+                refetch={async () => {
+                  await refetch();
+                }}
               />
             ))
           )}
@@ -50,15 +66,26 @@ export const TagsContent = () => {
       <Modal {...modalProps} title="Nova Tag">
         <div className={styles.modalContent}>
           <Input label="Nome" placeholder="Nome da tag" required field="name" />
-          <Input label="Observações" placeholder="Observações (opcional)" field="notes" />
+          <Input
+            label="Observações"
+            placeholder="Observações (opcional)"
+            field="notes"
+          />
           <CategoryTreeSelect
-            values={parentTag ? [{ id: parentTag.id, title: parentTag.name }] : []}
+            values={
+              parentTag ? [{ id: parentTag.id, title: parentTag.name }] : []
+            }
+            label="Selecione uma Tag pai"
+            placeholder="Selecione uma Tag pai"
             onChange={(value) => {
               if (!value) {
                 form.setValue("parentTag", null);
                 return;
               }
-              const { id, title } = value as unknown as { id: number; title: string };
+              const { id, title } = value as unknown as {
+                id: number;
+                title: string;
+              };
               form.setValue("parentTag", { id, name: title });
             }}
             onClear={() => form.setValue("parentTag", null)}

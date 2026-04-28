@@ -63,30 +63,6 @@ const mapStatusToPortalCode = (
   }
 };
 
-export const createCheckoutSession = async (
-  returnPath?: string,
-): Promise<{ url: string }> => {
-  try {
-    const body: Record<string, string> = {};
-    if (returnPath) body.return_path = returnPath;
-    const response = await api.post<{ url: string }>(
-      "/api/billing/checkout_session",
-      body,
-    );
-    return response;
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      const status = error.response?.status;
-      const code = mapStatusToCode(status);
-      const message =
-        (error.response?.data as { message?: string } | undefined)?.message ??
-        error.message;
-      throw new CheckoutSessionError(code, status ?? null, message);
-    }
-    throw new CheckoutSessionError("unknown", null, (error as Error)?.message);
-  }
-};
-
 export const createPortalSession = async (): Promise<{ url: string }> => {
   try {
     const response = await api.post<{ url: string }>(
@@ -112,11 +88,38 @@ export const getBillingStatus = async (): Promise<BillingStatus> => {
   return billingStatusSchema.parse(raw);
 };
 
+// Parse PlanPrice data from billing status response
+export interface ParsedPlanPrices {
+  [planName: string]: {
+    monthly?: { lookupKey: string; unitAmount: number };
+    yearly?: { lookupKey: string; unitAmount: number };
+  };
+}
+
 export const billingService = {
-  createCheckoutSession,
   createPortalSession,
   getBillingStatus,
 };
 
-export const createOnboardingCheckoutSession = (): Promise<{ url: string }> =>
-  createCheckoutSession("/onboarding");
+export const createEmbeddedCheckoutSession = async (
+  priceLookupKey: string,
+  returnUrl: string,
+): Promise<{ client_secret: string }> => {
+  try {
+    const response = await api.post<{ client_secret: string }>(
+      "/api/billing/checkout_session",
+      { price_lookup_key: priceLookupKey, return_url: returnUrl, ui_mode: "embedded" },
+    );
+    return response;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const status = error.response?.status;
+      const code = mapStatusToCode(status);
+      const message =
+        (error.response?.data as { message?: string } | undefined)?.message ??
+        error.message;
+      throw new CheckoutSessionError(code, status ?? null, message);
+    }
+    throw new CheckoutSessionError("unknown", null, (error as Error)?.message);
+  }
+};

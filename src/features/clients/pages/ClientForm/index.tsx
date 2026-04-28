@@ -8,8 +8,8 @@ import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { ClientOptions } from "@/schemas/client";
 import { masks } from "@/utils/masks";
-import { useEffect, useMemo } from "react";
-import { MdAdd } from "react-icons/md";
+import { useEffect, useMemo, useState } from "react";
+import { MdAdd, MdExpandLess, MdExpandMore } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { AddressForm } from "../../components/AddressForm";
 import { useClientForm } from "../../hooks/useClientForm";
@@ -35,6 +35,10 @@ export const ClientForm = () => {
   } = useClientForm(Number(id), isEditing);
 
   const navigate = useNavigate();
+
+  // Editing → start expanded so the operator sees existing data.
+  // New → essentials-only, expand on demand.
+  const [showMore, setShowMore] = useState(isEditing);
 
   const birthDate = watch("birthDate");
 
@@ -131,7 +135,8 @@ export const ClientForm = () => {
     >
       <div className={styles.content}>
         <Form onSubmit={onSaveClient} form={form} className={styles.form}>
-          <Card title="Dados Pessoais" className={styles.section}>
+          {/* Essentials — what an operator can capture in 30 seconds */}
+          <Card title="Dados essenciais" className={styles.section}>
             <div className={styles.grid}>
               <Input
                 label="Nome Completo"
@@ -141,16 +146,10 @@ export const ClientForm = () => {
                 loading={isLoading}
               />
               <Input
-                label="CPF"
-                placeholder="000.000.000-00"
-                field="cpf"
-                mask={masks.formatCpf}
-                loading={isLoading}
-              />
-              <Input
-                label="RG"
-                placeholder="00.000.000-0"
-                field="rg"
+                label="Telefone (WhatsApp)"
+                placeholder="(11) 99999-9999"
+                field="phone"
+                mask={masks.formatPhone}
                 loading={isLoading}
               />
               <Input
@@ -168,126 +167,10 @@ export const ClientForm = () => {
                 field="gender"
                 loading={isLoading}
               />
-              <Select
-                label="Estado Civil"
-                placeholder="Selecione o estado civil"
-                options={ClientOptions.maritalStatusOptions}
-                field="maritalStatus"
-                loading={isLoading}
-              />
-              <Input
-                label="Perfil do Instagram"
-                placeholder="Perfil do Instagram"
-                field="instagramProfile"
-                loading={isLoading}
-              />
             </div>
           </Card>
 
-          <Card title="Contato" className={styles.section}>
-            <div className={styles.grid}>
-              <Input
-                label="Email"
-                type="email"
-                placeholder="email@exemplo.com"
-                field="email"
-                loading={isLoading}
-              />
-              <Input
-                label="Telefone"
-                placeholder="(11) 99999-9999"
-                field="phone"
-                mask={masks.formatPhone}
-                loading={isLoading}
-              />
-              <ClientSelector
-                isLoading={isLoading}
-                label="Cliente"
-                placeholder="Selecione um cliente"
-                selectCondition={(c) => c.id !== client?.id}
-                disabled={
-                  isLoading || isSubmitting || !!client?.indicatedBy?.id
-                }
-                link={
-                  client?.indicatedBy
-                    ? {
-                        to: `/clientes/${client?.indicatedBy?.id}/visualizar`,
-                        label: "Detalhes do cliente",
-                      }
-                    : undefined
-                }
-                value={
-                  client?.indicatedBy
-                    ? {
-                        id: client?.indicatedBy?.id,
-                        name: client?.indicatedBy?.name,
-                      }
-                    : undefined
-                }
-                onChange={async (client) => {
-                  setValue("indicatedBy", client);
-                }}
-              />
-            </div>
-          </Card>
-
-          <Card
-            title="Endereços"
-            className={styles.section}
-            actions={
-              <Button
-                variant="secondary"
-                type="button"
-                onClick={addAddress}
-                className={styles.addAddressButton}
-                prefixIcon={<MdAdd size={18} />}
-              >
-                Adicionar Endereço
-              </Button>
-            }
-          >
-            <div className={styles.addressList}>
-              {addressFields.map((field, index) => {
-                return (
-                  <AddressForm
-                    key={field.id}
-                    index={index}
-                    form={form}
-                    onRemove={() => removeAddress(index, field.addressId)}
-                    canRemove={addressFields.length > 1}
-                    isLoading={isLoading}
-                  />
-                );
-              })}
-            </div>
-          </Card>
-
-          {/* Informações de Saúde */}
-          <Card title="Informações de Saúde" className={styles.section}>
-            <div className={styles.healthGrid}>
-              <Checkbox
-                label="Reações alérgicas"
-                disabled={isLoading}
-                field="allergicReactions"
-              />
-            </div>
-            <TextArea
-              label="Observações de saúde"
-              placeholder="Descreva quaisquer condições ou observações de saúde relevantes"
-              field="healthNotes"
-              rows={4}
-            />
-          </Card>
-
-          <Card title="Observações" className={styles.section}>
-            <TextArea
-              label="Observações"
-              placeholder="Observações"
-              field="observations"
-              rows={4}
-            />
-          </Card>
-
+          {/* Guardian info auto-shows when minor — non-optional */}
           {isMinor && (
             <Card title="Responsáveis" className={styles.section}>
               <div className={styles.grid}>
@@ -347,6 +230,149 @@ export const ClientForm = () => {
                 />
               </div>
             </Card>
+          )}
+
+          <Button
+            variant="tertiary"
+            type="button"
+            onClick={() => setShowMore((s) => !s)}
+            prefixIcon={
+              showMore ? <MdExpandLess size={18} /> : <MdExpandMore size={18} />
+            }
+            className={styles.toggleMore}
+          >
+            {showMore ? "Ocultar campos adicionais" : "+ Adicionar informações"}
+          </Button>
+
+          {showMore && (
+            <>
+              <Card title="Documentos e perfil" className={styles.section}>
+                <div className={styles.grid}>
+                  <Input
+                    label="CPF"
+                    placeholder="000.000.000-00"
+                    field="cpf"
+                    mask={masks.formatCpf}
+                    loading={isLoading}
+                  />
+                  <Input
+                    label="RG"
+                    placeholder="00.000.000-0"
+                    field="rg"
+                    loading={isLoading}
+                  />
+                  <Select
+                    label="Estado Civil"
+                    placeholder="Selecione o estado civil"
+                    options={ClientOptions.maritalStatusOptions}
+                    field="maritalStatus"
+                    loading={isLoading}
+                  />
+                  <Input
+                    label="Perfil do Instagram"
+                    placeholder="Perfil do Instagram"
+                    field="instagramProfile"
+                    loading={isLoading}
+                  />
+                </div>
+              </Card>
+
+              <Card title="Contato adicional" className={styles.section}>
+                <div className={styles.grid}>
+                  <Input
+                    label="Email"
+                    type="email"
+                    placeholder="email@exemplo.com"
+                    field="email"
+                    loading={isLoading}
+                  />
+                  <ClientSelector
+                    isLoading={isLoading}
+                    label="Indicado por"
+                    placeholder="Selecione um cliente"
+                    selectCondition={(c) => c.id !== client?.id}
+                    disabled={
+                      isLoading || isSubmitting || !!client?.indicatedBy?.id
+                    }
+                    link={
+                      client?.indicatedBy
+                        ? {
+                            to: `/clientes/${client?.indicatedBy?.id}/visualizar`,
+                            label: "Detalhes do cliente",
+                          }
+                        : undefined
+                    }
+                    value={
+                      client?.indicatedBy
+                        ? {
+                            id: client?.indicatedBy?.id,
+                            name: client?.indicatedBy?.name,
+                          }
+                        : undefined
+                    }
+                    onChange={async (client) => {
+                      setValue("indicatedBy", client);
+                    }}
+                  />
+                </div>
+              </Card>
+
+              <Card
+                title="Endereços"
+                className={styles.section}
+                actions={
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    onClick={addAddress}
+                    className={styles.addAddressButton}
+                    prefixIcon={<MdAdd size={18} />}
+                  >
+                    Adicionar Endereço
+                  </Button>
+                }
+              >
+                <div className={styles.addressList}>
+                  {addressFields.map((field, index) => {
+                    return (
+                      <AddressForm
+                        key={field.id}
+                        index={index}
+                        form={form}
+                        onRemove={() => removeAddress(index, field.addressId)}
+                        canRemove={addressFields.length > 1}
+                        isLoading={isLoading}
+                      />
+                    );
+                  })}
+                </div>
+              </Card>
+
+              <Card title="Informações de Saúde" className={styles.section}>
+                <div className={styles.healthGrid}>
+                  <Checkbox
+                    label="Reações alérgicas"
+                    disabled={isLoading}
+                    field="allergicReactions"
+                  />
+                </div>
+                <TextArea
+                  label="Observações de saúde"
+                  placeholder="Descreva quaisquer condições ou observações de saúde relevantes"
+                  field="healthNotes"
+                  rows={4}
+                />
+              </Card>
+
+              <Card title="Observações" className={styles.section}>
+                <TextArea
+                  label="Observações"
+                  placeholder="Observações"
+                  field="observations"
+                  rows={4}
+                />
+              </Card>
+            </>
           )}
 
           <Button type="submit" loading={isSubmitting}>

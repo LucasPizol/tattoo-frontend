@@ -40,14 +40,13 @@
   position: relative;
   outline: none;
   width: 100%;
-  padding: 10px 16px;
-  min-height: 42px;
+  height: 35px;
+  padding: 6px 12px;
 
   &_open {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
     border-color: var(--color-primary);
-    border-bottom: none;
   }
 
   &:hover:not(&_open) {
@@ -79,7 +78,7 @@
 }
 
 .placeholder {
-  color: #777;
+  color: var(--text-tertiary);
   font-weight: 400;
 }
 
@@ -126,15 +125,13 @@
     border-bottom-right-radius: var(--input-border-radius);
     overflow-y: auto;
     max-height: 240px;
-    border: 1.5px solid var(--color-border);
+    border: 1px solid var(--color-border);
     padding: 8px;
     gap: 4px;
     display: flex;
     flex-direction: column;
     backdrop-filter: blur(10px);
     font-size: 14px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    animation: slideDown 0.2s ease;
 
     .searchContainer {
       display: flex;
@@ -153,7 +150,7 @@
     }
 
     .searchIcon {
-      color: #777;
+      color: var(--text-tertiary);
       margin-right: 8px;
       flex-shrink: 0;
     }
@@ -167,7 +164,7 @@
       background: transparent;
 
       &::placeholder {
-        color: #777;
+        color: var(--text-tertiary);
       }
     }
 
@@ -179,16 +176,20 @@
     }
 
     .option {
-      padding: 10px 12px;
+      padding: 6px 12px;
       cursor: pointer;
       transition: all 0.2s ease;
-      border-radius: 8px;
+      border-radius: var(--input-border-radius);
       font-weight: 500;
       border: 1px solid transparent;
 
-      &:hover,
       &_selected {
         background: var(--color-secondary-hover);
+        color: var(--app-primary-cta-fg);
+      }
+
+      &:hover:not(&_selected) {
+        background: var(--amber-pale);
         color: var(--color-primary);
       }
     }
@@ -196,7 +197,7 @@
     .noResults {
       padding: 20px 12px;
       text-align: center;
-      color: #777;
+      color: var(--text-tertiary);
       font-style: italic;
       font-size: 14px;
     }
@@ -206,7 +207,6 @@
 .select {
   display: flex;
   flex-direction: column;
-  gap: 2px;
   flex: 1;
 
   &.disabled,

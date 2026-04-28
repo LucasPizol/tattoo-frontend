@@ -64,8 +64,8 @@ export const CategoriesContent = () => {
   ];
 
   return (
-    <>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+    <div className={styles.categoriesContainer}>
+      <div className={styles.categoriesHeader}>
         <Button onClick={() => open()}>Nova Categoria</Button>
       </div>
       <FiltersCard form={form} onFinishFilters={onFinishFilters}>
@@ -76,14 +76,12 @@ export const CategoriesContent = () => {
           prefixIcon={<MdSearch />}
           className={styles.searchInput}
           onDebounceChange={async (value) => {
-            onFinishFilters({
-              name_cont: value,
-            });
+            onFinishFilters({ name_cont: value });
           }}
         />
       </FiltersCard>
       <Table columns={columns} data={categories || []} loading={isLoading} />
-      <Modal {...modalProps}>
+      <Modal {...modalProps} title="Nova Categoria">
         <Input field="name" label="Nome" placeholder="Nome da categoria" />
         <Input
           field="notes"
@@ -91,6 +89,6 @@ export const CategoriesContent = () => {
           placeholder="Observações sobre a categoria (opcional)"
         />
       </Modal>
-    </>
+    </div>
   );
 };

@@ -33,8 +33,6 @@ export const ProductRequests = {
       q: {
         ...data.q,
         user_id_eq: data.q?.user_id_eq,
-        not_featured_eq: undefined,
-        featured_eq: data.q?.not_featured_eq ? false : data.q?.featured_eq,
       },
     }),
   show: (id: number) => api.get<ProductShowResponse>(`/api/products/${id}`),

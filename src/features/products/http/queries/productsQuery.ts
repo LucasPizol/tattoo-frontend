@@ -31,10 +31,6 @@ export const useProductsQuery = ({
         q: {
           ...pagination.q,
           user_id_eq: pagination.q?.user_id_eq,
-          not_featured_eq: undefined,
-          featured_eq: pagination.q?.not_featured_eq
-            ? false
-            : pagination.q?.featured_eq,
         },
       }),
     initialFilters: {

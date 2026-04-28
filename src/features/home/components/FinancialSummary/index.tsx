@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { Loading } from "@/components/ui/Loading";
 import type { FinancialSummaryData } from "../../types";
-import { MdTrendingUp } from "react-icons/md";
+import { MdArrowForward, MdTrendingUp } from "react-icons/md";
 import { Link } from "react-router-dom";
 import {
   ResponsiveContainer,
@@ -31,7 +31,7 @@ export const FinancialSummary = ({ data, isLoading }: FinancialSummaryProps) => 
       icon={<MdTrendingUp />}
       actions={
         <Link to="/relatorios" className={styles.headerLink}>
-          Ver financeiro →
+          Ver financeiro <span className={styles.arrow}><MdArrowForward size={14} /></span>
         </Link>
       }
     >
@@ -40,7 +40,7 @@ export const FinancialSummary = ({ data, isLoading }: FinancialSummaryProps) => 
           <Loading size={24} />
         </div>
       ) : !data ? (
-        <p className={styles.empty}>Sem dados financeiros.</p>
+        <div className={styles.empty}>Sem dados financeiros.</div>
       ) : (
         <div className={styles.inner}>
           <div className={styles.metrics}>

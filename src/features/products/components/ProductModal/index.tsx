@@ -1,6 +1,5 @@
 import { CategoryTreeSelect } from "@/components/CategoryTreeSelect";
 import { Checkbox } from "@/components/ui/Checkbox";
-import { Divider } from "@/components/ui/Divider";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { ImagePreviewList } from "@/components/ui/ImageUpload/ImagePreviewList";
 import { Input } from "@/components/ui/Input";
@@ -34,12 +33,11 @@ export const ProductModal = (props: ModalPropsForm<ProductForm, Product>) => {
       {...props}
       title={props.currentReference ? "Editar Produto" : "Adicionar Produto"}
     >
-      <Input label="Nome" placeholder="Nome do produto" field="name" />
+      <Input label="Nome" field="name" />
 
       <div className={styles.row}>
         <Select
           label="Categoria"
-          placeholder="Categoria"
           field="materialId"
           options={
             categories?.map((category) => ({
@@ -50,7 +48,6 @@ export const ProductModal = (props: ModalPropsForm<ProductForm, Product>) => {
         />
         <Select
           label="Tipo de Produto"
-          placeholder="Tipo de Produto"
           field="productType"
           options={productTypes?.map((productType) => ({
             label: productType.label,
@@ -81,7 +78,7 @@ export const ProductModal = (props: ModalPropsForm<ProductForm, Product>) => {
         placeholder={`${
           tags?.length && tags.length > 0
             ? `${tags.length} locais selecionados`
-            : "Selecione um local de perfuração"
+            : ""
         }`}
         canOpenDisabled
         onClear={() => {
@@ -91,7 +88,7 @@ export const ProductModal = (props: ModalPropsForm<ProductForm, Product>) => {
       <div className={styles.row}>
         <Input
           label="Valor"
-          placeholder="Valor do produto"
+          placeholder="R$ 0,00"
           field="value"
           mask={masks.formatCurrency}
           className={styles.value}
@@ -99,7 +96,7 @@ export const ProductModal = (props: ModalPropsForm<ProductForm, Product>) => {
         {!props.currentReference && (
           <Input
             label="Quantidade inicial (opcional)"
-            placeholder="Digite a quantidade inicial"
+            placeholder="0"
             field="quantity"
             type="number"
             className={styles.quantity}
@@ -110,7 +107,6 @@ export const ProductModal = (props: ModalPropsForm<ProductForm, Product>) => {
       {!props.currentReference && (
         <Select
           label="Dona(o) do produto"
-          placeholder="Dona(o)"
           field="userId"
           options={
             users?.map((user) => ({
@@ -125,20 +121,6 @@ export const ProductModal = (props: ModalPropsForm<ProductForm, Product>) => {
         label="Obrigatório o cadastro de um responsável"
         field="requireResponsible"
       />
-      <Divider
-        text="Configurações do site"
-        style={{ marginTop: 2, marginBottom: 2 }}
-        textColor="#643074"
-      />
-      <div className={styles.row}>
-        <Checkbox label="Mostrar" field="featured" />
-        {props.form?.watch("featured") && (
-          <>
-            <Checkbox label="Novo" field="new" />
-            <Checkbox label="Carrosel" field="carousel" />
-          </>
-        )}
-      </div>
       <ImageUpload
         label="Imagens do Produto"
         onChange={(images) => {

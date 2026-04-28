@@ -19,6 +19,18 @@ export const useCreateRaffle = () => {
   });
 };
 
+export const useDrawRaffle = (id: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => api.post<RaffleShowResponse>(`/api/raffles/${id}/draw`, {}),
+    onSuccess: (data) => {
+      queryClient.setQueryData(["raffle", id], data);
+      queryClient.invalidateQueries({ queryKey: ["raffle", id] });
+    },
+  });
+};
+
 export const useDeleteRaffle = () => {
   const queryClient = useQueryClient();
 

@@ -1,128 +1,155 @@
-.container {
-  position: relative;
-  width: 100%;
-}
+// TreeSelect — visual mirror of Select, with tree-specific affordances
+// (indented rows, expand/collapse). All tokens, no raw hex.
 
-.selector {
+.select {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  min-height: 32px;
-  padding: 10px 16px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--input-border-radius);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #ffffff;
-
-  &:hover {
-    border-color: var(--color-primary);
-  }
-
-  &:focus-within {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(23, 125, 220, 0.2);
-  }
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  position: relative;
 
   &.disabled {
-    border-color: var(--color-border);
     cursor: not-allowed;
+    opacity: 0.5;
   }
 }
 
-.selectorValue {
+// ── Selector (the closed input-looking trigger) ──────────────────────────────
+
+.selectContainer {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--input-border-radius);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  background: var(--color-background);
+  position: relative;
+  outline: none;
+  width: 100%;
+  min-height: 35px;
+  padding: 6px 12px;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(.selectContainer_open) {
+      border-color: var(--color-primary);
+    }
+  }
+
+  &:focus-within,
+  &.selectContainer_open {
+    border-color: var(--color-primary);
+  }
+
+  &.selectContainer_open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.selectContent {
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--text-primary);
 }
 
 .selectedValue {
-  color: var(--color-secondary-text);
+  color: var(--text-primary);
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .placeholder {
-  color: #777;
+  color: var(--text-tertiary);
   font-size: 14px;
+  font-weight: 400;
 }
 
-.label {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  margin-bottom: 2px;
-}
-
-.selectorSuffix {
+.tagsContainer {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 4px;
-  color: #ffffff;
+  align-items: center;
+  width: 100%;
 }
 
+// Right-side controls (clear + chevron) — match Select's selectIcon position
 .clearButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   border: none;
-  background: none;
-  color: #8c8c8c;
+  background: transparent;
+  color: var(--text-tertiary);
   cursor: pointer;
   border-radius: 50%;
-  font-size: 12px;
-  transition: all 0.2s ease;
+  flex-shrink: 0;
+  transition: color 150ms ease, background-color 150ms ease;
 
-  &:hover {
-    background-color: #434343;
-    color: #ffffff;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-error);
+      background-color: var(--surface-overlay);
+    }
   }
 }
 
 .arrow {
+  display: flex;
+  align-items: center;
+  color: var(--text-tertiary);
   transition: transform 0.2s ease;
-  color: #8c8c8c;
+  flex-shrink: 0;
 }
 
-.arrowUp {
+.arrowOpen {
   transform: rotate(180deg);
 }
 
+// ── Error ───────────────────────────────────────────────────────────────────
+
+.errorMessage {
+  font-size: 12px;
+  color: var(--color-error);
+  margin: 4px 0 0 12px;
+  font-weight: 500;
+}
+
+.select.error {
+  .selectContainer {
+    border-color: var(--color-error);
+  }
+}
+
+// ── Dropdown (rendered via portal) ──────────────────────────────────────────
+
 .dropdownContent {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 4px;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
   z-index: 1000;
-  max-height: 300px;
+  background-color: var(--color-background);
+  border-bottom-left-radius: var(--input-border-radius);
+  border-bottom-right-radius: var(--input-border-radius);
   overflow: hidden;
-  animation: slideDown 0.2s ease;
-  z-index: 1000;
-  background-color: #fff;
+  max-height: 320px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-top: none;
+  box-shadow: var(--shadow-md);
+  font-size: 14px;
+  animation: dropdownIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dropdownContainer {
-  position: relative;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 999;
-}
-
-@keyframes slideDown {
+@keyframes dropdownIn {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-4px);
   }
   to {
     opacity: 1;
@@ -130,223 +157,157 @@
   }
 }
 
-.searchWrapper {
-  position: relative;
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--color-border);
+.searchInput {
+  margin: 8px;
+  margin-bottom: 4px;
 }
 
 .searchIcon {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-secondary-text);
-  z-index: 1;
-}
-
-.searchInput {
-  width: 100%;
-  height: 28px;
-  padding: 4px 8px 4px 28px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
-  color: #ffffff;
-  font-size: 14px;
-  outline: none;
-  transition: all 0.2s ease;
-
-  &::placeholder {
-    color: var(--color-secondary-text);
-  }
-
-  &:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(23, 125, 220, 0.2);
-  }
+  color: var(--text-tertiary);
+  flex-shrink: 0;
 }
 
 .treeContainer {
-  max-height: 250px;
+  flex: 1;
   overflow-y: auto;
-  padding: 4px 0;
+  padding: 4px 8px 8px;
+  display: flex;
+  flex-direction: column;
 
   &::-webkit-scrollbar {
     width: 6px;
   }
 
   &::-webkit-scrollbar-track {
-    background: var(--color-background);
+    background: var(--surface-1);
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--color-border);
-    border-radius: var(--border-radius);
+    background: var(--border-strong);
+    border-radius: 3px;
+  }
+}
 
-    &:hover {
-      background: var(--color-border);
+.noResults {
+  padding: 20px 12px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-style: italic;
+  font-size: 14px;
+}
+
+// ── Tree node (option row) ──────────────────────────────────────────────────
+
+.treeNode {
+  display: flex;
+  flex-direction: column;
+}
+
+// Mirrors Select's .option styling so the rows feel like one family
+.option {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: var(--input-border-radius);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 150ms ease, color 150ms ease;
+  user-select: none;
+  min-height: 32px;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(.option_selected):not(.option_disabled) {
+      background: var(--amber-pale);
+      color: var(--color-primary);
     }
   }
 }
 
-.treeNode {
-  position: relative;
+.option_selected {
+  background: var(--color-secondary-hover);
+  color: var(--app-primary-cta-fg);
 }
 
-.treeNodeContent {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 32px;
-  padding: 4px 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: var(--color-secondary-text);
-
-  &:hover {
-    background-color: var(--color-primary);
-    color: var(--color-primary-text);
-  }
+.option_disabled {
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-.treeNodeLeft {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
-}
-
+// Expand button — sits inline with the row title
 .expandButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   border: none;
-  background: none;
-  color: #8c8c8c;
+  background: transparent;
+  color: var(--text-tertiary);
   cursor: pointer;
-  border-radius: var(--border-radius);
-  transition: all 0.2s ease;
+  border-radius: 4px;
   flex-shrink: 0;
+  transition: background-color 150ms ease, color 150ms ease;
 
-  &:hover {
-    background-color: #434343;
-    color: #ffffff;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      background-color: var(--surface-overlay);
+      color: var(--text-primary);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 }
 
-.expanded {
-  transform: rotate(90deg);
+// Reserved space when there's no expand button — keeps titles aligned
+.expandSpacer {
+  width: 20px;
+  flex-shrink: 0;
 }
 
 .treeNodeTitle {
-  font-size: 14px;
-  line-height: 1.4;
+  flex: 1;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.4;
 }
 
 .treeNodeChildren {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
 
+  // Subtle indent guide line — only on hover so it doesn't dominate the dropdown
   &::before {
     content: "";
     position: absolute;
-    left: 16px;
+    left: 19px;
     top: 0;
-    bottom: 0;
+    bottom: 4px;
     width: 1px;
-    background-color: #434343;
+    background: var(--border-subtle);
+    pointer-events: none;
   }
 }
 
-.selected {
-  background-color: var(--color-primary) !important;
-  color: var(--color-primary-text);
-}
+// ── Disabled state ──────────────────────────────────────────────────────────
 
-.disabled {
-  color: #8c8c8c !important;
-  cursor: not-allowed !important;
-  background-color: transparent !important;
-
-  &:hover {
-    background-color: transparent !important;
-  }
-}
-
-.hovered {
-  &:hover {
-    background-color: var(--color-primary);
-  }
-}
-
-.emptyText {
-  padding: 16px;
-  text-align: center;
-  color: #8c8c8c;
-  font-size: 14px;
-}
-
-// Size variants
-.small {
-  .selector {
-    min-height: 24px;
-    padding: 2px 8px;
-  }
-
-  .selectedValue,
-  .placeholder {
-    font-size: 12px;
-  }
-
-  .treeNodeContent {
-    min-height: 28px;
-    padding: 2px 6px;
-  }
-
-  .treeNodeTitle {
-    font-size: 12px;
-  }
-}
-
-.large {
-  .selector {
-    min-height: 40px;
-    padding: 6px 12px;
-  }
-
-  .selectedValue,
-  .placeholder {
-    font-size: 16px;
-  }
-
-  .treeNodeContent {
-    min-height: 36px;
-    padding: 6px 10px;
-  }
-
-  .treeNodeTitle {
-    font-size: 16px;
-  }
-}
-
-.disabled {
-  .selector {
-    background-color: #141414;
-    border-color: #434343;
+.select.disabled {
+  .selectContainer {
     cursor: not-allowed;
-    color: #8c8c8c;
 
     &:hover {
-      border-color: #434343;
+      border-color: var(--color-border);
     }
-  }
-
-  .placeholder {
-    color: #8c8c8c;
   }
 }

@@ -8,7 +8,7 @@
 .label {
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
@@ -16,7 +16,7 @@
   border: 2px dashed var(--color-border);
   border-radius: 8px;
   padding: 24px;
-  background-color: #fafafa;
+  background-color: var(--surface-2);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -27,7 +27,7 @@
 
   &:hover {
     border-color: var(--color-primary);
-    background-color: #f5f5f5;
+    background-color: var(--surface-overlay);
     transform: translateY(-1px);
   }
 
@@ -43,7 +43,7 @@
 
     &:hover {
       transform: none;
-      background-color: #fafafa;
+      background-color: var(--surface-2);
       border-color: var(--color-border);
     }
   }
@@ -75,7 +75,7 @@
 
 .uploadText {
   font-size: 16px;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
   font-weight: 500;
 }
@@ -88,7 +88,7 @@
 
 .uploadSubtext {
   font-size: 12px;
-  color: #666;
+  color: var(--text-tertiary);
   margin: 0;
 }
 
@@ -108,7 +108,7 @@
   gap: 8px;
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0 0 12px 0;
 
   svg {
@@ -129,7 +129,7 @@
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #fff;
+  background-color: var(--surface-3);
   border: 1px solid var(--color-border);
   transition: all 0.2s ease;
   aspect-ratio: 1;

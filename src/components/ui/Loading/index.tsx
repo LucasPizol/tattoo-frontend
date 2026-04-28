@@ -11,7 +11,7 @@ type LoadingProps = {
 export const Loading = ({
   size = 14,
   color = "var(--color-primary)",
-  outlineColor = "#fff",
+  outlineColor = "var(--surface-overlay)",
   className,
 }: LoadingProps) => {
   return (

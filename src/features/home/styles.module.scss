@@ -64,3 +64,34 @@
   display: flex;
   flex-direction: column;
 }
+
+// Mobile-first reordering: artists open the app to see *today*, not to scan stats.
+.dashboardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.statsBlock {
+  order: 1;
+}
+
+.todayBlock {
+  order: 2;
+}
+
+.bottomBlock {
+  order: 3;
+}
+
+@media (max-width: 768px) {
+  .todayBlock {
+    order: 1;
+  }
+  .statsBlock {
+    order: 2;
+  }
+  .bottomBlock {
+    order: 3;
+  }
+}

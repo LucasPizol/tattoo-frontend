@@ -5,13 +5,17 @@ import { TreeSelect, type TreeNode } from "../ui/TreeSelect";
 
 type Props = {
   values: { id: number; title: string }[];
-  onChange: (value: Tag | null, newList: { id: number; title: string }[]) => void;
+  onChange: (
+    value: Tag | null,
+    newList: { id: number; title: string }[],
+  ) => void;
   tag: Tag | null;
   placeholder?: string;
   disabledIds?: number[];
   canOpenDisabled?: boolean;
   onClear?: () => void;
   canSelectRoot?: boolean;
+  label?: string;
 };
 
 export const CategoryTreeSelect = ({
@@ -23,6 +27,7 @@ export const CategoryTreeSelect = ({
   canOpenDisabled = false,
   canSelectRoot = false,
   onClear,
+  label = "Selecione uma tag",
 }: Props) => {
   const { data } = useTagList();
 
@@ -45,7 +50,7 @@ export const CategoryTreeSelect = ({
 
   return (
     <TreeSelect
-      label="Selecione uma tag"
+      label={label}
       placeholder={placeholder}
       values={values}
       data={buildTree(data || [])}
@@ -54,7 +59,10 @@ export const CategoryTreeSelect = ({
       onChange={(value) => {
         const hasValue = values.find((v) => v.id === value.id);
         if (hasValue) {
-          onChange(null, values.filter((v) => v.id !== value.id));
+          onChange(
+            null,
+            values.filter((v) => v.id !== value.id),
+          );
           return;
         }
         onChange(value as unknown as Tag, [...values, value]);
