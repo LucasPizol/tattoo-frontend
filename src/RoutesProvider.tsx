@@ -6,7 +6,6 @@ import {
   Navigate,
   Route,
   Routes,
-  useLocation,
   useSearchParams,
 } from "react-router-dom";
 import { BillingGate } from "./components/BillingGate";
@@ -47,7 +46,6 @@ import { ContractModal } from "./features/contract/ContractModal.tsx";
 import { usePendingContract } from "./features/contract/usePendingContract.ts";
 import { Register } from "./features/register/index.tsx";
 import { OnboardingPage } from "./features/onboarding/index.tsx";
-import { completeOnboardingStep } from "./services/requests/onboarding/index.ts";
 
 export const InstagramRedirect = () => {
   const [searchParams] = useSearchParams();
@@ -111,16 +109,6 @@ export const InstagramRedirect = () => {
 const AuthenticatedInner = () => {
   const hasCommissions = useEntitlement("multi_artist_commissions");
   const hasInstagramRaffles = useEntitlement("instagram_raffles");
-  const { session } = useSessionContext();
-  const location = useLocation();
-
-  const needsOnboarding =
-    session.isAuthenticated &&
-    session.company.onboarding_completed_at === null;
-
-  if (needsOnboarding && location.pathname !== "/onboarding") {
-    return <Navigate to="/onboarding" replace />;
-  }
 
   return (
     <Routes>
@@ -349,21 +337,6 @@ export const RoutesProvider = () => {
             query.queryKey[0].toLowerCase().includes("instagram-accounts"),
           refetchType: "all",
         });
-
-        const igStepDone =
-          session.isAuthenticated &&
-          session.company.onboarding_steps?.instagram === true;
-
-        if (!igStepDone && session.isAuthenticated) {
-          completeOnboardingStep("instagram")
-            .then(() => {
-              queryClient.invalidateQueries({ queryKey: ["session"] });
-              queryClient.invalidateQueries({
-                queryKey: ["onboarding", "status"],
-              });
-            })
-            .catch(() => {});
-        }
       }
     };
 
@@ -372,7 +345,7 @@ export const RoutesProvider = () => {
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, [session, queryClient]);
+  }, [queryClient]);
 
   if (isAuthenticating) {
     return <LoadingScreen variant="rainbow" showProgress progress={progress} />;

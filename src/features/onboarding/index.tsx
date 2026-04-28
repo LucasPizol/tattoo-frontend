@@ -12,14 +12,8 @@ import { useEffect, useRef, useState } from "react";
 import { MdCheckCircle, MdRadioButtonUnchecked } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import {
-  ONBOARDING_STATUS_QUERY_KEY,
-  useOnboarding,
-} from "./hooks/useOnboarding";
-import {
-  type OnboardingStepName,
-  completeOnboardingStep,
-} from "@/services/requests/onboarding";
+import { useOnboarding } from "./hooks/useOnboarding";
+import type { OnboardingStepName } from "@/services/requests/onboarding";
 import { BILLING_STATUS_QUERY_KEY } from "@/features/config/components/SubscriptionCard/useSubscription";
 import styles from "./styles.module.scss";
 
@@ -28,45 +22,31 @@ type StepDef = {
   title: string;
   description: string;
   ctaLabel: string;
-  ctaAction: "navigate" | "whatsapp" | "instagram";
-  ctaTarget?: string;
-  note?: string;
+  ctaTarget: string;
+  successNote?: string;
 };
 
 const BASE_STEPS: StepDef[] = [
-  {
-    name: "whatsapp",
-    title: "Conecte seu WhatsApp",
-    description:
-      "Receba e envie mensagens dos seus clientes diretamente no Rainbow.",
-    ctaLabel: "Conectar agora",
-    ctaAction: "whatsapp",
-    note: "Após conectar, você poderá receber mensagens. O envio de mensagens automáticas estará disponível em breve.",
-  },
   {
     name: "first_client",
     title: "Cadastre seu primeiro cliente",
     description: "Adicione um cliente para começar a agendar e vender.",
     ctaLabel: "Adicionar cliente",
-    ctaAction: "navigate",
     ctaTarget: "/clientes/novo",
   },
   {
-    name: "first_order",
-    title: "Crie seu primeiro pedido",
-    description:
-      "Registre uma venda ou agendamento para ver o Rainbow em ação.",
-    ctaLabel: "Criar pedido",
-    ctaAction: "navigate",
-    ctaTarget: "/vendas/usuarios",
+    name: "first_product",
+    title: "Cadastre seu primeiro produto",
+    description: "Adicione um produto ou serviço ao catálogo do seu studio.",
+    ctaLabel: "Adicionar produto",
+    ctaTarget: "/produtos",
   },
   {
-    name: "instagram",
-    title: "Conecte seu Instagram",
-    description:
-      "Gerencie comentários e posts do seu perfil diretamente no Rainbow.",
-    ctaLabel: "Conectar Instagram",
-    ctaAction: "instagram",
+    name: "first_appointment",
+    title: "Crie seu primeiro agendamento",
+    description: "Agende uma sessão ou atendimento na sua agenda.",
+    ctaLabel: "Abrir agenda",
+    ctaTarget: "/agenda",
   },
 ];
 
@@ -75,7 +55,6 @@ const STUDIO_STEP: StepDef = {
   title: "Convide sua equipe",
   description: "Adicione artistas e recepcionistas ao seu studio.",
   ctaLabel: "Convidar artista",
-  ctaAction: "navigate",
   ctaTarget: "/equipe",
 };
 
@@ -132,8 +111,7 @@ const TrialCTACard = () => {
 
   const isActive =
     billingStatus?.has_active_subscription &&
-    (billingStatus.status === "active" ||
-      billingStatus.status === "trialing");
+    (billingStatus.status === "active" || billingStatus.status === "trialing");
 
   if (isActive) {
     return (
@@ -172,30 +150,10 @@ type StepCardProps = {
   completed: boolean;
   skipped: boolean;
   onSkip: () => void;
-  onWhatsappConnect: () => void;
-  onInstagramConnect: () => void;
 };
 
-const StepCard = ({
-  step,
-  completed,
-  skipped,
-  onSkip,
-  onWhatsappConnect,
-  onInstagramConnect,
-}: StepCardProps) => {
+const StepCard = ({ step, completed, skipped, onSkip }: StepCardProps) => {
   const navigate = useNavigate();
-
-  const handleCTA = () => {
-    if (completed) return;
-    if (step.ctaAction === "navigate" && step.ctaTarget) {
-      navigate(step.ctaTarget);
-    } else if (step.ctaAction === "whatsapp") {
-      onWhatsappConnect();
-    } else if (step.ctaAction === "instagram") {
-      onInstagramConnect();
-    }
-  };
 
   return (
     <div
@@ -222,27 +180,18 @@ const StepCard = ({
             {step.description}
           </Typography.Body2>
         )}
-        {step.name === "first_order" && completed && (
+        {step.successNote && completed && (
           <Typography.Caption className={styles.stepCardSuccessNote}>
-            Primeiro pedido criado! Você está no caminho certo.
-          </Typography.Caption>
-        )}
-        {step.note && !completed && (
-          <Typography.Caption className={styles.stepCardNote}>
-            {step.note}
+            {step.successNote}
           </Typography.Caption>
         )}
       </div>
       {!completed && !skipped && (
         <div className={styles.stepCardActions}>
-          <Button size="small" onClick={handleCTA}>
+          <Button size="small" onClick={() => navigate(step.ctaTarget)}>
             {step.ctaLabel}
           </Button>
-          <button
-            type="button"
-            className={styles.skipLink}
-            onClick={onSkip}
-          >
+          <button type="button" className={styles.skipLink} onClick={onSkip}>
             Fazer depois
           </button>
         </div>
@@ -255,7 +204,6 @@ export const OnboardingPage = () => {
   const { session } = useSessionContext();
   const hasCommissions = useEntitlement("multi_artist_commissions");
   const { status, isLoadingStatus, completeAsync } = useOnboarding();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [skipped, setSkipped] = useState<Set<OnboardingStepName>>(new Set());
   const [celebrating, setCelebrating] = useState(false);
@@ -283,62 +231,11 @@ export const OnboardingPage = () => {
       })
       .catch(() => {
         autoCompletedRef.current = false;
-        toast.error("Não foi possível finalizar a configuração. Tente novamente.");
+        toast.error(
+          "Não foi possível finalizar a configuração. Tente novamente.",
+        );
       });
   }, [allDone, completeAsync, navigate]);
-
-  const handleWhatsappConnect = () => {
-    try {
-      const win = window as unknown as {
-        FB?: {
-          login: (
-            cb: (r: { authResponse?: unknown }) => void,
-            opts: unknown,
-          ) => void;
-        };
-      };
-
-      if (!win.FB) {
-        toast.error("Aguarde, carregando WhatsApp...");
-        return;
-      }
-
-      win.FB.login(
-        (response) => {
-          if (response.authResponse) {
-            completeOnboardingStep("whatsapp")
-              .then(() => {
-                queryClient.invalidateQueries({ queryKey: ["session"] });
-                queryClient.invalidateQueries({
-                  queryKey: ONBOARDING_STATUS_QUERY_KEY,
-                });
-              })
-              .catch(() => {});
-          }
-        },
-        {
-          config_id: "1437580641154378",
-          response_type: "code",
-          override_default_response_type: true,
-          extras: { setup: {} },
-        },
-      );
-    } catch {
-      toast.error("Erro ao conectar ao WhatsApp");
-    }
-  };
-
-  const handleInstagramConnect = () => {
-    const width = 600;
-    const height = 700;
-    const left = window.screenX + (window.outerWidth - width) / 2;
-    const top = window.screenY + (window.outerHeight - height) / 2;
-    window.open(
-      "/instagram/success",
-      "instagram-auth",
-      `width=${width},height=${height},left=${left},top=${top}`,
-    );
-  };
 
   if (!session.isAuthenticated) return null;
 
@@ -350,7 +247,9 @@ export const OnboardingPage = () => {
       <div className={styles.container}>
         <div className={styles.completedState}>
           <MdCheckCircle size={48} color="var(--color-success, #22c55e)" />
-          <Typography.Title level={2}>Configuração já concluída</Typography.Title>
+          <Typography.Title level={2}>
+            Configuração já concluída
+          </Typography.Title>
           <Typography.Body1>
             Seu studio já está configurado e pronto para usar.
           </Typography.Body1>
@@ -382,7 +281,9 @@ export const OnboardingPage = () => {
       <TrialCTACard />
 
       <div className={styles.header}>
-        <Typography.Title level={2}>Vamos configurar seu studio</Typography.Title>
+        <Typography.Title level={2}>
+          Vamos configurar seu studio
+        </Typography.Title>
         {!isLoadingStatus && (
           <ProgressBar total={steps.length} completed={completedCount} />
         )}
@@ -395,11 +296,7 @@ export const OnboardingPage = () => {
             step={step}
             completed={status?.steps[step.name].completed ?? false}
             skipped={skipped.has(step.name)}
-            onSkip={() =>
-              setSkipped((prev) => new Set([...prev, step.name]))
-            }
-            onWhatsappConnect={handleWhatsappConnect}
-            onInstagramConnect={handleInstagramConnect}
+            onSkip={() => setSkipped((prev) => new Set([...prev, step.name]))}
           />
         ))}
       </div>
@@ -411,7 +308,9 @@ export const OnboardingPage = () => {
           completeAsync()
             .then(() => navigate("/dashboard", { replace: true }))
             .catch(() => {
-              toast.error("Não foi possível finalizar a configuração. Tente novamente.");
+              toast.error(
+                "Não foi possível finalizar a configuração. Tente novamente.",
+              );
             });
         }}
       >

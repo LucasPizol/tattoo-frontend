@@ -1,19 +1,17 @@
 import { api } from "@/services/api";
 
 export type OnboardingStepName =
-  | "whatsapp"
   | "first_client"
-  | "first_order"
-  | "instagram"
+  | "first_product"
+  | "first_appointment"
   | "team";
 
 export type OnboardingStatusResponse = {
   completed_at: string | null;
   steps: {
-    whatsapp: { completed: boolean; completed_at: string | null };
     first_client: { completed: boolean; completed_at: string | null };
-    first_order: { completed: boolean; completed_at: string | null };
-    instagram: { completed: boolean; completed_at: string | null };
+    first_product: { completed: boolean; completed_at: string | null };
+    first_appointment: { completed: boolean; completed_at: string | null };
     team: { completed: boolean; completed_at: string | null };
   };
 };

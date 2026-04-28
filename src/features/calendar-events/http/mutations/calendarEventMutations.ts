@@ -1,5 +1,6 @@
 import { api } from "@/services/api";
 import type { CreateCalendarEventPayload } from "../../types";
+import { completeOnboardingStep } from "@/services/requests/onboarding";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
@@ -12,6 +13,20 @@ export const useCreateCalendarEvent = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["calendar-events"] });
       toast.success("Evento criado com sucesso");
+
+      const session = queryClient.getQueryData<{
+        company: { onboarding_steps: { first_appointment: boolean } };
+      }>(["session"]);
+      const alreadyDone = session?.company?.onboarding_steps?.first_appointment;
+
+      if (!alreadyDone) {
+        completeOnboardingStep("first_appointment")
+          .then(() => {
+            queryClient.invalidateQueries({ queryKey: ["session"] });
+            queryClient.invalidateQueries({ queryKey: ["onboarding", "status"] });
+          })
+          .catch(() => {});
+      }
     },
     onError: () => {
       toast.error("Erro ao criar evento");

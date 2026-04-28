@@ -17,10 +17,9 @@ export type LoginResponse = {
   company: {
     onboarding_completed_at: string | null;
     onboarding_steps: {
-      whatsapp: boolean;
       first_client: boolean;
-      first_order: boolean;
-      instagram: boolean;
+      first_product: boolean;
+      first_appointment: boolean;
       team: boolean;
     };
     entitlements: CompanyEntitlements;
