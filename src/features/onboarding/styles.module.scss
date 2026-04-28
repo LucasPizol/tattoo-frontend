@@ -1,0 +1,188 @@
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// Trial CTA card
+.trialCard {
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  background: var(--color-surface, #fff);
+  padding: 20px;
+}
+
+.trialCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.trialCardActive {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trialTitle {
+  font-weight: 600;
+}
+
+.trialDescription {
+  color: var(--color-text-muted, #6b7280);
+}
+
+// Progress bar
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progressSegments {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.progressSegment {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-border, #e5e7eb);
+  transition: background 0.3s ease;
+}
+
+.progressSegmentFilled {
+  background: var(--color-primary, #7c3aed);
+}
+
+.progressLabel {
+  white-space: nowrap;
+  color: var(--color-text-muted, #6b7280);
+  font-size: 13px;
+}
+
+// Step cards
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stepCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  background: var(--color-surface, #fff);
+  padding: 20px;
+  transition: opacity 0.2s ease;
+}
+
+.stepCardCompleted {
+  opacity: 0.65;
+}
+
+.stepCardSkipped {
+  display: none;
+}
+
+.stepCardIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.stepCardBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stepCardTitle {
+  font-weight: 600;
+  margin: 0;
+}
+
+.stepCardTitleCompleted {
+  text-decoration: line-through;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.stepCardDescription {
+  color: var(--color-text-muted, #6b7280);
+  margin: 0;
+}
+
+.stepCardNote {
+  color: var(--color-text-muted, #6b7280);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.stepCardSuccessNote {
+  color: var(--color-success, #22c55e);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.stepCardActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.skipLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  color: var(--color-text-muted, #6b7280);
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: var(--color-text, #374151);
+  }
+}
+
+// Skip all / bottom
+.skipAll {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  color: var(--color-text-muted, #6b7280);
+  cursor: pointer;
+  text-decoration: underline;
+  align-self: center;
+
+  &:hover {
+    color: var(--color-text, #374151);
+  }
+}
+
+// Completed + celebration states
+.completedState,
+.celebrationState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 320px;
+  text-align: center;
+}

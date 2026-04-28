@@ -1,4 +1,5 @@
 import { api } from "@/services/api";
+import type { FocusValue } from "@/schemas/register";
 import type { LoginResponse } from "../../types";
 
 export type GoogleNeedsCompanyInfo = {
@@ -15,6 +16,7 @@ export type GoogleAuthResponse = LoginResponse | GoogleNeedsCompanyInfo;
 export type GoogleCompleteRegistrationPayload = {
   company_name: string;
   cnpj: string;
+  focus?: FocusValue;
   name: string;
   email: string;
   google_uid: string;

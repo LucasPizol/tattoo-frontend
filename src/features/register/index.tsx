@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/Input";
 import { Stepper } from "@/components/ui/Stepper";
 import { useSessionContext } from "@/context/useSession";
 import type { GoogleNeedsCompanyInfo } from "@/features/session/http/mutations/googleMutations";
+import { FOCUS_OPTIONS } from "@/schemas/register";
 import { masks } from "@/utils/masks";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,6 +19,7 @@ import styles from "./styles.module.scss";
 const googleCompanySchema = z.object({
   company_name: z.string().min(1, "Nome da empresa é obrigatório"),
   cnpj: z.string().min(18, "CNPJ inválido"),
+  focus: z.enum(["tattoo", "piercing", "both"]),
 });
 
 type GoogleCompanyForm = z.infer<typeof googleCompanySchema>;
@@ -33,7 +35,7 @@ export const Register = () => {
 
   const googleCompanyForm = useForm<GoogleCompanyForm>({
     resolver: zodResolver(googleCompanySchema),
-    defaultValues: { company_name: "", cnpj: "" },
+    defaultValues: { company_name: "", cnpj: "", focus: "both" as "tattoo" | "piercing" | "both" },
   });
 
   const handleGoogleAuth = async (accessToken: string) => {
@@ -53,6 +55,7 @@ export const Register = () => {
     await completeGoogleRegistration({
       company_name: data.company_name,
       cnpj: data.cnpj,
+      focus: data.focus,
       name: googleData.name,
       email: googleData.email,
       google_uid: googleData.google_uid,
@@ -87,6 +90,27 @@ export const Register = () => {
               error={googleCompanyForm.formState.errors.cnpj?.message}
               required
             />
+            <div className={styles.focusGroup}>
+              <span className={styles.focusLabel}>Foco do studio</span>
+              <div className={styles.focusOptions}>
+                {FOCUS_OPTIONS.map((opt) => (
+                  <label key={opt.value} className={styles.focusOption}>
+                    <input
+                      type="radio"
+                      value={opt.value}
+                      {...googleCompanyForm.register("focus")}
+                      className={styles.focusRadio}
+                    />
+                    <span>{opt.label}</span>
+                  </label>
+                ))}
+              </div>
+              <p className={styles.focusHint}>
+                Essa escolha define as tags sugeridas no começo. Não altera o
+                preço do plano, não bloqueia nenhum recurso, e você pode editar
+                tudo depois. Use "Ambos" se não tiver certeza.
+              </p>
+            </div>
             <div className={styles.actions}>
               <Button
                 type="submit"
@@ -141,6 +165,29 @@ export const Register = () => {
                 error={form.formState.errors.cnpj?.message}
                 required
               />
+
+              <div className={styles.focusGroup}>
+                <span className={styles.focusLabel}>Foco do studio</span>
+                <div className={styles.focusOptions}>
+                  {FOCUS_OPTIONS.map((opt) => (
+                    <label key={opt.value} className={styles.focusOption}>
+                      <input
+                        type="radio"
+                        value={opt.value}
+                        {...form.register("focus")}
+                        className={styles.focusRadio}
+                      />
+                      <span>{opt.label}</span>
+                    </label>
+                  ))}
+                </div>
+                <p className={styles.focusHint}>
+                  Essa escolha define as tags sugeridas no começo. Não altera o
+                  preço do plano, não bloqueia nenhum recurso, e você pode editar
+                  tudo depois. Use "Ambos" se não tiver certeza.
+                </p>
+              </div>
+
               <div className={styles.actions}>
                 <Button type="button" onClick={nextStep}>
                   Próximo

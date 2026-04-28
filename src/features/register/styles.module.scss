@@ -115,6 +115,46 @@
   }
 }
 
+.focusGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.focusLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--input-label-color, rgba(245, 240, 232, 0.6));
+}
+
+.focusOptions {
+  display: flex;
+  gap: 16px;
+}
+
+.focusOption {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-inverse, #f5f0e8);
+}
+
+.focusRadio {
+  accent-color: var(--amber, #e6b966);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.focusHint {
+  font-size: 12px;
+  color: var(--text-inverse-muted, rgba(245, 240, 232, 0.4));
+  line-height: 1.5;
+  margin: 0;
+}
+
 .footer {
   text-align: center;
   margin-top: 24px;

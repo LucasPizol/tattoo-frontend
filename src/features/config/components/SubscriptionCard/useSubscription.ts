@@ -163,7 +163,7 @@ export const useSubscription = (): UseSubscriptionResult => {
   });
 
   const startCheckout = useCallback(() => {
-    checkoutMutation.mutate();
+    checkoutMutation.mutate(undefined);
   }, [checkoutMutation]);
 
   const portalMutation = useMutation({

@@ -63,11 +63,15 @@ const mapStatusToPortalCode = (
   }
 };
 
-export const createCheckoutSession = async (): Promise<{ url: string }> => {
+export const createCheckoutSession = async (
+  returnPath?: string,
+): Promise<{ url: string }> => {
   try {
+    const body: Record<string, string> = {};
+    if (returnPath) body.return_path = returnPath;
     const response = await api.post<{ url: string }>(
       "/api/billing/checkout_session",
-      {},
+      body,
     );
     return response;
   } catch (error) {
@@ -113,3 +117,6 @@ export const billingService = {
   createPortalSession,
   getBillingStatus,
 };
+
+export const createOnboardingCheckoutSession = (): Promise<{ url: string }> =>
+  createCheckoutSession("/onboarding");

@@ -1,4 +1,5 @@
 import { api } from "@/services/api";
+import { completeOnboardingStep } from "@/services/requests/onboarding";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
@@ -17,6 +18,20 @@ export const useCreateClient = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clients"] });
       toast.success("Cliente criado com sucesso");
+
+      const session = queryClient.getQueryData<{
+        company: { onboarding_steps: { first_client: boolean } };
+      }>(["session"]);
+      const alreadyDone = session?.company?.onboarding_steps?.first_client;
+
+      if (!alreadyDone) {
+        completeOnboardingStep("first_client")
+          .then(() => {
+            queryClient.invalidateQueries({ queryKey: ["session"] });
+            queryClient.invalidateQueries({ queryKey: ["onboarding", "status"] });
+          })
+          .catch(() => {});
+      }
     },
     onError: () => {
       toast.error("Erro ao criar cliente");

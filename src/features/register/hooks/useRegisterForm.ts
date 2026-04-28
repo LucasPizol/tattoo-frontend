@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useRegister } from "../http/mutations/registerMutation";
 
 const STEP_FIELDS: Record<number, (keyof RegisterForm)[]> = {
-  0: ["company_name", "cnpj"],
+  0: ["company_name", "cnpj", "focus"],
   1: ["full_name", "email", "password"],
 };
 
